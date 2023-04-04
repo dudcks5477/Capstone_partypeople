@@ -6,7 +6,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 
 @EnableAutoConfiguration(exclude={MongoAutoConfiguration.class})
-@SpringBootApplication
 public class BackendApplication {
 
     public static void main(String[] args) {

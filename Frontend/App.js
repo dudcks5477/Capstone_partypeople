@@ -3,9 +3,9 @@ import {Text, View} from 'react-native';
 const App = () => {
   return (
     <View>
-      <Text>지혁준 씨발</Text>
-      <Text></Text>
-      <Text></Text>
+      <Text>바보 영찬</Text>
+      <Text>바보 영찬</Text>
+      <Text>또 술 먹니</Text>
     </View>
   );
 };

@@ -1,27 +1,69 @@
-import React from 'react';
-import {TouchableOpacity, Text, View} from 'react-native';
-import {ScrollView, TextInput} from 'react-native';
-const App = () => {
+import React, {useState} from 'react';
+import {
+  SafeAreaView,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  Text,
+} from 'react-native';
+
+const LoginScreen = () => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleLogin = () => {
+    // 로그인 처리 코드 작성
+  };
+
   return (
-    <ScrollView>
-      <Text>로그인</Text>
+    <SafeAreaView style={styles.container}>
       <TextInput
-        style={{
-          height: 40,
-          borderColor: 'gray',
-          borderWidth: 1,
-        }}
-        defaultValue="ID"
+        style={styles.input}
+        placeholder="Username"
+        value={username}
+        onChangeText={text => setUsername(text)}
       />
       <TextInput
-        style={{
-          height: 40,
-          borderColor: 'gray',
-          borderWidth: 1,
-        }}
-        defaultValue="Password"
+        style={styles.input}
+        placeholder="Password"
+        secureTextEntry
+        value={password}
+        onChangeText={text => setPassword(text)}
       />
-    </ScrollView>
+      <TouchableOpacity style={styles.button} onPress={handleLogin}>
+        <Text style={styles.buttonText}>Login</Text>
+      </TouchableOpacity>
+    </SafeAreaView>
   );
 };
-export default App;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    paddingHorizontal: 20,
+  },
+  input: {
+    height: 40,
+    width: '100%',
+    borderColor: 'gray',
+    borderWidth: 1,
+    paddingHorizontal: 10,
+    marginVertical: 10,
+  },
+  button: {
+    backgroundColor: '#007AFF',
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 20,
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 18,
+    textAlign: 'center',
+  },
+});
+
+export default LoginScreen;

@@ -7,7 +7,7 @@ import {
   Text,
 } from 'react-native';
 
-const LoginScreen = () => {
+const LoginPage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
@@ -31,7 +31,7 @@ const LoginScreen = () => {
         onChangeText={text => setPassword(text)}
       />
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Login</Text>
+        <Text style={styles.buttonText}>로그인</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
   },
   button: {
     width: '100%',
-    backgroundColor: '#007AFF',
+    backgroundColor: '#000',
     padding: 10,
     borderRadius: 5,
     marginTop: 20,
@@ -67,4 +67,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginScreen;
+export default LoginPage;

@@ -1,13 +1,19 @@
 import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, Text } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { styles } from './LoginStyles';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const navigation = useNavigation();
+
   const handleLogin = () => {
     // 로그인 처리 코드 작성
+
+    // HomeScreen으로 이동
+    navigation.navigate('Home');
   };
 
   return (

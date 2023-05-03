@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, Text } from 'react-native';
-import { styles } from './styles';
+import { styles } from './LoginStyles';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');

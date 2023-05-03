@@ -1,15 +1,10 @@
 import React from 'react';
-import {View, Text, Button} from 'react-native';
+import { TextInput, View, Text } from 'react-native';
+import { styles } from './HomeStyles';
+import SearchBar from '../container/SearchBar'
 
-const HomeScreen = ({navigation})=> {
+export default function HomeScreen() {
   return (
-    <View>
-      <Text>Home Screen</Text>
-      <Button
-        title="Go to Second Screen"
-        onPress={() => navigation.navigate('Second')}
-      />
-    </View>
+    <SearchBar/>
   );
 }
-export default HomeScreen;

@@ -13,7 +13,7 @@ export default function LoginScreen() {
     // 로그인 처리 코드 작성
 
     // HomeScreen으로 이동
-    navigation.navigate('Home');
+    navigation.navigate('BottomTab',{screen:'Home'});
   };
 
   return (

@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, TextInput, Button} from 'react-native';
+import {View, TextInput} from 'react-native';
 
 export default function SearchBar() {
   const [query, setQuery] = useState('');

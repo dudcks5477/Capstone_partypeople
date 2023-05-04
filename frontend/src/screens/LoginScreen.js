@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, Text } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { styles } from './LoginStyles';
+import { styles } from './Styles/LoginStyles';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');

@@ -32,7 +32,7 @@ const listings = [
 const PartyCard = () => {
   return (
     <View style={styles.container}>
-      <ScrollView horizontal>
+      <ScrollView vertical>
         {listings.map((listing) => (
           <Card
             key={listing.id}

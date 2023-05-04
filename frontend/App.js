@@ -9,14 +9,15 @@ const Stack = createNativeStackNavigator();
 
 const App = () => {
   return (
-    <Listings/>
-    // <NavigationContainer>
-    //   <Stack.Navigator>
-    //     <Stack.Screen name="Login" component={LoginScreen} />
-    //     <Stack.Screen name="HomeSearchBar" component={HomeScreen} />
-    //     <Stack.Screen name="BottomTab" component={UnderBarButton} options={{ headerShown: false }} />
-    //   </Stack.Navigator>
-    // </NavigationContainer>
+    // <Listings/>
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="Listings" component={Listings} />
+        <Stack.Screen name="HomeSearchBar" component={HomeScreen} />
+        <Stack.Screen name="BottomTab" component={UnderBarButton} options={{ headerShown: false }} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 };
 

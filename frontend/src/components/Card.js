@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     elevation: 5,
     margin: 10,
-    width: '48%',
+    width: '90%',
     aspectRatio: 1,
   },
   image: {

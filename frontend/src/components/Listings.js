@@ -6,7 +6,7 @@ const listings = [
   {
     id: 1,
     image: require('../assets/newyork.jpeg'),
-    title: 'Luxury Villa in Bali, Indonesia',
+    title: 'Luxury Villa in Bali, New York',
     description:
       'Escape to your own private luxury villa in the heart of Bali. Relax by the pool, enjoy the view, and experience the ultimate in luxury.',
     price: '$450/night',
@@ -14,7 +14,7 @@ const listings = [
   {
     id: 2,
     image: require('../assets/paris.jpeg'),
-    title: 'Mountain Cottage in Switzerland',
+    title: 'Mountain Cottage in Paris',
     description:
       'Get away from it all in this cozy mountain cottage in the Swiss Alps. Perfect for hiking, skiing, and enjoying the great outdoors.',
     price: '$120/night',
@@ -22,7 +22,7 @@ const listings = [
   {
     id: 3,
     image: require('../assets/seoul.jpeg'),
-    title: 'Beachfront Bungalow in Thailand',
+    title: 'Beachfront Bungalow in Seoul',
     description:
       'Relax on the beach in your own private bungalow in Thailand. Perfect for soaking up the sun, swimming in the sea, and enjoying the local cuisine.',
     price: '$200/night',
@@ -32,7 +32,7 @@ const listings = [
 const PartyCard = () => {
   return (
     <View style={styles.container}>
-      <ScrollView horizontal>
+      <ScrollView vertical>
         {listings.map((listing) => (
           <Card
             key={listing.id}

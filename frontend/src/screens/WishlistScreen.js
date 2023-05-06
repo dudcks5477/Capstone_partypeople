@@ -12,15 +12,15 @@ const WishlistScreen = () => {
         <Text style={styles.cardText}>찬's 파티 3월 18일 6시</Text>
       </View>
       <View style={styles.cardContainer}>
-        <Image source={require('../assets/party1.jpeg')} style={styles.cardImage} />
+        <Image source={require('../assets/party2.jpeg')} style={styles.cardImage} />
         <Text style={styles.cardText}>찬's 파티 3월 18일 6시</Text>
       </View>
       <View style={styles.cardContainer}>
-        <Image source={require('../assets/party1.jpeg')} style={styles.cardImage} />
+        <Image source={require('../assets/party3.jpeg')} style={styles.cardImage} />
         <Text style={styles.cardText}>찬's 파티 3월 18일 6시</Text>
       </View>
       <View style={styles.cardContainer}>
-        <Image source={require('../assets/party1.jpeg')} style={styles.cardImage} />
+        <Image source={require('../assets/party4.jpeg')} style={styles.cardImage} />
         <Text style={styles.cardText}>찬's 파티 3월 18일 6시</Text>
       </View>
     </ScrollView>

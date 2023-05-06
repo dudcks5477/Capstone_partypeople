@@ -6,11 +6,14 @@ import UnderBarButton from './src/container/UnderBarButton';
 import HomeScreen from './src/screens/HomeScreen';
 import Listings from './src/components/Listings'
 import MapScreen from './src/screens/MapScreen';
-import AddScreen from './src/screens/AddScreen'
+import AddScreen from './src/screens/AddScreen';
+import PartyDetailScreen from './src/screens/PartyDetailScreen';
+
 const Stack = createNativeStackNavigator();
 
 const App = () => {
   return (
+    // <PartyDetailScreen/>
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="Login" component={LoginScreen} />

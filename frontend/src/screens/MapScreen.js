@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { StyleSheet, View, Dimensions,TouchableOpacity,Text } from 'react-native';
+import { StyleSheet, View, Dimensions,TouchableOpacity,Text,Modal,Pressable } from 'react-native';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { useNavigation } from '@react-navigation/native';
@@ -8,16 +8,17 @@ import { useNavigation } from '@react-navigation/native';
 
 
 
-const MapScreen = () => {
+const MapScreen = ({route}) => {
+  const { address,partyName,numOfPeople,description,latitude,longitude,date,time} = route.params || {}
   const mapRef = useRef(null); // Ref를 추가합니다.
   const navigation = useNavigation();
+  const [modalVisible, setModalVisible] = useState(false);
   const [region, setRegion] = useState({
     latitude: 37.5665,
     longitude: 126.9780,
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,
   }); // 지도 초기 위치를 상태로 관리합니다.
-
   const handlePlaceSelected = (data, details) => {
     const { geometry } = details;
     const { location } = geometry;
@@ -31,7 +32,9 @@ const MapScreen = () => {
       longitudeDelta: region.longitudeDelta,
     });
   };
-
+  const handleMarkerPress = () => {
+    setModalVisible(true);
+  };
   return (
     <View style={styles.container}>
       <MapView
@@ -41,9 +44,40 @@ const MapScreen = () => {
         initialRegion={region} // 초기 위치를 상태에서 가져옵니다.
         onRegionChangeComplete={setRegion} // 지도를 이동할 때마다 상태를 업데이트합니다.
       >
-        <Marker coordinate={region} />
+        {address && (
+    <Marker
+      coordinate={{
+        latitude: latitude,
+        longitude: longitude,
+      }}
+      onPress={handleMarkerPress} // 마커를 클릭했을 때, handleMarkerPress 함수를 실행합니다.
+    />
+  )}
       </MapView>
-
+      <Modal
+      
+      transparent={true}
+      visible={modalVisible}
+      onRequestClose={() => {
+        Alert.alert('Modal has been closed.');
+        setModalVisible(false);
+      }}>
+      <View style={styles.centeredView}>
+        <View style={styles.modalView}>
+          <Text style={styles.modalText}>
+            파티이름 :{partyName} {'\n'}
+            날짜 :{date}{'\n'}
+            시간 :{time}{'\n'}
+            인원 :{numOfPeople}{'\n'}
+            설명 :{description}</Text>
+          <Pressable
+            style={[styles.button, styles.buttonClose]}
+            onPress={() => setModalVisible(false)}>
+            <Text style={styles.textStyle}>닫기</Text>
+          </Pressable>
+        </View>
+      </View>
+    </Modal>
       {/* GooglePlacesAutocomplete를 추가합니다. */}
       <GooglePlacesAutocomplete
               minLength={2}
@@ -129,6 +163,51 @@ const styles = StyleSheet.create({
   addButtonText: {
     fontSize: 10,
     color: 'white',
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    marginTop: 50,
+  },
+  
+  modalView: {
+    margin: 10,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 10,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    marginBottom: 60,
+    width: '90%',
+  },
+  
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonOpen: {
+    backgroundColor: '#F194FF',
+  },
+  buttonClose: {
+    backgroundColor: '#2196F3',
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
   },
 });
 

@@ -4,7 +4,7 @@ import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { useNavigation } from '@react-navigation/native';
 import Geocoder from 'react-native-geocoding';
-Geocoder.init('AIzaSyB_eawVNI3T9lGyQsePWA2GwE2uXyWxZI0');
+Geocoder.init('api 키');
 
 
 const MapScreen2 = () => {

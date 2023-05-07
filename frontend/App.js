@@ -21,6 +21,7 @@ const App = () => {
         <Stack.Screen name="PartyCard" component={PartyCard} />
         <Stack.Screen name="MapScreen" component={MapScreen} />
         <Stack.Screen name="AddScreen" component={AddScreen} />
+        <Stack.Screen name='PartyDetail' component={PartyDetailScreen}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

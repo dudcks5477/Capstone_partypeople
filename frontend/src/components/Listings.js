@@ -11,7 +11,7 @@
 // |
  
 import React from 'react';
-import {ScrollView, StyleSheet, View, SafeAreaView} from 'react-native';
+import {ScrollView, StyleSheet, View, SafeAreaView, TouchableOpacity, Text} from 'react-native';
 import Card from './Card';
 
 const listings = [
@@ -41,17 +41,31 @@ const listings = [
   },
 ];
 
-const PartyCard = () => (
-  <SafeAreaView style={styles.containerNotch}>
-    <View style={styles.container}>
-      <ScrollView>
-        {listings.map(listing => (
-          <Card key={listing.id} {...listing} />
-        ))}
-      </ScrollView>
-    </View>
-  </SafeAreaView>
-);
+const PartyCard = () => {
+  const handleCardPress = (id) => {
+    // 카드를 클릭했을 때의 동작
+    console.log(`Clicked card with ID: ${id}`);
+  }
+  
+  return (
+    <SafeAreaView style={styles.containerNotch}>
+      <View style={styles.container}>
+        <ScrollView>
+          {listings.map(listing => (
+            <TouchableOpacity
+              key={listing.id}
+              style={styles.cardButton}
+              onPress={() => handleCardPress(listing.id)}
+              activeOpacity={1}
+            >
+              <Card {...listing} />
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      </View>
+    </SafeAreaView>
+  );
+};
 
 const styles = StyleSheet.create({
   containerNotch: {
@@ -59,6 +73,9 @@ const styles = StyleSheet.create({
   },
   container: {
     marginVertical: 10,
+  },
+  cardButton: {
+    marginBottom: 10,
   },
 });
 

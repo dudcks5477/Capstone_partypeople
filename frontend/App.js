@@ -4,7 +4,7 @@ import React from 'react';
 import LoginScreen from './src/screens/LoginScreen';
 import UnderBarButton from './src/container/UnderBarButton';
 import HomeScreen from './src/screens/HomeScreen';
-import Listings from './src/components/Listings'
+import PartyCard from './src/components/PartyCard'
 import MapScreen from './src/screens/MapScreen';
 import AddScreen from './src/screens/AddScreen';
 import PartyDetailScreen from './src/screens/PartyDetailScreen';
@@ -13,13 +13,12 @@ const Stack = createNativeStackNavigator();
 
 const App = () => {
   return (
-    // <PartyDetailScreen/>
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="HomeSearchBar" component={HomeScreen} />
         <Stack.Screen name="BottomTab" component={UnderBarButton} options={{ headerShown: false }} />
-        <Stack.Screen name="Listings" component={Listings} />
+        <Stack.Screen name="PartyCard" component={PartyCard} />
         <Stack.Screen name="MapScreen" component={MapScreen} />
         <Stack.Screen name="AddScreen" component={AddScreen} />
       </Stack.Navigator>

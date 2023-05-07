@@ -1,30 +1,36 @@
 import React from 'react';
-import { View, Text, ScrollView, StyleSheet, Image } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 const WishlistScreen = () => {
+  const navigation = useNavigation();
+
+  const handleCardPress = () => {
+    navigation.navigate('PartyDetail');
+  };
+
   return (
     <ScrollView>
       <View>
         <Text style={styles.title}>Wishlists</Text>
       </View>
-      <View style={styles.cardContainer}>
+      <TouchableOpacity style={styles.cardContainer} onPress={handleCardPress}>
         <Image source={require('../assets/party1.jpeg')} style={styles.cardImage} />
         <Text style={styles.cardText}>찬's 파티 3월 18일 6시</Text>
-      </View>
-      <View style={styles.cardContainer}>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.cardContainer} onPress={handleCardPress}>
         <Image source={require('../assets/party2.jpeg')} style={styles.cardImage} />
         <Text style={styles.cardText}>찬's 파티 3월 18일 6시</Text>
-      </View>
-      <View style={styles.cardContainer}>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.cardContainer} onPress={handleCardPress}>
         <Image source={require('../assets/party3.jpeg')} style={styles.cardImage} />
         <Text style={styles.cardText}>찬's 파티 3월 18일 6시</Text>
-      </View>
-      <View style={styles.cardContainer}>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.cardContainer} onPress={handleCardPress}>
         <Image source={require('../assets/party4.jpeg')} style={styles.cardImage} />
         <Text style={styles.cardText}>찬's 파티 3월 18일 6시</Text>
-      </View>
+      </TouchableOpacity>
     </ScrollView>
-    
   );
 };
 

@@ -1,7 +1,6 @@
 import React from 'react';
 import {TouchableOpacity, Text, StyleSheet, Image, View, ScrollView} from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import SearchBar from '../container/SearchBar';
 import Line from '../container/Line';
 
 const PartyDetailScreen = () => {
@@ -12,7 +11,6 @@ const PartyDetailScreen = () => {
   
   return (
     <ScrollView>
-      <SearchBar/>
       <Line style={{marginTop: 20}} />
       <TouchableOpacity onPress={handleButtonPress} style={{flexDirection: 'row', alignItems: 'center'}}>
         <MaterialIcons name="chevron-left" size={24} color="black" style={{ marginRight: 8}} />

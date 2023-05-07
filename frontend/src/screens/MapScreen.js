@@ -7,7 +7,6 @@ import { useNavigation } from '@react-navigation/native';
 
 
 
-
 const MapScreen = ({route}) => {
   const { address,partyName,numOfPeople,description,latitude,longitude,date,time} = route.params || {}
   const mapRef = useRef(null); // Ref를 추가합니다.
@@ -62,7 +61,7 @@ const MapScreen = ({route}) => {
         Alert.alert('Modal has been closed.');
         setModalVisible(false);
       }}>
-      <View style={styles.centeredView}>
+      <TouchableOpacity style={styles.centeredView}>
         <View style={styles.modalView}>
           <Text style={styles.modalText}>
             파티이름 :{partyName} {'\n'}
@@ -76,7 +75,7 @@ const MapScreen = ({route}) => {
             <Text style={styles.textStyle}>닫기</Text>
           </Pressable>
         </View>
-      </View>
+      </TouchableOpacity>
     </Modal>
       {/* GooglePlacesAutocomplete를 추가합니다. */}
       <GooglePlacesAutocomplete

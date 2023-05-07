@@ -1,5 +1,5 @@
 import React from 'react';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import HomeScreen from '../screens/HomeScreen';
 import ChatScreen from '../screens/ChatScreen';
 import PrivateProfileScreen from '../screens/PrivateProfileScreen';
@@ -9,46 +9,47 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 const Tab = createBottomTabNavigator();
 
-const UnderBarButton = () => {
-  return (
-    <Tab.Navigator
-      screenOptions={({ route }) => ({
-        tabBarIcon: ({ focused, color, size }) => {
-          let iconName;
-
-          if (route.name === 'Map') {
-            iconName = 'map';
-          } else if (route.name === 'Wishlist') {
-            iconName = 'favorite';
-          } else if (route.name === 'Home') {
-            iconName = 'home';
-          } else if (route.name === 'Chat') {
-            iconName = 'chat';
-          } else if (route.name === 'PrivateProfile') {
-            iconName = 'person';
-          }
-
-          return (
-            <MaterialIcons
-              name={iconName}
-              color={focused ? '#B39DDB' : 'black'}
-              size={size}
-            />
-          );
-        },
-      })}
-      tabBarOptions={{
-        activeTintColor: '#B39DDB',
-        inactiveTintColor: 'black',
-      }}
-    >
-      <Tab.Screen name="Map" component={MapScreen} />
-      <Tab.Screen name="Wishlist" component={WishlistScreen} />
-      <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Chat" component={ChatScreen} />
-      <Tab.Screen name="PrivateProfile" component={PrivateProfileScreen} />
-    </Tab.Navigator>
-  );
-};
+const UnderBarButton = () => (
+  <Tab.Navigator
+    screenOptions={({route}) => ({
+      tabBarIcon: ({focused, color, size}) => {
+        const icons = {
+          Map: 'map',
+          Wishlist: 'favorite',
+          Home: 'home',
+          Chat: 'chat',
+          PrivateProfile: 'person',
+        };
+        const iconName = icons[route.name];
+        return (
+          <MaterialIcons
+            name={iconName}
+            color={focused ? '#B39DDB' : 'black'}
+            size={size}
+          />
+        );
+      },
+    })}
+    tabBarOptions={{
+      activeTintColor: '#B39DDB',
+      inactiveTintColor: 'black',
+    }}>
+    <Tab.Screen name="Map" component={MapScreen} options={{
+          headerShown: false,
+        }}/>
+    <Tab.Screen name="Wishlist" component={WishlistScreen} options={{
+          headerShown: false,
+        }}/>
+    <Tab.Screen name="Home" component={HomeScreen} options={{
+          headerShown: false,
+        }}/>
+    <Tab.Screen name="Chat" component={ChatScreen} options={{
+          headerShown: false,
+        }}/>
+    <Tab.Screen name="PrivateProfile" component={PrivateProfileScreen} options={{
+          headerShown: false,
+        }}/>
+  </Tab.Navigator>
+);
 
 export default UnderBarButton;

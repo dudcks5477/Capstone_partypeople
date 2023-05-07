@@ -2,10 +2,12 @@ import React, {useState} from 'react';
 import {View, Button, Platform, Text, TextInput,TouchableOpacity, Alert} from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import CameraScreen from './CameraScreen';
-
+import PartyCard from '../components/PartyCard';
+import HomeScreen from './HomeScreen';
 const AddScreen = ({navigation, route}) => {
   const { address,longitude,latitude } = route.params || {};
   const [date, setDate] = useState(new Date());
+  const [time, setTime] = useState();
   const [show, setShow] = useState(false);
   const [partyName, setPartyName] = useState('');
   const [numOfPeople, setNumOfPeople] = useState('');
@@ -13,9 +15,10 @@ const AddScreen = ({navigation, route}) => {
   const [mode, setMode] = useState('date');
   
   const handleCreate = () => {
-    if(!address || !partyName || !numOfPeople || !description || !date) {
+    if(!address || !partyName || !numOfPeople || !description || !date ) {
       Alert.alert('오류', '입력되지 않은 항목이 있습니다.');
     } else {
+      setTime(date.toLocaleTimeString())
       navigation.navigate('Map', {
         address : address,
         longitude: longitude,
@@ -92,6 +95,14 @@ const AddScreen = ({navigation, route}) => {
       <TouchableOpacity onPress={handleCreate}>
         <Text>생성하기</Text>
       </TouchableOpacity>
+      <HomeScreen
+        address={address}
+        partyName={partyName}
+        numOfPeople={numOfPeople}
+        description={description}
+        date={date.toLocaleDateString()}
+        time= {date.toLocaleTimeString()}
+        />
     </View>
   );
 };

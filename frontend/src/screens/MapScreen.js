@@ -6,9 +6,9 @@ import { useNavigation } from '@react-navigation/native';
 
 
 
-
 const MapScreen = ({route}) => {
   const { address,partyName,numOfPeople,description,latitude,longitude,date,time} = route.params || {}
+  
   const mapRef = useRef(null); // Ref를 추가합니다.
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
@@ -34,6 +34,12 @@ const MapScreen = ({route}) => {
   const handleMarkerPress = () => {
     setModalVisible(true);
   };
+  const handlePartyDetailPress = () => {
+    navigation.navigate('PartyDetail', {address, partyName, numOfPeople, description, date, time});
+    setModalVisible(false);
+    console.log(address, partyName, numOfPeople, description, date, time)
+  }
+  
   return (
     <View style={styles.container}>
       <MapView
@@ -44,6 +50,7 @@ const MapScreen = ({route}) => {
         onRegionChangeComplete={setRegion} // 지도를 이동할 때마다 상태를 업데이트합니다.
       >
         {address && (
+          
     <Marker
       coordinate={{
         latitude: latitude,
@@ -52,31 +59,36 @@ const MapScreen = ({route}) => {
       onPress={handleMarkerPress} // 마커를 클릭했을 때, handleMarkerPress 함수를 실행합니다.
     />
   )}
+  
+
       </MapView>
       <Modal
-      
-      transparent={true}
-      visible={modalVisible}
-      onRequestClose={() => {
-        Alert.alert('Modal has been closed.');
-        setModalVisible(false);
-      }}>
-      <TouchableOpacity style={styles.centeredView}>
-        <View style={styles.modalView}>
-          <Text style={styles.modalText}>
-            파티이름 :{partyName} {'\n'}
-            날짜 :{date}{'\n'}
-            시간 :{time}{'\n'}
-            인원 :{numOfPeople}{'\n'}
-            설명 :{description}</Text>
-          <Pressable
-            style={[styles.button, styles.buttonClose]}
-            onPress={() => setModalVisible(false)}>
-            <Text style={styles.textStyle}>닫기</Text>
-          </Pressable>
-        </View>
-      </TouchableOpacity>
-    </Modal>
+  transparent={true}
+  visible={modalVisible}
+  onRequestClose={() => {
+    Alert.alert('Modal has been closed.');
+    setModalVisible(false);
+  }}>
+  <Pressable
+    style={styles.centeredView}
+    onPress={() => handlePartyDetailPress()
+    }>
+    <View style={styles.modalView}>
+      <Text style={styles.modalText}>
+        파티이름 :{partyName} {'\n'}
+        날짜 :{date}{'\n'}
+        시간 :{time}{'\n'}
+        인원 :{numOfPeople}{'\n'}
+        설명 :{description}
+      </Text>
+      <Pressable
+        style={[styles.button, styles.buttonClose]}
+        onPress={() => setModalVisible(false)}>
+        <Text style={styles.textStyle}>닫기</Text>
+      </Pressable>
+    </View>
+  </Pressable>
+</Modal>
       {/* GooglePlacesAutocomplete를 추가합니다. */}
       <GooglePlacesAutocomplete
               minLength={2}
@@ -101,7 +113,11 @@ const MapScreen = ({route}) => {
   >
     <Text style={styles.addButtonText}>+생성하기</Text>
   </TouchableOpacity>
+  
     </View>
+    
+      
+    
   );
 };
 

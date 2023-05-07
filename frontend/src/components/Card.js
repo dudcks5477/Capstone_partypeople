@@ -1,21 +1,25 @@
 import React from 'react';
 import {View, Image, Text, StyleSheet, SafeAreaView} from 'react-native';
+import Config from 'react-native-config';
 
-const Card = ({image, title, description, price}) => (
-  
+const Card = ({image, address, partyName, numOfPeople, description, date, time}) => {
+  console.log("CARd",image, address, partyName, numOfPeople, description, date, time);
+  return (
     <View style={styles.cardContainer}>
       <View style={styles.card}>
         <Image source={image} style={styles.image} />
-        <Text style={styles.title}>{title}</Text>
+        <Text style={styles.title}>{partyName}</Text>
         <Text style={styles.description}>{description}</Text>
-        <Text style={styles.price}>{price}</Text>
+        <Text style={styles.title}>{numOfPeople}</Text>
+        <Text style={styles.title}>{date}</Text>
+        <Text style={styles.title}>{time}</Text>
+        <Text style={styles.title}>{address}</Text>
       </View>
     </View>
-  
-);
-
+  );
+};
+//홈으로가서 party card한테 변수 넘겨서 바꿔야될듯
 const styles = StyleSheet.create({
-  
   cardContainer: {
     alignItems: 'center',
     justifyContent: 'center',

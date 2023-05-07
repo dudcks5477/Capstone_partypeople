@@ -2,11 +2,13 @@ import React from 'react';
 import {TouchableOpacity, Text, StyleSheet, Image, View, ScrollView} from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Line from '../container/Line';
+// import { useEffect, useState } from 'react';
 
-const PartyDetailScreen = () => {
+const PartyDetailScreen = ({navigation,route}) => {
+  const { address, partyName, numOfPeople, description, date, time } = route.params || {};
   const handleButtonPress = () => {
     // 버튼을 눌렀을 때 동작
-    console.log("버튼이 눌렸습니다.");
+    console.log(route);
   };
   
   return (
@@ -14,7 +16,7 @@ const PartyDetailScreen = () => {
       <Line style={{marginTop: 20}} />
       <TouchableOpacity onPress={handleButtonPress} style={{flexDirection: 'row', alignItems: 'center'}}>
         <MaterialIcons name="chevron-left" size={24} color="black" style={{ marginRight: 8}} />
-        <Text>Chan's Party</Text>
+        <Text>{partyName}</Text>
       </TouchableOpacity>
       <View style={styles.cardContainer}>
         <Image source={require('../assets/party1.jpeg')} style={styles.cardImage} />
@@ -28,6 +30,7 @@ const PartyDetailScreen = () => {
       <Line/>
       <View style={{height:136}}>
         <Text>파티소개</Text>
+        <Text>{description} {numOfPeople} {date} {time} {address}</Text>
       </View>
       <Line/>      
       <TouchableOpacity onPress={handleButtonPress} style={{flexDirection: 'row', marginLeft: 5}}> 
@@ -40,7 +43,9 @@ const PartyDetailScreen = () => {
           <Text>참가자</Text>
         </View>
       </TouchableOpacity>
+      
     </ScrollView>
+    
   );
 };
 

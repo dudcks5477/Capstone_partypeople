@@ -42,17 +42,14 @@ const styles = StyleSheet.create({
     marginLeft: 15,
     marginTop: 30,
   },
-  cardContainer: {
-    alignItems: 'center',
-    marginTop: 10,
-  },
+  cardContainer: {alignItems: 'center', marginTop: 10},
   cardImage: {
     width: 362,
     height: 154,
     borderRadius: 8,
     shadowColor: '#000000',
     shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowRadius: 6,
   },
   cardText: {

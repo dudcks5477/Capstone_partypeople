@@ -3,7 +3,6 @@ import {TouchableOpacity, Text, StyleSheet, Image, View, ScrollView} from 'react
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import SearchBar from '../container/SearchBar';
 import Line from '../container/Line';
-import UnderBarButton from '../container/UnderBarButton';
 
 const PartyDetailScreen = () => {
   const handleButtonPress = () => {

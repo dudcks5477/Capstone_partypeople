@@ -1,22 +1,42 @@
-import React from 'react';
-import {TouchableOpacity, Text, StyleSheet, Image, View, ScrollView} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { TouchableOpacity, Text, StyleSheet, Image, View, ScrollView } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Line from '../container/Line';
-// import { useEffect, useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const PartyDetailScreen = ({navigation,route}) => {
-  const { address, partyName, numOfPeople, description, date, time } = route.params || {};
+const PartyDetailScreen = () => {
+  const [partyData, setPartyData] = useState({
+    address: '',
+    date: '',
+    time: '',
+    partyName: '',
+    numOfPeople: '',
+    description: '',
+  });
+
   const handleButtonPress = () => {
-    // 버튼을 눌렀을 때 동작
-    console.log(route);
+    console.log("Hi");
   };
-  
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const storedData = await AsyncStorage.getItem('partyData');
+        setPartyData(storedData ? JSON.parse(storedData) : []);
+      } catch(e){
+        console.log(e)
+      }
+    }
+
+    getData();
+  }, []);
+
   return (
     <ScrollView>
-      <Line style={{marginTop: 20}} />
-      <TouchableOpacity onPress={handleButtonPress} style={{flexDirection: 'row', alignItems: 'center'}}>
-        <MaterialIcons name="chevron-left" size={24} color="black" style={{ marginRight: 8}} />
-        <Text>{partyName}</Text>
+      <Line style={{ marginTop: 20 }} />
+      <TouchableOpacity onPress={handleButtonPress} style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <MaterialIcons name="chevron-left" size={24} color="black" style={{ marginRight: 8 }} />
+        <Text>{partyData.partyName}</Text>
       </TouchableOpacity>
       <View style={styles.cardContainer}>
         <Image source={require('../assets/party1.jpeg')} style={styles.cardImage} />
@@ -25,15 +45,15 @@ const PartyDetailScreen = ({navigation,route}) => {
         <MaterialIcons name="account-circle" size={24} color="black" />
         <Text>주최자</Text>
         <Text>Show profile</Text>
-        <MaterialIcons name="chevron-right" size={24} color="black" style={{marginRight:8}}/>
+        <MaterialIcons name="chevron-right" size={24} color="black" style={{ marginRight: 8 }} />
       </TouchableOpacity>
-      <Line/>
-      <View style={{height:136}}>
+      <Line />
+      <View style={{ height: 136 }}>
         <Text>파티소개</Text>
-        <Text>{description} {numOfPeople} {date} {time} {address}</Text>
+        <Text>{partyData.description} {partyData.numOfPeople} {partyData.date} {partyData.time} {partyData.address}</Text>
       </View>
-      <Line/>      
-      <TouchableOpacity onPress={handleButtonPress} style={{flexDirection: 'row', marginLeft: 5}}> 
+      <Line />
+      <TouchableOpacity onPress={handleButtonPress} style={{ flexDirection: 'row', marginLeft: 5 }}>
         <View>
           <MaterialIcons name="account-circle" size={24} color="black" />
           <Text>참가자</Text>
@@ -43,9 +63,7 @@ const PartyDetailScreen = ({navigation,route}) => {
           <Text>참가자</Text>
         </View>
       </TouchableOpacity>
-      
     </ScrollView>
-    
   );
 };
 
@@ -63,6 +81,6 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 6,
   },
-})
+});
 
 export default PartyDetailScreen;

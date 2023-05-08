@@ -13,7 +13,7 @@ const PartyDetailScreen = () => {
   };
 
   const handleGoBack = () => {
-    navigation.goBack();
+    navigation.goBack(); // 이전으로 돌아가기
   }
   
   return (

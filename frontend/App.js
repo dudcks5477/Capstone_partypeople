@@ -4,7 +4,6 @@ import React from 'react';
 import LoginScreen from './src/screens/LoginScreen';
 import UnderBarButton from './src/container/UnderBarButton';
 import HomeScreen from './src/screens/HomeScreen';
-import PartyCard from './src/components/PartyCard';
 import MapScreen from './src/screens/MapScreen';
 import AddScreen from './src/screens/AddScreen';
 import MapScreen2 from './src/screens/MapScreen2';
@@ -25,7 +24,7 @@ const App = () => (
         options={{headerShown: false}}
       />
       
-      <Stack.Screen name="PartyCard" component={PartyCard} />
+     
       <Stack.Screen name="MapScreen" component={MapScreen} />
       <Stack.Screen name="AddScreen" component={AddScreen} options={{
           headerShown: false,
@@ -36,6 +35,7 @@ const App = () => (
       <Stack.Screen name="PartyDetail" component={PartyDetailScreen} options={{
           headerShown: false,
         }} />
+
     </Stack.Navigator>
   </NavigationContainer>
 );

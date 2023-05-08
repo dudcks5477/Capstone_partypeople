@@ -1,4 +1,4 @@
-import React from 'react';
+import React ,{useState,useEffect} from 'react';
 import {TouchableOpacity, Text, StyleSheet, Image, View, ScrollView, Button, Alert} from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
@@ -16,7 +16,7 @@ const PartyDetailScreen = () => {
   });
 
 
-const PartyDetailScreen = () => {
+
   const navigation = useNavigation();
 
   const handleButtonPress = () => {
@@ -63,7 +63,7 @@ const PartyDetailScreen = () => {
         marginHorizontal: '5%',
         marginTop: 2,}}>
         <MaterialIcons name="chevron-left" size={24} color="black" style={{ marginRight: 2}} />
-        <Text>Chan's Party</Text>
+        <Text>{partyData.partyName}</Text>
       </TouchableOpacity>
 
       <View style={styles.cardContainer}>
@@ -207,5 +207,6 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
 });
+
 
 export default PartyDetailScreen;

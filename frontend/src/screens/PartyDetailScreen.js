@@ -1,18 +1,25 @@
 import React from 'react';
 import {TouchableOpacity, Text, StyleSheet, Image, View, ScrollView} from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { useNavigation } from '@react-navigation/native';
 import Line from '../container/Line';
 
 const PartyDetailScreen = () => {
+  const navigation = useNavigation();
+
   const handleButtonPress = () => {
     // 버튼을 눌렀을 때 동작
     console.log("버튼이 눌렸습니다.");
   };
+
+  const handleGoBack = () => {
+    navigation.goBack();
+  }
   
   return (
     <ScrollView>
       <Line style={{marginTop: 20}} />
-      <TouchableOpacity onPress={handleButtonPress} style={{flexDirection: 'row', alignItems: 'center'}}>
+      <TouchableOpacity onPress={handleGoBack} style={{flexDirection: 'row', alignItems: 'center'}}>
         <MaterialIcons name="chevron-left" size={24} color="black" style={{ marginRight: 8}} />
         <Text>Chan's Party</Text>
       </TouchableOpacity>

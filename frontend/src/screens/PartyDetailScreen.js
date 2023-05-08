@@ -6,6 +6,7 @@ import Line from '../container/Line';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TouchableHighlight } from 'react-native-gesture-handler';
 const PartyDetailScreen = () => {
+  const [isFavorite, setIsFavorite] = useState(false);
   const [partyData, setPartyData] = useState({
     address: '',
     date: '',
@@ -14,7 +15,37 @@ const PartyDetailScreen = () => {
     numOfPeople: '',
     description: '',
   });
-
+  
+  const toggleFavorite = async () => {
+    const newFavoriteValue = !isFavorite;
+    setIsFavorite(newFavoriteValue);
+  
+    try {
+      const wishlist = await AsyncStorage.getItem('wishlist');
+      let currentWishlist = wishlist ? JSON.parse(wishlist) : [];
+  
+      if (newFavoriteValue) {
+        // 찜 목록에 추가
+        currentWishlist.push({
+          address: partyData.address,
+          date: partyData.date,
+          time: partyData.time,
+          partyName: partyData.partyName,
+          numOfPeople: partyData.numOfPeople,
+          description: partyData.description,
+        });
+      } else {
+        // 찜 목록에서 삭제
+        currentWishlist = currentWishlist.filter(
+          (item) => item.partyName !== partyData.partyName
+        );
+      }
+  
+      await AsyncStorage.setItem('wishlist', JSON.stringify(currentWishlist));
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
 
   const navigation = useNavigation();
@@ -22,19 +53,37 @@ const PartyDetailScreen = () => {
   const handleButtonPress = () => {
     console.log("Hi");
   };
-
   useEffect(() => {
-    const getData = async () => {
+    const fetchData = async () => {
       try {
-        const storedData = await AsyncStorage.getItem('partyData');
-        setPartyData(storedData ? JSON.parse(storedData) : []);
-      } catch(e){
-        console.log(e)
+        const data = await AsyncStorage.getItem('partyData');
+        if (data !== null) {
+          setPartyData(JSON.parse(data));
+        }
+      } catch (e) {
+        console.log("Error fetching data", e);
       }
-    }
-
-    getData();
+    };
+  
+    fetchData();
   }, []);
+  
+  useEffect(() => {
+    const checkIfFavorite = async () => {
+      try {
+        const wishlist = await AsyncStorage.getItem('wishlist');
+        const currentWishlist = wishlist ? JSON.parse(wishlist) : [];
+        const isPartyInWishlist = currentWishlist.some(
+          (item) => item.partyName === partyData.partyName
+        );
+        setIsFavorite(isPartyInWishlist);
+      } catch (e) {
+        console.log('Error checking favorite status:', e);
+      }
+    };
+  
+    checkIfFavorite();
+  }, [partyData]);
 
   const handleGoBack = () => {
     navigation.goBack(); // 이전으로 돌아가기
@@ -51,7 +100,11 @@ const PartyDetailScreen = () => {
     require('../assets/party3.jpeg'),
     // 이미지 경로 추가
   ]
-  
+  const handlePress = () => {
+      console.log("dede",isFavorite)
+      navigation.push('WishlistScreen',{isFavorite,address,date ,time,partyName,numOfPeople,description});
+    
+  };
   return (
     <ScrollView>
       <Line style={{marginTop: 20}} />
@@ -108,10 +161,12 @@ const PartyDetailScreen = () => {
           ))}
         </ScrollView>
       </View>
-
+      <View style={styles.cartContainer}>
+      <MaterialIcons name="shopping-cart" size={28} color="gray" />
+      </View>
       <View style={styles.buttonContainer}>
-        <View style={styles.cartContainer}>
-          <MaterialIcons name="shopping-cart" size={28} color="gray" />
+        
+      
           {/* <Text style={styles.cartText}>100</Text> */}
         </View>
           <Button
@@ -119,7 +174,20 @@ const PartyDetailScreen = () => {
             color="gray"
             onPress={() => Alert.alert("참석하기를 누르셨습니다!")}
           />
-        <MaterialIcons name="favorite-border" size={28} color="gray" />
+    
+      <View>
+      <TouchableOpacity onPress={toggleFavorite} >
+        <View>
+          {isFavorite ? (
+            <MaterialIcons name="favorite" size={28} color="red" />
+          ) : (
+            <MaterialIcons name="favorite-border" size={28} color="gray" />
+          )}
+        </View>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={handlePress}>
+        
+      </TouchableOpacity>
       </View>
     </ScrollView>
   );

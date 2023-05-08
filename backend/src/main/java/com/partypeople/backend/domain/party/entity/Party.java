@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import com.sun.istack.NotNull;
-import org.springframework.data.mongodb.core.mapping.Document;
+
 
 import javax.persistence.*;
 

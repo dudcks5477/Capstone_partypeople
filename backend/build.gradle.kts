@@ -19,14 +19,13 @@ repositories {
 }
 
 dependencies {
-    implementation ("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     compileOnly("org.projectlombok:lombok")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    runtimeOnly("com.h2database:h2")
+    runtimeOnly ("org.mariadb.jdbc:mariadb-java-client")
 }
 
 tasks.withType<Test> {

@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 @Service
 public class PartyService {
     private final PartyRepository partyRepository;
@@ -26,7 +26,7 @@ public class PartyService {
     public PartyDto read(HttpServletRequest request, Long id) {
         Optional<Party> party = partyRepository.findById(id);
         //if (party.isEmpty()) {
-            //throw new WrongPartyId();
+        //throw new WrongPartyId();
         //}
         PartyDto partyDto = entityToPartyDto(party.get());
 
@@ -36,7 +36,7 @@ public class PartyService {
     public Party update(Long id, PartyDto partyDto) {
         Optional<Party> party = partyRepository.findById(id);
         ///if (booth.isEmpty()) {
-         //   throw new WrongBoothId();
+        //   throw new WrongBoothId();
         //}
         long partyId = party.get().getId();
         partyDto.setId(partyId);
@@ -49,7 +49,7 @@ public class PartyService {
     public String delete(Long id) {
         Optional<Party> party = partyRepository.findById(id);
         //if (booth.isEmpty()) {
-           // throw new WrongBoothId();
+        // throw new WrongBoothId();
         //}
         partyRepository.delete(party.get());
         return "Ok";

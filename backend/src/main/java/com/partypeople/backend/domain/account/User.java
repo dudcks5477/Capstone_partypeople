@@ -1,32 +1,34 @@
 package com.partypeople.backend.domain.account;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import lombok.*;
 
-@Document(collection = "users")
-@Getter
-@Setter
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.*;
+import java.time.LocalDate;
+
+
+@Builder
 @AllArgsConstructor
+@NoArgsConstructor
+@Setter
+@Getter
+@Entity
 public class User {
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
+    @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false, unique = true)
     private String email;
 
+    @Column(nullable = false)
     private String password;
 
-    @Override
-    public String toString(){
-        return "User{"+
-                "id='"+id+'\''+
-                ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                '}';
-    }
+    @Column(nullable = false)
+    private LocalDate birthDay;
 }

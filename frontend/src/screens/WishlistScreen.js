@@ -1,35 +1,56 @@
-import React from 'react';
-import { View, Text, ScrollView, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text ,StyleSheet,ScrollView,TouchableOpacity,Image} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
-
-const WishlistScreen = () => {
+const WishlistScreen = ({ route }) => {
+  const {isFavorite,address,date ,time,partyName,numOfPeople,description} = route.params || {};
+  const [wishlist, setWishlist] = useState([]);
   const navigation = useNavigation();
-
-  const handleCardPress = () => {
+  console.log("",isFavorite)
+  const images = [
+    require('../assets/party1.jpeg'),
+    require('../assets/party2.jpeg'),
+    require('../assets/party3.jpeg'),
+    // 이미지 경로 추가
+  ]
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const data = await AsyncStorage.getItem('wishlist');
+        if (data !== null) {
+          setWishlist(JSON.parse(data));
+        }
+      } catch (e) {
+        console.log("Wish", e);
+      }
+    };
+  
+    const unsubscribe = navigation.addListener('focus', () => {
+      getData();
+    });
+  
+    return unsubscribe;
+  }, [navigation]);
+const handleCardPress = () => {
     navigation.navigate('PartyDetail');
   };
+  
 
   return (
     <ScrollView>
       <View>
         <Text style={styles.title}>Wishlists</Text>
       </View>
-      <TouchableOpacity style={styles.cardContainer} onPress={handleCardPress}>
-        <Image source={require('../assets/party1.jpeg')} style={styles.cardImage} />
-        <Text style={styles.cardText}>찬's 파티 3월 18일 6시</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.cardContainer} onPress={handleCardPress}>
-        <Image source={require('../assets/party2.jpeg')} style={styles.cardImage} />
-        <Text style={styles.cardText}>찬's 파티 3월 18일 6시</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.cardContainer} onPress={handleCardPress}>
-        <Image source={require('../assets/party3.jpeg')} style={styles.cardImage} />
-        <Text style={styles.cardText}>찬's 파티 3월 18일 6시</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.cardContainer} onPress={handleCardPress}>
-        <Image source={require('../assets/party4.jpeg')} style={styles.cardImage} />
-        <Text style={styles.cardText}>찬's 파티 3월 18일 6시</Text>
-      </TouchableOpacity>
+      {wishlist.map((party, index) => (
+        <TouchableOpacity
+          key={index}
+          style={styles.cardContainer}
+          onPress={handleCardPress}
+        >
+          <Image source={require('../assets/party1.jpeg')} style={styles.cardImage} />
+          <Text style={styles.cardText}>{party.partyName}</Text>
+        </TouchableOpacity>
+      ))}
     </ScrollView>
   );
 };

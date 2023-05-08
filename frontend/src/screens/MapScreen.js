@@ -1,14 +1,21 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef,useEffect } from 'react';
 import { StyleSheet, View, Dimensions,TouchableOpacity,Text,Modal,Pressable } from 'react-native';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-
-const MapScreen = ({route}) => {
-  const { address,partyName,numOfPeople,description,latitude,longitude,date,time} = route.params || {}
+const MapScreen = () => {
   
+  const [address, setAddress] = useState('');
+  const [latitude, setLatitude] = useState(37.5665);
+  const [longitude, setLongitude] = useState(126.9780);
+  const [date, setDate] = useState(new Date());
+  const [time, setTime] = useState();
+  const [partyName, setPartyName] = useState('');
+  const [numOfPeople, setNumOfPeople] = useState('');
+  const [description, setDescription] = useState('');
   const mapRef = useRef(null); // Ref를 추가합니다.
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
@@ -31,13 +38,36 @@ const MapScreen = ({route}) => {
       longitudeDelta: region.longitudeDelta,
     });
   };
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const partyData = await AsyncStorage.getItem('partyData');
+        if (partyData !== null) {
+          const data = JSON.parse(partyData);
+          setAddress(data.address);
+          setLatitude(data.latitude);
+          setLongitude(data.longitude);
+          setDescription(data.description);
+          setDate(data.date2);
+          setTime(data.time);
+          setNumOfPeople(data.numOfPeople);
+          setPartyName(data.partyName)
+          console.log(data)
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    };
+
+    getData();
+  }, []);
   const handleMarkerPress = () => {
     setModalVisible(true);
   };
   const handlePartyDetailPress = () => {
-    navigation.navigate('PartyDetail', {address, partyName, numOfPeople, description, date, time});
+    navigation.navigate('PartyDetail');
     setModalVisible(false);
-    console.log(address, partyName, numOfPeople, description, date, time)
+    console.log("Map1",address, partyName, numOfPeople, description, date, time)
   }
   
   return (
@@ -66,28 +96,36 @@ const MapScreen = ({route}) => {
   transparent={true}
   visible={modalVisible}
   onRequestClose={() => {
-    Alert.alert('Modal has been closed.');
     setModalVisible(false);
   }}>
-  <Pressable
-    style={styles.centeredView}
-    onPress={() => handlePartyDetailPress()
-    }>
-    <View style={styles.modalView}>
-      <Text style={styles.modalText}>
-        파티이름 :{partyName} {'\n'}
-        날짜 :{date}{'\n'}
-        시간 :{time}{'\n'}
-        인원 :{numOfPeople}{'\n'}
-        설명 :{description}
-      </Text>
-      <Pressable
-        style={[styles.button, styles.buttonClose]}
-        onPress={() => setModalVisible(false)}>
-        <Text style={styles.textStyle}>닫기</Text>
-      </Pressable>
+  <TouchableOpacity
+    style={styles.modalOverlay}
+    onPress={() => setModalVisible(false)}
+  >
+    <View style={styles.centeredView}>
+      <View style={[styles.modalView, {marginTop: 'auto'}]}>
+        <Text style={styles.modalText}>
+          파티이름 :{partyName} {'\n'}
+          날짜 :{date}{'\n'}
+          시간 :{time}{'\n'}
+          인원 :{numOfPeople}{'\n'}
+          설명 :{description}
+        </Text>
+        <Pressable
+          style={[styles.button, styles.buttonClose]}
+          onPress={() => setModalVisible(false)}>
+          <Text style={styles.textStyle}>닫기</Text>
+        </Pressable>
+        <TouchableOpacity
+          style={styles.navigateButton}
+          onPress={() => {
+            navigation.navigate('PartyDetail');
+          }}>
+          <Text style={styles.navigateText}>Navigate</Text>
+        </TouchableOpacity>
+      </View>
     </View>
-  </Pressable>
+  </TouchableOpacity>
 </Modal>
       {/* GooglePlacesAutocomplete를 추가합니다. */}
       <GooglePlacesAutocomplete
@@ -183,16 +221,18 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
     alignItems: 'center',
-    marginTop: 50,
+    bottom : 60
   },
-  
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0)',
+  },
   modalView: {
-    margin: 10,
     backgroundColor: 'white',
-    borderRadius: 20,
-    padding: 10,
+    borderRadius: 10,
+    padding: 20,
     alignItems: 'center',
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -200,17 +240,18 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
-    marginBottom: 60,
-    width: '90%',
+    width: Dimensions.get('window').width - 60,
+    height: Dimensions.get('window').height / 4,
   },
-  
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+  },
   button: {
     borderRadius: 20,
     padding: 10,
     elevation: 2,
-  },
-  buttonOpen: {
-    backgroundColor: '#F194FF',
+    marginVertical: 10,
   },
   buttonClose: {
     backgroundColor: '#2196F3',
@@ -220,9 +261,15 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
   },
-  modalText: {
-    marginBottom: 15,
-    textAlign: 'center',
+  navigateButton: {
+    backgroundColor: 'transparent',
+    width: Dimensions.get('window').width - 60,
+    height: Dimensions.get('window').height / 4,
+    borderRadius: 10,
+    padding: 10,
+    marginTop: 10,
+    bottom: 205,
+    
   },
 });
 

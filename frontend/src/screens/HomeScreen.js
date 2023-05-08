@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, StyleSheet, View, SafeAreaView, TouchableOpacity } from 'react-native';
+import { ScrollView, StyleSheet, View, SafeAreaView, TouchableOpacity,Button } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage'; // AsyncStorage import 추가
 import SearchBar from '../container/SearchBar';
@@ -24,7 +24,14 @@ const HomeScreen = () => {
 
     getData();
   }, []);
-
+  const clearAllData = async () => {
+    try {
+      await AsyncStorage.clear();
+      console.log('AsyncStorage cleared successfully');
+    } catch (e) {
+      console.log('Failed to clear AsyncStorage:', e);
+    }
+  };
   return (
     <>
       <SearchBar />
@@ -42,6 +49,10 @@ const HomeScreen = () => {
             )}
           </ScrollView>
         </View>
+        <View>
+      <Button title="Clear AsyncStorage" onPress={clearAllData} />
+    </View>
+
       </SafeAreaView>
     </>
   );

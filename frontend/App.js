@@ -8,7 +8,7 @@ import MapScreen from './src/screens/MapScreen';
 import AddScreen from './src/screens/AddScreen';
 import MapScreen2 from './src/screens/MapScreen2';
 import PartyDetailScreen from './src/screens/PartyDetailScreen';
-
+import WishlistScreen from './src/screens/WishlistScreen';
 const Stack = createNativeStackNavigator();
 
 const App = () => (
@@ -35,7 +35,9 @@ const App = () => (
       <Stack.Screen name="PartyDetail" component={PartyDetailScreen} options={{
           headerShown: false,
         }} />
-
+<Stack.Screen name="Wishlist" component={WishlistScreen} options={{
+          headerShown: false,
+        }} />
     </Stack.Navigator>
   </NavigationContainer>
 );

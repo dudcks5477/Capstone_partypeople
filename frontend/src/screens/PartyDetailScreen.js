@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import Line from '../container/Line';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TouchableHighlight } from 'react-native-gesture-handler';
+import ChatRoomScreen from './ChatRoomScreen';
 const PartyDetailScreen = () => {
   const [isFavorite, setIsFavorite] = useState(false);
   const [partyData, setPartyData] = useState({
@@ -49,6 +50,28 @@ const PartyDetailScreen = () => {
 
 
   const navigation = useNavigation();
+  
+  const joinChatRoom = async () => {
+    try {
+      const chatRooms = await AsyncStorage.getItem('chatRooms');
+      let currentChatRooms = chatRooms ? JSON.parse(chatRooms) : [];
+  
+      // 이미 해당 partyName의 채팅방이 있는지 확인
+      const chatRoomExists = currentChatRooms.some((chatRoom) => chatRoom.partyName === partyData.partyName);
+  
+      if (!chatRoomExists) {
+        // 존재하지 않으면 새 채팅방 추가
+        currentChatRooms.push({
+          partyName: partyData.partyName,
+        });
+  
+        await AsyncStorage.setItem('chatRooms', JSON.stringify(currentChatRooms));
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  
 
   const handleButtonPress = () => {
     console.log("Hi");
@@ -169,11 +192,14 @@ const PartyDetailScreen = () => {
       
           {/* <Text style={styles.cartText}>100</Text> */}
         </View>
-          <Button
-            title="참석하기"
-            color="gray"
-            onPress={() => Alert.alert("참석하기를 누르셨습니다!")}
-          />
+        <Button
+  title="참석하기"
+  color="gray"
+  onPress={async () => {
+    await joinChatRoom();
+    navigation.navigate('Chat');
+  }}
+/>
     
       <View>
       <TouchableOpacity onPress={toggleFavorite} >

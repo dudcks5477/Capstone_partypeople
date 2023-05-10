@@ -51,31 +51,27 @@ const PartyDetailScreen = () => {
 
   const navigation = useNavigation();
   
-  const joinChatRoom = async () => {
-    try {
-      const chatRooms = await AsyncStorage.getItem('chatRooms');
-      let currentChatRooms = chatRooms ? JSON.parse(chatRooms) : [];
-  
-      // 이미 해당 partyName의 채팅방이 있는지 확인
-      const chatRoomExists = currentChatRooms.some((chatRoom) => chatRoom.partyName === partyData.partyName);
-  
-      if (!chatRoomExists) {
-        // 존재하지 않으면 새 채팅방 추가
-        currentChatRooms.push({
-          partyName: partyData.partyName,
-        });
-  
-        await AsyncStorage.setItem('chatRooms', JSON.stringify(currentChatRooms));
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  };
-  
+const joinChatRoom = async () => {
+  try {
+    const chatRooms = await AsyncStorage.getItem('chatRooms');
+    let currentChatRooms = chatRooms ? JSON.parse(chatRooms) : [];
 
-  const handleButtonPress = () => {
-    console.log("Hi");
-  };
+    // 이미 해당 partyName의 채팅방이 있는지 확인
+    const chatRoomExists = currentChatRooms.some((chatRoom) => chatRoom.partyName === partyData.partyName);
+
+    if (!chatRoomExists) {
+      // 존재하지 않으면 새 채팅방 추가
+      currentChatRooms.push({
+        partyName: partyData.partyName,
+      });
+
+      await AsyncStorage.setItem('chatRooms', JSON.stringify(currentChatRooms));
+    }
+  } catch (e) {
+    console.log(e);
+  }
+};
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -146,7 +142,7 @@ const PartyDetailScreen = () => {
         <Image source={require('../assets/party1.jpeg')} style={styles.cardImage} />
       </View>
 
-      <TouchableOpacity onPress={handleButtonPress} style={styles.hostProfile}>
+      <TouchableOpacity onPress={() => navigation.navigate('ProfileScreen')} style={styles.hostProfile}>
         <View style={styles.profileTextContainer}>
           <MaterialIcons name="account-circle" size={50} color="gray" />
           <View>

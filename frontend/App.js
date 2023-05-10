@@ -11,6 +11,7 @@ import PartyDetailScreen from "./src/screens/PartyDetailScreen";
 import WishlistScreen from "./src/screens/WishlistScreen";
 import ChatRoomScreen from "./src/screens/ChatRoomScreen";
 import ChatScreen from "./src/screens/ChatScreen";
+import ProfileScreen from "./src/screens/ProfileScreen";
 // import { ChatProvider } from "./src/screens/ChatContext";
 const Stack = createNativeStackNavigator();
 
@@ -73,6 +74,13 @@ const App = () => (
         <Stack.Screen
           name="ChatRoomScreen"
           component={ChatRoomScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="ProfileScreen"
+          component={ProfileScreen}
           options={{
             headerShown: false,
           }}

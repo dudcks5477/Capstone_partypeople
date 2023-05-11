@@ -36,4 +36,12 @@ public class User {
 
     @ManyToMany(mappedBy = "participants")
     private List<Party> parties;
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_wishlist",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "party_id")
+    )
+    private List<Party> wishlist;
 }

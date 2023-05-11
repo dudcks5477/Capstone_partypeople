@@ -3,8 +3,7 @@ import {View, Button, Platform, Text, TextInput,TouchableOpacity, Alert} from 'r
 import DateTimePicker from '@react-native-community/datetimepicker';
 import CameraScreen from './CameraScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { v4 as uuidv4 } from 'react-native-uuid';
-
+import axios from 'axios';
 
 const AddScreen = ({navigation,route}) => {
   const { address,longitude,latitude } = route.params || {};
@@ -18,30 +17,38 @@ const AddScreen = ({navigation,route}) => {
   const [description, setDescription] = useState('');
   const [mode, setMode] = useState('date');
   
-  const handleCreate = async() => {
-    
-    if(!address || !partyName || !numOfPeople || !description || !date ) {
+  const handleCreate = async () => {
+    if (!address || !partyName || !numOfPeople || !description || !date) {
       Alert.alert('오류', '입력되지 않은 항목이 있습니다.');
     } else {
-      
-      navigation.navigate('Map');
-      const data = { address, longitude, latitude, date2, time, partyName, numOfPeople, description };
+      const data = {
+        address,
+        longitude,
+        latitude,
+        date2,
+        time,
+        partyName,
+        numOfPeople,
+        description,
+      };
+  
       try {
-        await AsyncStorage.setItem('partyData',JSON.stringify(data));
-        navigation.navigate('Map');
-      }catch(e){
-        console.log(e)
+        const response = await axios.post('http://localhost:8080/api/party', data);
+        
+        if (response.status === 200) {
+          // 데이터가 성공적으로 전송되었을 때의 처리 로직
+          navigation.navigate('Map');
+        } else {
+          // 요청이 실패했을 때의 처리 로직
+          Alert.alert('오류', '데이터 전송에 실패했습니다.');
+        }
+      } catch (error) {
+        // 예외 발생 시의 처리 로직
+        console.log(error);
+        Alert.alert('오류', '데이터 전송 중 예외가 발생했습니다.');
       }
     }
-  } 
-  const handleClearAsyncStorage = async () => {
-    try {
-      await AsyncStorage.removeItem('partyData');
-      Alert.alert('알림', '저장된 데이터가 삭제되었습니다.');
-    } catch(e) {
-      console.log(e);
-    }
-  }
+  };
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
@@ -117,14 +124,6 @@ const AddScreen = ({navigation,route}) => {
       <TouchableOpacity onPress={handleClearAsyncStorage}>
     <Text>저장된 데이터 삭제</Text>
   </TouchableOpacity>
-      {/* <HomeScreen
-        address={address}
-        partyName={partyName}
-        numOfPeople={numOfPeople}
-        description={description}
-        date={date.toLocaleDateString()}
-        time= {date.toLocaleTimeString()}
-        /> */}
     </View>
   );
 };

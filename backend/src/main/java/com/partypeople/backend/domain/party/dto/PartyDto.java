@@ -1,7 +1,11 @@
 package com.partypeople.backend.domain.party.dto;
 
+import com.partypeople.backend.domain.account.User;
 import com.sun.istack.NotNull;
 import lombok.*;
+
+import javax.persistence.ManyToMany;
+import java.util.List;
 
 @Data
 @Builder
@@ -21,5 +25,9 @@ public class PartyDto {
 
     @NotNull
     private String content;
+
+
+    @ManyToMany
+    private List<User> participants;
 
 }

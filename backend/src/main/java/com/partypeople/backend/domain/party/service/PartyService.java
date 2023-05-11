@@ -1,9 +1,12 @@
 package com.partypeople.backend.domain.party.service;
 
+import com.partypeople.backend.domain.account.User;
+import com.partypeople.backend.domain.account.UserRepository;
 import com.partypeople.backend.domain.party.dto.PartyDto;
 import com.partypeople.backend.domain.party.entity.Party;
 import com.partypeople.backend.domain.party.repository.PartyRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,8 +20,11 @@ import java.util.Optional;
 @Service
 public class PartyService {
     private final PartyRepository partyRepository;
+    private final UserRepository userRepository;
     @Transactional
-    public Party create(PartyDto partyDto) {
+    public Party create(PartyDto partyDto, Long userId) {
+        User organizer = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
         Party party = partyDtoToEntity(partyDto);
         return partyRepository.save(party);
     }
@@ -55,6 +61,14 @@ public class PartyService {
         return "Ok";
     }
 
+    public void joinParty(Long partyId, Long userId) {
+        Party party = partyRepository.findById(partyId).orElseThrow(() -> new IllegalArgumentException("Invalid party ID"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
+        party.getParticipants().add(user);
+        // 참가자 관련 로직 추가
+
+        partyRepository.save(party);
+    }
     public Party partyDtoToEntity(PartyDto partyDto) {
         return Party.builder()
                 .id(partyDto.getId())

@@ -1,5 +1,6 @@
 package com.partypeople.backend.domain.party.entity;
 
+import com.partypeople.backend.domain.account.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -8,6 +9,7 @@ import com.sun.istack.NotNull;
 
 
 import javax.persistence.*;
+import java.util.List;
 
 @Builder
 @AllArgsConstructor
@@ -30,5 +32,8 @@ public class Party {
 
     @NotNull
     private String content;
+
+    @ManyToMany
+    private List<User> participants;
 
 }

@@ -15,9 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 public class PartyController {
     private final PartyService partyService;
     @PostMapping()
-    public Integer createParty(@RequestBody PartyDto partyDto) {
-        Party party = partyService.create(partyDto);
-        return HttpStatus.OK.value();
+    public Party createParty(@RequestBody PartyDto partyDto, @RequestParam Long userId) {
+        return partyService.create(partyDto, userId);
     }
 
     @GetMapping("{id}")
@@ -33,6 +32,11 @@ public class PartyController {
     @DeleteMapping("{id}")
     public String partyDelete(@PathVariable Long id) {
         return partyService.delete(id);
+    }
+
+    @PostMapping("/{partyId}/join/{userId}")
+    public void joinParty(@PathVariable Long partyId, @RequestBody Long userId) {
+        partyService.joinParty(partyId, userId);
     }
 
 }

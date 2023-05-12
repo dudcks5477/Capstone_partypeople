@@ -2,8 +2,7 @@ import React, {useState} from 'react';
 import {View, Button, Image} from 'react-native';
 
 const ImagePicker = require('react-native-image-picker');
-const CameraScreen = () => {
-  const [imageSource, setImageSource] = useState(null);
+const CameraScreen = ({setImageSource, setIsCameraVisible}) => {
 
   const takePicture = () => {
     ImagePicker.launchCamera(
@@ -16,11 +15,13 @@ const CameraScreen = () => {
       response => {
         if (response.didCancel) {
           console.log('User cancelled image picker');
+          setIsCameraVisible(false);
         } else if (response.error) {
           console.log('ImagePicker Error: ', response.error);
         } else {
           const source = {uri: response.uri};
           setImageSource(source);
+          setIsCameraVisible(false);
         }
       },
     );

@@ -26,8 +26,15 @@ public class PartyDto {
     @NotNull
     private String content;
 
+    @NotNull
+    private Long  numOfPeople;
+
+    @NotNull
+
 
     @ManyToMany
     private List<User> participants;
+
+
 
 }

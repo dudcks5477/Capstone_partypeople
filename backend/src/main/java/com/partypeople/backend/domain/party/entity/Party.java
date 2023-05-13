@@ -14,7 +14,10 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.persistence.*;
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Builder
@@ -27,20 +30,32 @@ public class Party {
     @Id
     private Long id;
 
-    @NotNull
-    private String name;
-
-    @NotNull
-    private String place;
+    private String partyName;
+    private String partyLocation;
+    private LocalDateTime partyDateTime;
+    private Long numOfPeople;
+    private String content;
 
     //@NotNull
     //private int coin;
 
-    @NotNull
-    private String content;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "party_participant",
+            joinColumns = @JoinColumn(name = "party_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private Set<User> participants = new HashSet<>();
 
-    @ManyToMany
-    private List<User> participants;
+    public void addParticipant(User user) {
+        participants.add(user);
+        user.getParties().add(this);
+    }
+
+    public boolean containsParticipant(User user) {
+        return participants.contains(user);
+    }
+
 
     @Transient
     private MultipartFile imageFile;
@@ -68,4 +83,39 @@ public class Party {
 
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setPartyName(String partyName) {
+        this.partyName = partyName;
+    }
+
+    public void setPartyLocation(String partyLocation) {
+        this.partyLocation = partyLocation;
+    }
+
+    public void setPartyDateTime(LocalDateTime partyDateTime) {
+        this.partyDateTime = partyDateTime;
+    }
+
+    public void setNumOfPeople(Long numOfPeople) {
+        this.numOfPeople = numOfPeople;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public void setParticipants(Set<User> participants) {
+        this.participants = participants;
+    }
+
+    public void setImageFile(MultipartFile imageFile) {
+        this.imageFile = imageFile;
+    }
+
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
+    }
 }

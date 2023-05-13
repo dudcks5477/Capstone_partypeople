@@ -1,18 +1,29 @@
 package com.partypeople.backend.domain.party.controller;
 
+import com.partypeople.backend.domain.global.Exception.AccessDeniedException;
+import com.partypeople.backend.domain.global.Exception.AlreadyJoinedException;
+import com.partypeople.backend.domain.global.Exception.PartyNotFoundException;
+import com.partypeople.backend.domain.global.Exception.UserNotFoundException;
+import com.partypeople.backend.domain.global.security.UserPrincipal;
 import com.partypeople.backend.domain.party.dto.PartyDto;
+import com.partypeople.backend.domain.party.dto.PartyRequestDto;
+import com.partypeople.backend.domain.party.dto.PartyResponseDto;
 import com.partypeople.backend.domain.party.entity.Party;
 import com.partypeople.backend.domain.party.repository.PartyRepository;
 import com.partypeople.backend.domain.party.service.PartyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.net.URI;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RequestMapping("/party")
@@ -22,29 +33,49 @@ public class PartyController {
     private final PartyRepository partyRepository;
 
     private static final String UPLOAD_DIR = "src/main/resources";
-    @PostMapping()
-    public Party createParty(@RequestBody PartyDto partyDto, @RequestParam Long userId) {
-        return partyService.create(partyDto, userId);
+    @PostMapping
+    public ResponseEntity<Void> createParty(@RequestBody PartyRequestDto requestDto, Long userId) {
+        Long partyId = partyService.createParty(requestDto, userId);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{partyId}")
+                .buildAndExpand(partyId)
+                .toUri();
+        return ResponseEntity.created(location).build();
     }
 
-    @GetMapping("{id}")
-    public PartyDto partyRead(HttpServletRequest request, @PathVariable Long id) {
-        return partyService.read(request, id);
+    @PutMapping("/{partyId}")
+    public ResponseEntity<Void> updateParty(@PathVariable Long partyId, @RequestBody PartyRequestDto requestDto, Authentication authentication) {
+        Long userId = getUserIdFromAuthentication(authentication);
+        partyService.updateParty(partyId, requestDto, userId);
+        return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("{id}")
-    public Party partyUpdate(@PathVariable Long id, @RequestBody PartyDto partyDto) {
-        return partyService.update(id, partyDto);
+    @DeleteMapping("/{partyId}")
+    public ResponseEntity<Void> deleteParty(@PathVariable Long partyId, Authentication authentication) {
+        Long userId = getUserIdFromAuthentication(authentication);
+        partyService.deleteParty(partyId, userId);
+        return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("{id}")
-    public String partyDelete(@PathVariable Long id) {
-        return partyService.delete(id);
+    @GetMapping("/{partyId}")
+    public ResponseEntity<PartyResponseDto> getParty(@PathVariable Long partyId) {
+        PartyResponseDto partyResponseDto = partyService.getParty(partyId);
+        return ResponseEntity.ok(partyResponseDto);
     }
 
-    @PostMapping("/{partyId}/join/{userId}")
-    public void joinParty(@PathVariable Long partyId, @RequestBody Long userId) {
-        partyService.joinParty(partyId, userId);
+    @PostMapping("/party/{partyId}/join")
+    public ResponseEntity<?> joinParty(@PathVariable Long partyId, Authentication authentication) {
+        try {
+            Long userId = getUserIdFromAuthentication(authentication);
+
+            partyService.joinParty(partyId, userId);
+
+            return ResponseEntity.ok().build();
+        } catch (PartyNotFoundException | UserNotFoundException | AlreadyJoinedException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (AccessDeniedException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        }
     }
 
     @PostMapping("/{partyId}/upload-image")
@@ -91,6 +122,18 @@ public class PartyController {
 
          */
     }
+    @GetMapping
+    public ResponseEntity<List<PartyResponseDto>> getAllParties() {
+        List<PartyResponseDto> partyResponseDtos = partyService.getAllParties();
+        return ResponseEntity.ok(partyResponseDtos);
+    }
+
+    private Long getUserIdFromAuthentication(Authentication authentication) {
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+        return userPrincipal.getId();
+    }
+
+
 
 
 }

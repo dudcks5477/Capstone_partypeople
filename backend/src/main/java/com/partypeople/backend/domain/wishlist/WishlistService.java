@@ -20,8 +20,8 @@ public class WishlistService {
 
     // 위시리스트에 파티 추가
     public void addPartyToWishlist(Long userId, Long partyId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
-        Party party = partyRepository.findById(partyId).orElseThrow(() -> new PartyNotFoundException(partyId));
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
+        Party party = partyRepository.findById(partyId).orElseThrow(() -> new PartyNotFoundException("Party not found with ID: " + partyId));
 
         List<Party> wishlist = user.getWishlist();
         if (wishlist == null) {
@@ -37,20 +37,20 @@ public class WishlistService {
 
     // 위시리스트 조회
     public List<Party> getWishlist(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
         return user.getWishlist();
     }
 
     // 위시리스트에서 파티 제거
     public void removePartyFromWishlist(Long userId, Long partyId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("Party not found with ID: " + partyId));
 
         List<Party> wishlist = user.getWishlist();
         if (wishlist != null && wishlist.size() > 0) {
             Party partyToRemove = wishlist.stream()
                     .filter(party -> party.getId().equals(partyId))
                     .findFirst()
-                    .orElseThrow(() -> new PartyNotFoundException(partyId));
+                    .orElseThrow(() -> new PartyNotFoundException("Party not found with ID: " + partyId));
 
             wishlist.remove(partyToRemove);
             user.setWishlist(wishlist);

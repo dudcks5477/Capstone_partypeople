@@ -3,7 +3,11 @@ import {View, Button, Platform, Text, TextInput,TouchableOpacity, Alert, ScrollV
 import HomeScreen from './HomeScreen';
 import CameraScreen from './CameraScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios';
+import DateTimePicker from '@react-native-community/datetimepicker';
+// import axios from 'axios';
+
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Line from '../container/Line';
 
 const AddScreen = ({navigation,route}) => {
   const { address,longitude,latitude } = route.params || {};
@@ -18,10 +22,6 @@ const AddScreen = ({navigation,route}) => {
   const [coin, setCoin] = useState('');
   const [mode, setMode] = useState('date');
   const [dateSelected, setDateSelected] = useState(false);
-
-  const handleGoBack = () => {
-    navigation.goBack(); // 이전으로 돌아가기
-  }
   
   const handleCreate = async () => {
     if (!address || !partyName || !numOfPeople || !description || !date) {
@@ -81,6 +81,10 @@ const AddScreen = ({navigation,route}) => {
   const [imageSource, setImageSource] = useState(null);
 
   const openCamera = () => { setIsCameraVisible(true); }
+
+  const handleGoBack = () => {
+    navigation.goBack(); // 이전으로 돌아가기
+  }
 
   return (
     <View>
@@ -327,7 +331,7 @@ const AddScreen = ({navigation,route}) => {
       </TouchableOpacity>
 
 
-      {/* {show && (
+      {show && (
         <DateTimePicker
           testID="dateTimePicker"
           value={date}
@@ -336,15 +340,15 @@ const AddScreen = ({navigation,route}) => {
           display="default"
           onChange={onChange}
         />
-      )} */}
+      )}
       
       
 
       <Text>{address}</Text>
       
-      <TouchableOpacity onPress={handleClearAsyncStorage}>
-    <Text>저장된 데이터 삭제</Text>
-  </TouchableOpacity>
+      {/* <TouchableOpacity onPress={handleClearAsyncStorage}>
+        <Text>저장된 데이터 삭제</Text>
+      </TouchableOpacity> */}
     </View>
   );
 };

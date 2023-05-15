@@ -110,89 +110,113 @@ const ChatScreen = ({ navigation }) => {
 
       {/* 채팅 목록 */}
       <View style={{flex:1}}>
-        <ScrollView style={{ width: '90%', marginHorizontal: '5%'}}> 
-          <View style={{flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
-            <MaterialIcons name="account-circle" size={60} color="gray" style={{marginRight: 2}}/>
-            <View style={{flexDirection: 'column'}}>
-              <Text style={{fontSize: 14}}>파티이름</Text>
-              <Text style={{fontSize: 12}}>주최자외</Text>
-              <Text style={{fontSize: 10}}>32명 참석자</Text>
+
+        {/* 채팅 목록이 자동으로 생성 */}
+        {/* <FlatList
+          style={{ width: '90%', marginHorizontal: '5%' }}
+          data={chatRooms}
+          keysExtractor={(item, index) => index.toString()}
+          renderItem={({ item }) => (
+            <TouchableOpacity onPress={() => navigation.navigate('ChatRoomScreen', { partyName: item.partyName })}>
+              <View style={{flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
+                <MaterialIcons name="account-circle" size={60} color="gray" style={{marginRight: 2}}/>
+                <View style={{flexDirection: 'column'}}>
+                  <Text style={{fontSize: 14}}>{item.partyName}</Text>
+                  <Text style={{fontSize: 12}}>주최자외</Text>
+                  <Text style={{fontSize: 10}}>{`${item.attendeesCount}명 참석자`}</Text>
+                </View>
+              </View>
+            </TouchableOpacity>
+          )}
+        /> */}
+
+        {/* 아래 코드 지우지마 테스트용 채팅목록들임 */}
+        <TouchableOpacity onPress={() => navigation.navigate('ChatRoomScreen', { partyName: '파티이름' })}>
+          <ScrollView style={{ width: '90%', marginHorizontal: '5%'}}> 
+            <View style={{flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
+              <MaterialIcons name="account-circle" size={60} color="gray" style={{marginRight: 2}}/>
+              <View style={{flexDirection: 'column'}}>
+                <Text style={{fontSize: 14}}>파티이름</Text>
+                <Text style={{fontSize: 12}}>주최자외</Text>
+                <Text style={{fontSize: 10}}>32명 참석자</Text>
+              </View>
             </View>
-          </View>
-          <Line/>
-          <View style={{flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
-            <MaterialIcons name="account-circle" size={60} color="gray" style={{marginRight: 2}}/>
-            <View style={{flexDirection: 'column'}}>
-              <Text style={{fontSize: 14}}>파티이름</Text>
-              <Text style={{fontSize: 12}}>주최자외</Text>
-              <Text style={{fontSize: 10}}>32명 참석자</Text>
+            <Line/>
+            <View style={{flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
+              <MaterialIcons name="account-circle" size={60} color="gray" style={{marginRight: 2}}/>
+              <View style={{flexDirection: 'column'}}>
+                <Text style={{fontSize: 14}}>파티이름</Text>
+                <Text style={{fontSize: 12}}>주최자외</Text>
+                <Text style={{fontSize: 10}}>32명 참석자</Text>
+              </View>
             </View>
-          </View>
-          <Line/>
-          <View style={{flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
-            <MaterialIcons name="account-circle" size={60} color="gray" style={{marginRight: 2}}/>
-            <View style={{flexDirection: 'column'}}>
-              <Text style={{fontSize: 14}}>파티이름</Text>
-              <Text style={{fontSize: 12}}>주최자외</Text>
-              <Text style={{fontSize: 10}}>32명 참석자</Text>
+            <Line/>
+            <View style={{flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
+              <MaterialIcons name="account-circle" size={60} color="gray" style={{marginRight: 2}}/>
+              <View style={{flexDirection: 'column'}}>
+                <Text style={{fontSize: 14}}>파티이름</Text>
+                <Text style={{fontSize: 12}}>주최자외</Text>
+                <Text style={{fontSize: 10}}>32명 참석자</Text>
+              </View>
             </View>
-          </View>
-          <Line/>
-          <View style={{flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
-            <MaterialIcons name="account-circle" size={60} color="gray" style={{marginRight: 2}}/>
-            <View style={{flexDirection: 'column'}}>
-              <Text style={{fontSize: 14}}>파티이름</Text>
-              <Text style={{fontSize: 12}}>주최자외</Text>
-              <Text style={{fontSize: 10}}>32명 참석자</Text>
+            <Line/>
+            <View style={{flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
+              <MaterialIcons name="account-circle" size={60} color="gray" style={{marginRight: 2}}/>
+              <View style={{flexDirection: 'column'}}>
+                <Text style={{fontSize: 14}}>파티이름</Text>
+                <Text style={{fontSize: 12}}>주최자외</Text>
+                <Text style={{fontSize: 10}}>32명 참석자</Text>
+              </View>
             </View>
-          </View>
-          <Line/>
-          <View style={{flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
-            <MaterialIcons name="account-circle" size={60} color="gray" style={{marginRight: 2}}/>
-            <View style={{flexDirection: 'column'}}>
-              <Text style={{fontSize: 14}}>파티이름</Text>
-              <Text style={{fontSize: 12}}>주최자외</Text>
-              <Text style={{fontSize: 10}}>32명 참석자</Text>
+            <Line/>
+            <View style={{flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
+              <MaterialIcons name="account-circle" size={60} color="gray" style={{marginRight: 2}}/>
+              <View style={{flexDirection: 'column'}}>
+                <Text style={{fontSize: 14}}>파티이름</Text>
+                <Text style={{fontSize: 12}}>주최자외</Text>
+                <Text style={{fontSize: 10}}>32명 참석자</Text>
+              </View>
             </View>
-          </View>
-          <Line/>
-          <View style={{flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
-            <MaterialIcons name="account-circle" size={60} color="gray" style={{marginRight: 2}}/>
-            <View style={{flexDirection: 'column'}}>
-              <Text style={{fontSize: 14}}>파티이름</Text>
-              <Text style={{fontSize: 12}}>주최자외</Text>
-              <Text style={{fontSize: 10}}>32명 참석자</Text>
+            <Line/>
+            <View style={{flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
+              <MaterialIcons name="account-circle" size={60} color="gray" style={{marginRight: 2}}/>
+              <View style={{flexDirection: 'column'}}>
+                <Text style={{fontSize: 14}}>파티이름</Text>
+                <Text style={{fontSize: 12}}>주최자외</Text>
+                <Text style={{fontSize: 10}}>32명 참석자</Text>
+              </View>
             </View>
-          </View>
-          <Line/>
-          <View style={{flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
-            <MaterialIcons name="account-circle" size={60} color="gray" style={{marginRight: 2}}/>
-            <View style={{flexDirection: 'column'}}>
-              <Text style={{fontSize: 14}}>파티이름</Text>
-              <Text style={{fontSize: 12}}>주최자외</Text>
-              <Text style={{fontSize: 10}}>32명 참석자</Text>
+            <Line/>
+            <View style={{flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
+              <MaterialIcons name="account-circle" size={60} color="gray" style={{marginRight: 2}}/>
+              <View style={{flexDirection: 'column'}}>
+                <Text style={{fontSize: 14}}>파티이름</Text>
+                <Text style={{fontSize: 12}}>주최자외</Text>
+                <Text style={{fontSize: 10}}>32명 참석자</Text>
+              </View>
             </View>
-          </View>
-          <Line/>
-          <View style={{flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
-            <MaterialIcons name="account-circle" size={60} color="gray" style={{marginRight: 2}}/>
-            <View style={{flexDirection: 'column'}}>
-              <Text style={{fontSize: 14}}>파티이름</Text>
-              <Text style={{fontSize: 12}}>주최자외</Text>
-              <Text style={{fontSize: 10}}>32명 참석자</Text>
+            <Line/>
+            <View style={{flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
+              <MaterialIcons name="account-circle" size={60} color="gray" style={{marginRight: 2}}/>
+              <View style={{flexDirection: 'column'}}>
+                <Text style={{fontSize: 14}}>파티이름</Text>
+                <Text style={{fontSize: 12}}>주최자외</Text>
+                <Text style={{fontSize: 10}}>32명 참석자</Text>
+              </View>
             </View>
-          </View>
-          <Line/>
-          <View style={{flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
-            <MaterialIcons name="account-circle" size={60} color="gray" style={{marginRight: 2}}/>
-            <View style={{flexDirection: 'column'}}>
-              <Text style={{fontSize: 14}}>파티이름</Text>
-              <Text style={{fontSize: 12}}>주최자외</Text>
-              <Text style={{fontSize: 10}}>32명 참석자</Text>
+            <Line/>
+            <View style={{flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
+              <MaterialIcons name="account-circle" size={60} color="gray" style={{marginRight: 2}}/>
+              <View style={{flexDirection: 'column'}}>
+                <Text style={{fontSize: 14}}>파티이름</Text>
+                <Text style={{fontSize: 12}}>주최자외</Text>
+                <Text style={{fontSize: 10}}>32명 참석자</Text>
+              </View>
             </View>
-          </View>
-          <Line/>
-        </ScrollView>
+            <Line/>
+          </ScrollView>
+        </TouchableOpacity>
+
       </View>
     </View>
   );

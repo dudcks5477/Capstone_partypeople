@@ -1,17 +1,19 @@
 import React, {useState} from 'react';
-import {View, Button, Platform, Text, TextInput,TouchableOpacity, Alert, ScrollView, Image} from 'react-native';
-import HomeScreen from './HomeScreen';
-import CameraScreen from './CameraScreen';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {View, Button, Platform, Text, TextInput,TouchableOpacity, Alert, ScrollView, Image,Modal} from 'react-native';
+
+// import CameraScreen from './CameraScreen';
+import ImageCropPicker from 'react-native-image-crop-picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
-// import axios from 'axios';
+import axios from 'axios';
 
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Line from '../container/Line';
 
 const AddScreen = ({navigation,route}) => {
   const { address,longitude,latitude } = route.params || {};
-
+  const [imageSources, setImageSources] = useState([]);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(-1);
+  const [modalVisible, setModalVisible] = useState(false);
   const [date, setDate] = useState(new Date());
   const [date2, setDate2] = useState(new Date());
   const [time, setTime] = useState();
@@ -22,25 +24,60 @@ const AddScreen = ({navigation,route}) => {
   const [coin, setCoin] = useState('');
   const [mode, setMode] = useState('date');
   const [dateSelected, setDateSelected] = useState(false);
-  
+  const handleImagesSelected = (images) => {
+    setImageSources(images);
+  };
+  const handleImageClick = (index) => {
+    setSelectedImageIndex(index);
+    setModalVisible(true);
+  };
+  const handleModalClose = () => {
+    setSelectedImageIndex(-1);
+    setModalVisible(false);
+  };
+  const handleCameraPress = () => {
+    ImageCropPicker.openPicker({
+      multiple: true,
+      mediaType: 'photo',
+    })
+      .then((selectedImages) => {
+        if (selectedImages.length > 0) {
+          handleImagesSelected(selectedImages);
+        }
+      })
+      .catch((error) => {
+        console.log('ImagePicker Error: ', error);
+      });
+  };
   const handleCreate = async () => {
-    if (!address || !partyName || !numOfPeople || !description || !date) {
+    if (!address || !partyName || !numOfPeople || !description || !date || imageSources.length === 0) {
       Alert.alert('오류', '입력되지 않은 항목이 있습니다.');
     } else {
-      const data = {
-        address,
-        longitude,
-        latitude,
-        date2,
-        time,
-        partyName,
-        numOfPeople,
-        description,
-      };
-  
       try {
-        const response = await axios.post('http://localhost:8080/api/party', data);
-        
+        const formData = new FormData();
+  
+        // 이미지 업로드
+        imageSources.forEach((image, index) => {
+          const filename = `image_${index + 1}.jpg`;
+          formData.append('images', {
+            uri: image.path,
+            type: image.mime,
+            name: filename,
+          });
+        });
+  
+        // 기존의 데이터 추가
+        formData.append('address', address);
+        formData.append('longitude', longitude);
+        formData.append('latitude', latitude);
+        formData.append('date2', date2);
+        formData.append('time', time);
+        formData.append('partyName', partyName);
+        formData.append('numOfPeople', numOfPeople);
+        formData.append('description', description);
+        // console.log(formData._parts)
+        const response = await axios.post('/api/party', formData);
+  
         if (response.status === 200) {
           // 데이터가 성공적으로 전송되었을 때의 처리 로직
           navigation.navigate('Map');
@@ -77,11 +114,7 @@ const AddScreen = ({navigation,route}) => {
   const showDatepicker = () => showMode('date');
   const showTimepicker = () => showMode('time');
 
-  const [isCameraVisible, setIsCameraVisible] = useState(false);
-  const [imageSource, setImageSource] = useState(null);
-
-  const openCamera = () => { setIsCameraVisible(true); }
-
+  
   const handleGoBack = () => {
     navigation.goBack(); // 이전으로 돌아가기
   }
@@ -244,74 +277,66 @@ const AddScreen = ({navigation,route}) => {
         width: '90%',
         marginHorizontal: '5%',
       }}>
-        <Text>사진 등록</Text>
-        <View style={{flexDirection: 'row', marginTop: 10,alignItems:"center"}}>
-          <View style={{
+         <View>
+         <Text>사진 등록</Text>
+      <View style={{ flexDirection: 'row', marginTop: 10, alignItems: 'center' }}>
+        <TouchableOpacity
+          style={{
             borderColor: 1,
             borderRadius: 10,
             alignItems: 'center',
             justifyContent: 'center',
             height: 69,
             width: 80,
-            backgroundColor: "#ccc",
-            marginRight: 10
-          }}>
-            <MaterialIcons name="photo-camera" size={70} color="gray"/>
-          </View>
-          <ScrollView
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ flexDirection: 'row' }}
-          >
-            <View style={{
-              borderColor: 1,
-              borderRadius: 10,
-              alignItems: 'center',
-              justifyContent: 'center',
-              height: 69,
-              width: 80,
-              backgroundColor: "#ccc",
-              marginRight: 3
-            }}>
-            </View>
-            <View style={{
-              borderColor: 1,
-              borderRadius: 10,
-              alignItems: 'center',
-              justifyContent: 'center',
-              height: 69,
-              width: 80,
-              backgroundColor: "#ccc",
-              marginRight: 3
-            }}>
-            </View>
-            <View style={{
-              borderColor: 1,
-              borderRadius: 10,
-              alignItems: 'center',
-              justifyContent: 'center',
-              height: 69,
-              width: 80,
-              backgroundColor: "#ccc",
-              marginRight: 3
-            }}>
-            </View>
-            <View style={{
-              borderColor: 1,
-              borderRadius: 10,
-              alignItems: 'center',
-              justifyContent: 'center',
-              height: 69,
-              width: 80,
-              backgroundColor: "#ccc",
-              marginRight: 3
-            }}>
-            </View>
-          </ScrollView>
-          {isCameraVisible && <CameraScreen setImageSource={setImageSource} />}
-          {imageSource && <Image source={imageSource} style={{width: 300, height:300}} />}
-        </View>
+            backgroundColor: '#ccc',
+            marginRight: 10,
+          }}
+          onPress={handleCameraPress}
+        >
+          <MaterialIcons name="photo-camera" size={70} color="gray" />
+        </TouchableOpacity>
+        <ScrollView
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ flexDirection: 'row' }}
+        >
+          {imageSources.map((image, index) => (
+            <TouchableOpacity
+              key={index}
+              style={{
+                borderColor: 1,
+                borderRadius: 10,
+                alignItems: 'center',
+                justifyContent: 'center',
+                height: 69,
+                width: 80,
+                backgroundColor: '#ccc',
+                marginRight: 3,
+              }}
+              onPress={() => handleImageClick(index)}
+            >
+              <Image source={{ uri: image.path }} style={{ width: 80, height: 69, borderRadius: 10 }} />
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
       </View>
+      <ScrollView>
+      
+    </ScrollView>
+    <Modal visible={modalVisible} onRequestClose={handleModalClose}>
+      <View style={{ flex: 1, backgroundColor: 'black', justifyContent: 'center', alignItems: 'center' }}>
+        {selectedImageIndex !== -1 && (
+          <TouchableOpacity onPress={handleModalClose}>
+            <Image
+              source={{ uri: imageSources[selectedImageIndex].path }}
+              style={{ width: 300, height: 300, resizeMode: 'contain' }}
+            />
+          </TouchableOpacity>
+        )}
+      </View>
+    </Modal>
+  </View>
+    </View>
 
       <TouchableOpacity 
         onPress={handleCreate} 
@@ -342,13 +367,7 @@ const AddScreen = ({navigation,route}) => {
         />
       )}
       
-      
-
-      {/* <Text>{address}</Text> */}
-      
-      {/* <TouchableOpacity onPress={handleClearAsyncStorage}>
-        <Text>저장된 데이터 삭제</Text>
-      </TouchableOpacity> */}
+    
     </View>
   );
 };

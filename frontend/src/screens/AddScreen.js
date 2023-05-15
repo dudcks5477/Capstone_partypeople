@@ -344,7 +344,7 @@ const AddScreen = ({navigation,route}) => {
       
       
 
-      <Text>{address}</Text>
+      {/* <Text>{address}</Text> */}
       
       {/* <TouchableOpacity onPress={handleClearAsyncStorage}>
         <Text>저장된 데이터 삭제</Text>

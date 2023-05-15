@@ -102,8 +102,8 @@ const ChatScreen = ({ navigation }) => {
             </View>
           </TouchableOpacity>
         </View>
-        {selectedTab === 'message' && <Line style={{width: 70, backgroundColor: 'black'}}/>}
-        {selectedTab === 'notification' && <Line style={{width: 100, marginLeft: '50%', backgroundColor: 'black'}}/>}
+        {selectedTab === 'message' && <Line style={{width: 60, marginLeft: '0%',backgroundColor: 'black'}}/>}
+        {selectedTab === 'notification' && <Line style={{width: 75, marginLeft: '26%', backgroundColor: 'black'}}/>}
       </View>
 
       <Line style= {{marginBottom: 10}}/>
@@ -142,7 +142,7 @@ const ChatScreen = ({ navigation }) => {
               </View>
             </View>
             <Line/>
-            <View style={{flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
+            {/* <View style={{flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
               <MaterialIcons name="account-circle" size={60} color="gray" style={{marginRight: 2}}/>
               <View style={{flexDirection: 'column'}}>
                 <Text style={{fontSize: 14}}>파티이름</Text>
@@ -213,7 +213,7 @@ const ChatScreen = ({ navigation }) => {
                 <Text style={{fontSize: 10}}>32명 참석자</Text>
               </View>
             </View>
-            <Line/>
+            <Line/> */}
           </ScrollView>
         </TouchableOpacity>
 

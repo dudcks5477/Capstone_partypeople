@@ -12,6 +12,7 @@ import WishlistScreen from "./src/screens/WishlistScreen";
 import ChatRoomScreen from "./src/screens/ChatRoomScreen";
 import ChatScreen from "./src/screens/ChatScreen";
 import ProfileScreen from "./src/screens/ProfileScreen";
+import RegisterScreen from "./src/screens/RegisterScreen";
 // import { ChatProvider } from "./src/screens/ChatContext";
 const Stack = createNativeStackNavigator();
 
@@ -85,7 +86,15 @@ const App = () => (
             headerShown: false,
           }}
         />
+        <Stack.Screen
+          name="Register"
+          component={RegisterScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
       </Stack.Navigator>
+      
     </NavigationContainer>
 
 );

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, Text } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
 import { styles } from './Styles/LoginStyles';
 
 export default function LoginScreen() {
@@ -9,11 +10,28 @@ export default function LoginScreen() {
 
   const navigation = useNavigation();
 
-  const handleLogin = () => {
-    // 로그인 처리 코드 작성
+  const handleLogin = async () => {
+    try {
+      // 이메일과 비밀번호를 백엔드로 전송하여 로그인 처리합니다.
+      const response = await axios.post('http://your-backend-url.com/login', {
+        email: email,
+        password: password,
+      });
 
-    // HomeScreen으로 이동
-    navigation.navigate('BottomTab',{screen:'Home'});
+      // 로그인이 성공적으로 처리되었을 때의 로직을 작성합니다.
+      console.log(response.data); // 서버로부터 받은 응답 데이터 출력
+
+      // HomeScreen으로 이동
+      navigation.navigate('BottomTab', { screen: 'Home' });
+    } catch (error) {
+      // 로그인 요청이 실패하였을 때의 예외 처리 로직을 작성합니다.
+      console.error(error);
+    }
+  };
+
+  const handleRegister = () => {
+    // RegisterPage로 이동
+    navigation.navigate('Register');
   };
 
   return (
@@ -35,6 +53,9 @@ export default function LoginScreen() {
       />
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>로그인</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.button} onPress={handleRegister}>
+        <Text style={styles.buttonText}>회원가입</Text>
       </TouchableOpacity>
     </View>
   );

@@ -59,7 +59,7 @@ const AddScreen = ({navigation,route}) => {
         // 이미지 업로드
         imageSources.forEach((image, index) => {
           const filename = `image_${index + 1}.jpg`;
-          formData.append('images', {
+          formData.append('imageFile', {
             uri: image.path,
             type: image.mime,
             name: filename,
@@ -67,16 +67,16 @@ const AddScreen = ({navigation,route}) => {
         });
   
         // 기존의 데이터 추가
-        formData.append('address', address);
+        formData.append('partyLocation', address);
         formData.append('longitude', longitude);
         formData.append('latitude', latitude);
-        formData.append('date2', date2);
-        formData.append('time', time);
+        formData.append('partyDate', date2);
+        formData.append('PartyTime', time);
         formData.append('partyName', partyName);
         formData.append('numOfPeople', numOfPeople);
-        formData.append('description', description);
-        // console.log(formData._parts)
-        const response = await axios.post('/api/party', formData);
+        formData.append('content', description);
+        console.log(formData)
+        const response = await axios.post('http://partypeople.cisnkgkhl5uc.ap-northeast-2.rds.amazonaws.com:8080/api/party', formData);
   
         if (response.status === 200) {
           // 데이터가 성공적으로 전송되었을 때의 처리 로직

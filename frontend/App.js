@@ -19,7 +19,7 @@ const Stack = createNativeStackNavigator();
 const App = () => (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen
+        {/* <Stack.Screen
           name="Login"
           component={LoginScreen}
           options={{
@@ -50,7 +50,7 @@ const App = () => (
           options={{
             headerShown: false,
           }}
-        />
+        /> */}
         <Stack.Screen
           name="PartyDetail"
           component={PartyDetailScreen}
@@ -59,6 +59,13 @@ const App = () => (
           }}
         />
         <Stack.Screen
+          name="ProfileScreen"
+          component={ProfileScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+        {/* <Stack.Screen
           name="Wishlist"
           component={WishlistScreen}
           options={{
@@ -79,20 +86,18 @@ const App = () => (
             headerShown: false,
           }}
         />
-        <Stack.Screen
-          name="ProfileScreen"
-          component={ProfileScreen}
-          options={{
-            headerShown: false,
-          }}
-        />
+        
         <Stack.Screen
           name="Register"
           component={RegisterScreen}
           options={{
             headerShown: false,
           }}
-        />
+        /> */}
+
+          
+
+
       </Stack.Navigator>
       
     </NavigationContainer>

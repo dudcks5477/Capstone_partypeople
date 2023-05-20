@@ -15,6 +15,8 @@ import java.time.LocalTime;
 @NoArgsConstructor
 public class PartyRequestDto {
     private String partyName;
+    private double longitude;
+    private double latitude;
     private String partyLocation;
     private LocalDate partyDate;
     private LocalTime partyTime;

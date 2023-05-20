@@ -10,6 +10,8 @@ import java.util.stream.Collectors;
 public class PartyResponseDto {
     private Long id;
     private String partyName;
+    private double longitude;
+    private double latitude;
     private String partyLocation;
     private LocalDateTime partyDateTime;
     private Long numOfPeople;
@@ -22,6 +24,8 @@ public class PartyResponseDto {
     public PartyResponseDto(Party party) {
         this.id = party.getId();
         this.partyName = party.getPartyName();
+        this.longitude =  party.getLongitude();
+        this.latitude = party.getLatitude();
         this.partyLocation = party.getPartyLocation();
         this.partyDateTime = party.getPartyDateTime();
         this.numOfPeople = party.getNumOfPeople();

@@ -36,6 +36,8 @@ public class PartyService {
 
         Party party = Party.builder()
                 .partyName(requestDto.getPartyName())
+                .longitude(requestDto.getLongitude())
+                .latitude(requestDto.getLatitude())
                 .partyLocation(requestDto.getPartyLocation())
                 .partyDateTime(partyDateTime)
                 .numOfPeople(requestDto.getNumOfPeople())
@@ -71,6 +73,8 @@ public class PartyService {
 
         // 파티 정보 업데이트
         party.setPartyName(requestDto.getPartyName());
+        party.setLatitude(requestDto.getLatitude());
+        party.setLongitude(requestDto.getLongitude());
         party.setPartyLocation(requestDto.getPartyLocation());
         party.setPartyDateTime(LocalDateTime.of(requestDto.getPartyDate(), requestDto.getPartyTime()));
         party.setNumOfPeople(requestDto.getNumOfPeople());

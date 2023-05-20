@@ -31,6 +31,8 @@ public class Party {
     private Long id;
 
     private String partyName;
+    private double longitude;
+    private double latitude;
     private String partyLocation;
     private LocalDateTime partyDateTime;
     private Long numOfPeople;
@@ -117,5 +119,13 @@ public class Party {
 
     public void setImageName(String imageName) {
         this.imageName = imageName;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
     }
 }

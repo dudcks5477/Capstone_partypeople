@@ -11,7 +11,7 @@ const RegisterScreen = () => {
   const navigation = useNavigation();
   const registerUser = async () => {
     try {
-      const response = await axios.post('http://your-backend-url.com/register', {
+      const response = await axios.post('http://ec2-user@ip-172-31-40-3/api/UserController', {
         name: name,
         email: email,
         password: password,

@@ -2,10 +2,10 @@ spring:
   profiles:
     include: "local"
   datasource:
-    url: jdbc:mariadb://localhost:3306/partypeople
+    url: jdbc:mariadb://partypeople.cisnkgkhl5uc.ap-northeast-2.rds.amazonaws.com:3306/partypeople
     driver-class-name: org.mariadb.jdbc.Driver
-    username: party
-    password: party
+    username: partypeople
+    password: partypeople
   jpa:
     open-in-view: true
     generate-ddl : true

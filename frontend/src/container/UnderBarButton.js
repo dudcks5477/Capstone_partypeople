@@ -24,16 +24,15 @@ const UnderBarButton = () => (
         return (
           <MaterialIcons
             name={iconName}
-            color={focused ? '#B39DDB' : 'black'}
+            color={focused ? '#B39DDB' : 'white'}
             size={size}
           />
         );
       },
-    })}
-    tabBarOptions={{
-      activeTintColor: '#B39DDB',
-      inactiveTintColor: 'black',
-    }}>
+      tabBarActiveTintColor: '#B39DDB',
+      tabBarInactiveTintColor: 'white',
+      tabBarStyle: { backgroundColor: 'black' }
+    })}>
     <Tab.Screen name="Map" component={MapScreen} options={{
           headerShown: false,
         }}/>

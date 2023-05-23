@@ -93,40 +93,40 @@ const MapScreen = () => {
 
       </MapView>
       <Modal
-  transparent={true}
-  visible={modalVisible}
-  onRequestClose={() => {
-    setModalVisible(false);
-  }}>
-  <TouchableOpacity
-    style={styles.modalOverlay}
-    onPress={() => setModalVisible(false)}
-  >
-    <View style={styles.centeredView}>
-      <View style={[styles.modalView, {marginTop: 'auto'}]}>
-        <Text style={styles.modalText}>
-          파티이름 :{partyName} {'\n'}
-          날짜 :{date}{'\n'}
-          시간 :{time}{'\n'}
-          인원 :{numOfPeople}{'\n'}
-          설명 :{description}
-        </Text>
-        <Pressable
-          style={[styles.button, styles.buttonClose]}
-          onPress={() => setModalVisible(false)}>
-          <Text style={styles.textStyle}>닫기</Text>
-        </Pressable>
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(false);
+        }}>
         <TouchableOpacity
-          style={styles.navigateButton}
-          onPress={() => {
-            navigation.navigate('PartyDetail');
-          }}>
-          <Text style={styles.navigateText}>Navigate</Text>
+          style={styles.modalOverlay}
+          onPress={() => setModalVisible(false)}
+        >
+          <View style={styles.centeredView}>
+            <View style={[styles.modalView, {marginTop: 'auto'}]}>
+              <Text style={styles.modalText}>
+                파티이름 :{partyName} {'\n'}
+                날짜 :{date}{'\n'}
+                시간 :{time}{'\n'}
+                인원 :{numOfPeople}{'\n'}
+                설명 :{description}
+              </Text>
+              <Pressable
+                style={[styles.button, styles.buttonClose]}
+                onPress={() => setModalVisible(false)}>
+                <Text style={styles.textStyle}>닫기</Text>
+              </Pressable>
+              <TouchableOpacity
+                style={styles.navigateButton}
+                onPress={() => {
+                  navigation.navigate('PartyDetail');
+              }}>
+                <Text style={styles.navigateText}>Navigate</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
         </TouchableOpacity>
-      </View>
-    </View>
-  </TouchableOpacity>
-</Modal>
+      </Modal>
       {/* GooglePlacesAutocomplete를 추가합니다. */}
       <GooglePlacesAutocomplete
               minLength={2}

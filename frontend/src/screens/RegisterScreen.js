@@ -10,8 +10,9 @@ const RegisterScreen = () => {
   const [birthDay, setBirthDay] = useState('');
   const navigation = useNavigation();
   const registerUser = async () => {
+    console.log('A')
     try {
-      const response = await axios.post('http://ec2-user@ip-172-31-40-3/api/UserController', {
+      const response = await axios.post('http://13.209.74.82:8080/users', {
         name: name,
         email: email,
         password: password,

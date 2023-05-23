@@ -75,12 +75,13 @@ const AddScreen = ({navigation,route}) => {
         formData.append('partyName', partyName);
         formData.append('numOfPeople', numOfPeople);
         formData.append('content', description);
-        console.log(formData)
-        const response = await axios.post('http://partypeople.cisnkgkhl5uc.ap-northeast-2.rds.amazonaws.com:8080/api/party', formData);
+        
+        const response = await axios.post('http://13.209.74.82:8080:8080/party', formData);
   
         if (response.status === 200) {
+          console.log(formData)
           // 데이터가 성공적으로 전송되었을 때의 처리 로직
-          navigation.navigate('Map');
+          // navigation.navigate('Map');
         } else {
           // 요청이 실패했을 때의 처리 로직
           Alert.alert('오류', '데이터 전송에 실패했습니다.');

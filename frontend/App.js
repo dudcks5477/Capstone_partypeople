@@ -51,6 +51,7 @@ const App = () => (
             headerShown: false,
           }}
         />
+        
         <Stack.Screen
           name="PartyDetail"
           component={PartyDetailScreen}

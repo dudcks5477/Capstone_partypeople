@@ -14,7 +14,7 @@ export default function LoginScreen() {
     // navigation.navigate('BottomTab', { screen: 'Home' });
     try {
       // 이메일과 비밀번호를 백엔드로 전송하여 로그인 처리합니다.
-      const response = await axios.post('http://13.209.74.82:22/api/User', {
+      const response = await axios.post('http://ec2-13-209-74-82.ap-northeast-2.compute.amazonaws.com:8080/api/User', {
         email: email,
         password: password,
       });

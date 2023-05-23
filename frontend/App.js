@@ -87,6 +87,7 @@ const App = () => (
         />
       </Stack.Navigator>
     </NavigationContainer>
+    // <ProfileScreen/>
 
 );
 

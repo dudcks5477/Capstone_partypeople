@@ -1,14 +1,23 @@
-import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import React, {useState} from 'react';
+import { View, Text, TouchableOpacity, Image, FlatList, TextInput } from 'react-native';
 import { Rating } from 'react-native-ratings'; 
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Line from '../container/Line';
 
 const ProfileScreen = () => {
 
+  const [userComment, setUserComment] = useState('');
+
   const handleGoBack = () => {
     navigation.goBack(); // 이전으로 돌아가기
   }
+
+  const images = [
+    require('../assets/party1.jpeg'),
+    require('../assets/party2.jpeg'),
+    require('../assets/party3.jpeg'),
+    require('../assets/party4.jpeg')
+  ]
 
   return (
     <View>
@@ -91,18 +100,54 @@ const ProfileScreen = () => {
         marginHorizontal: '5%'
       }}>
         <Text>Recent Party / Host</Text>
-        {/* 이미지 */}
+          <FlatList
+            horizontal
+            pagingEnabled
+            showsHorizontalScrollIndicator={false}
+            data={images}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item }) => (
+              <View style={{ alignItems: 'center', marginRight: 10}}>
+                <Image
+                  style={{ width: 346, height: 154, borderRadius: 10 }}
+                  source={item} /> 
+              </View>
+            )}
+          />
         <Text>Comment</Text>
+        <TextInput
+          style={{ height: 40, borderColor: 'gray'}}
+          onChangeText={text => setUserComment(text)}
+          value={userComment}
+        />
       </View>
-      <Line style={{marginTop: 40}}/>
+      <Line style={{marginTop: 5}}/>
       <View style={{
         width: '90%',
         marginHorizontal: '5%',
         marginTop: 5
       }}>
         <Text>Recent Party / Participate In</Text>
-        {/* 이미지 */}
+          <FlatList
+            horizontal
+            pagingEnabled
+            showsHorizontalScrollIndicator={false}
+            data={images}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item }) => (
+              <View style={{ alignItems: 'center', marginRight: 10}}>
+                <Image
+                  style={{ width: 346, height: 154, borderRadius: 10 }}
+                  source={item} /> 
+              </View>
+            )}
+          />
         <Text>Comment</Text>
+        <TextInput
+          style={{ height: 40, borderColor: 'gray'}}
+          onChangeText={text => setUserComment(text)}
+          value={userComment}
+        />
       </View>
     </View>
   );

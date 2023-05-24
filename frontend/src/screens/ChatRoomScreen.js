@@ -11,7 +11,6 @@ const ChatRoomScreen = ({ route }) => {
   }
 
   return (
-    <>
       <GiftedChat
         messages={messages}
         onSend={newMessages => onSend(newMessages)}
@@ -19,8 +18,14 @@ const ChatRoomScreen = ({ route }) => {
           _id: 1,
           name: partyName,
         }}
+        placeholder='메시지를 입력하세요.'
+        placeholderTextColor="#fff"
+        textInputStyle={{
+          backgroundColor: "#000",
+          color: "#fff",
+          marginLeft: 10
+        }}
       />
-    </>
   );
 };
 

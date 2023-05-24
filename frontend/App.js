@@ -19,7 +19,7 @@ const Stack = createNativeStackNavigator();
 const App = () => (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen
+        {/* <Stack.Screen
           name="Login"
           component={LoginScreen}
           options={{
@@ -36,7 +36,7 @@ const App = () => (
           component={UnderBarButton}
           options={{ headerShown: false }}
         />
-        <Stack.Screen name="MapScreen" component={MapScreen} />
+        <Stack.Screen name="MapScreen" component={MapScreen} /> */}
         <Stack.Screen
           name="AddScreen"
           component={AddScreen}
@@ -44,14 +44,14 @@ const App = () => (
             headerShown: false,
           }}
         />
-        <Stack.Screen
+         <Stack.Screen
           name="Map2"
           component={MapScreen2}
           options={{
             headerShown: false,
           }}
         />
-        
+        {/*
         <Stack.Screen
           name="PartyDetail"
           component={PartyDetailScreen}
@@ -94,7 +94,7 @@ const App = () => (
           options={{
             headerShown: false,
           }}
-        />
+        /> */}
 
           
 

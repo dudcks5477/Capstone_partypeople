@@ -37,7 +37,7 @@ const handleCardPress = () => {
   
 
   return (
-    <ScrollView>
+    <ScrollView style={{backgroundColor: "#222"}}>
       <View>
         <Text style={styles.title}>Wishlists</Text>
       </View>
@@ -57,7 +57,7 @@ const handleCardPress = () => {
 
 const styles = StyleSheet.create({
   title: {
-    color: '#000',
+    color: '#B39DDB',
     fontSize: 40,
     fontWeight: 'bold',
     marginLeft: 15,

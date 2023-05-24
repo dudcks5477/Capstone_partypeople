@@ -38,13 +38,13 @@ const ChatScreen = ({ navigation }) => {
       <TouchableOpacity
         onPress={() => navigation.navigate('ChatRoomScreen', { partyName: item.partyName })}
       >
-        <Text>{item.partyName}</Text>
+        <Text style={styles.text}>{item.partyName}</Text>
       </TouchableOpacity>
     );
   }
 
   return (
-    <View style={{flex: 1}}>
+    <View style={{flex: 1, backgroundColor: '#222'}}>
       <Text style={styles.title}>채팅</Text>
       
       {/* 일단 뭔지 몰라서 주석처리 */}
@@ -61,7 +61,7 @@ const ChatScreen = ({ navigation }) => {
          <View style={{flexDirection: 'row', marginBottom:13}}>
           <TouchableOpacity onPress={() => setSelectedTab('message')}>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Text style={{marginRight: 35}}>Message</Text>
+              <Text style={[styles.text, {marginRight: 35}]}>Message</Text>
               {messageCount > 0 && (
                 <View style={{
                   backgroundColor: 'black',
@@ -82,7 +82,7 @@ const ChatScreen = ({ navigation }) => {
           </TouchableOpacity>
           <TouchableOpacity onPress={() => setSelectedTab('notification')}>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Text>Notification</Text>
+              <Text style={styles.text}>Notification</Text>
               {notificationCount > 0 && (
                 <View style={{
                   backgroundColor: 'black',
@@ -121,9 +121,9 @@ const ChatScreen = ({ navigation }) => {
               <View style={{flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
                 <MaterialIcons name="account-circle" size={60} color="gray" style={{marginRight: 2}}/>
                 <View style={{flexDirection: 'column'}}>
-                  <Text style={{fontSize: 14}}>{item.partyName}</Text>
-                  <Text style={{fontSize: 12}}>주최자외</Text>
-                  <Text style={{fontSize: 10}}>{`${item.attendeesCount}명 참석자`}</Text>
+                  <Text style={styles.text}>{item.partyName}</Text>
+                  <Text style={styles.subText}>주최자외</Text>
+                  <Text style={styles.smallText}>{`${item.attendeesCount}명 참석자`}</Text>
                 </View>
               </View>
             </TouchableOpacity>
@@ -136,81 +136,72 @@ const ChatScreen = ({ navigation }) => {
             <View style={{flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
               <MaterialIcons name="account-circle" size={60} color="gray" style={{marginRight: 2}}/>
               <View style={{flexDirection: 'column'}}>
-                <Text style={{fontSize: 14}}>파티이름</Text>
-                <Text style={{fontSize: 12}}>주최자외</Text>
-                <Text style={{fontSize: 10}}>32명 참석자</Text>
+                <Text style={styles.text}>파티이름</Text>
+                <Text style={styles.subText}>주최자외</Text>
+                <Text style={styles.smallText}>32명 참석자</Text>
               </View>
             </View>
             <Line/>
             {/* <View style={{flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
               <MaterialIcons name="account-circle" size={60} color="gray" style={{marginRight: 2}}/>
               <View style={{flexDirection: 'column'}}>
-                <Text style={{fontSize: 14}}>파티이름</Text>
-                <Text style={{fontSize: 12}}>주최자외</Text>
-                <Text style={{fontSize: 10}}>32명 참석자</Text>
+                <Text style={styles.text}>파티이름</Text>
+                <Text style={styles.subText}>주최자외</Text>
+                <Text style={styles.smallText}>32명 참석자</Text>
               </View>
             </View>
             <Line/>
             <View style={{flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
               <MaterialIcons name="account-circle" size={60} color="gray" style={{marginRight: 2}}/>
               <View style={{flexDirection: 'column'}}>
-                <Text style={{fontSize: 14}}>파티이름</Text>
-                <Text style={{fontSize: 12}}>주최자외</Text>
-                <Text style={{fontSize: 10}}>32명 참석자</Text>
+                <Text style={styles.text}>파티이름</Text>
+                <Text style={styles.subText}>주최자외</Text>
+                <Text style={styles.smallText}>32명 참석자</Text>
               </View>
             </View>
             <Line/>
             <View style={{flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
               <MaterialIcons name="account-circle" size={60} color="gray" style={{marginRight: 2}}/>
               <View style={{flexDirection: 'column'}}>
-                <Text style={{fontSize: 14}}>파티이름</Text>
-                <Text style={{fontSize: 12}}>주최자외</Text>
-                <Text style={{fontSize: 10}}>32명 참석자</Text>
+                <Text style={styles.text}>파티이름</Text>
+                <Text style={styles.subText}>주최자외</Text>
+                <Text style={styles.smallText}>32명 참석자</Text>
               </View>
             </View>
             <Line/>
             <View style={{flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
               <MaterialIcons name="account-circle" size={60} color="gray" style={{marginRight: 2}}/>
               <View style={{flexDirection: 'column'}}>
-                <Text style={{fontSize: 14}}>파티이름</Text>
-                <Text style={{fontSize: 12}}>주최자외</Text>
-                <Text style={{fontSize: 10}}>32명 참석자</Text>
+                <Text style={styles.text}>파티이름</Text>
+                <Text style={styles.subText}>주최자외</Text>
+                <Text style={styles.smallText}>32명 참석자</Text>
               </View>
             </View>
             <Line/>
             <View style={{flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
               <MaterialIcons name="account-circle" size={60} color="gray" style={{marginRight: 2}}/>
               <View style={{flexDirection: 'column'}}>
-                <Text style={{fontSize: 14}}>파티이름</Text>
-                <Text style={{fontSize: 12}}>주최자외</Text>
-                <Text style={{fontSize: 10}}>32명 참석자</Text>
+                <Text style={styles.text}>파티이름</Text>
+                <Text style={styles.subText}>주최자외</Text>
+                <Text style={styles.smallText}>32명 참석자</Text>
               </View>
             </View>
             <Line/>
             <View style={{flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
               <MaterialIcons name="account-circle" size={60} color="gray" style={{marginRight: 2}}/>
               <View style={{flexDirection: 'column'}}>
-                <Text style={{fontSize: 14}}>파티이름</Text>
-                <Text style={{fontSize: 12}}>주최자외</Text>
-                <Text style={{fontSize: 10}}>32명 참석자</Text>
+                <Text style={styles.text}>파티이름</Text>
+                <Text style={styles.subText}>주최자외</Text>
+                <Text style={styles.smallText}>32명 참석자</Text>
               </View>
             </View>
             <Line/>
             <View style={{flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
               <MaterialIcons name="account-circle" size={60} color="gray" style={{marginRight: 2}}/>
               <View style={{flexDirection: 'column'}}>
-                <Text style={{fontSize: 14}}>파티이름</Text>
-                <Text style={{fontSize: 12}}>주최자외</Text>
-                <Text style={{fontSize: 10}}>32명 참석자</Text>
-              </View>
-            </View>
-            <Line/>
-            <View style={{flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
-              <MaterialIcons name="account-circle" size={60} color="gray" style={{marginRight: 2}}/>
-              <View style={{flexDirection: 'column'}}>
-                <Text style={{fontSize: 14}}>파티이름</Text>
-                <Text style={{fontSize: 12}}>주최자외</Text>
-                <Text style={{fontSize: 10}}>32명 참석자</Text>
+                <Text style={styles.text}>파티이름</Text>
+                <Text style={styles.subText}>주최자외</Text>
+                <Text style={styles.smallText}>32명 참석자</Text>
               </View>
             </View>
             <Line/> */}
@@ -224,12 +215,24 @@ const ChatScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   title: {
-    color: 'gray',
+    color: '#B39DDB',
     fontSize: 40,
     fontWeight: 'bold',
     marginLeft: 15,
     marginTop: 30,
   },
+  text: {
+    color: '#B39DDB',
+    fontSize: 14
+  },
+  subText: {
+    color: '#B39DDB',
+    fontSize: 12
+  },
+  smallText: {
+    color: '#B39DDB',
+    fontSize: 10
+  }
 });
 
 export default ChatScreen;

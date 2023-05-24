@@ -1,5 +1,6 @@
 package com.partypeople.backend.domain.account;
 
+import com.partypeople.backend.domain.global.Exception.UserNotFoundException;
 import com.partypeople.backend.domain.party.dto.PartyRequestDto;
 import com.partypeople.backend.domain.party.dto.PartyResponseDto;
 import com.partypeople.backend.domain.party.entity.Party;
@@ -57,6 +58,13 @@ public class UserController {
         } else {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
+    }
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<User> getUserById(@PathVariable Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
+        return ResponseEntity.ok(user);
     }
 
 

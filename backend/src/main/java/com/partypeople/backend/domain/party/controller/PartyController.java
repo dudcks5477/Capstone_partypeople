@@ -33,26 +33,26 @@ public class PartyController {
     private final PartyRepository partyRepository;
 
     private static final String UPLOAD_DIR = "src/main/resources";
-    @PostMapping
-    public ResponseEntity<Void> createParty(@RequestBody PartyRequestDto requestDto, Long userId) {
-        Long partyId = partyService.createParty(requestDto, userId);
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{partyId}")
-                .buildAndExpand(partyId)
-                .toUri();
-        return ResponseEntity.created(location).build();
+    @PostMapping("/{userId}")
+    public ResponseEntity<Long> createParty(@PathVariable Long userId, @RequestBody PartyRequestDto requestDto) {
+        try {
+            Long partyId = partyService.createParty(requestDto, userId);
+            return ResponseEntity.ok(partyId);
+        } catch (UserNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
-    @PutMapping("/{partyId}")
-    public ResponseEntity<Void> updateParty(@PathVariable Long partyId, @RequestBody PartyRequestDto requestDto, Authentication authentication) {
-        Long userId = getUserIdFromAuthentication(authentication);
+    @PutMapping("/{partyId}/{userId}")
+    public ResponseEntity<Void> updateParty(@PathVariable Long partyId, @PathVariable Long userId, @RequestBody PartyRequestDto requestDto) {
         partyService.updateParty(partyId, requestDto, userId);
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/{partyId}")
-    public ResponseEntity<Void> deleteParty(@PathVariable Long partyId, Authentication authentication) {
-        Long userId = getUserIdFromAuthentication(authentication);
+    @DeleteMapping("/{partyId}/{userId}")
+    public ResponseEntity<Void> deleteParty(@PathVariable Long partyId, @PathVariable Long userId) {
         partyService.deleteParty(partyId, userId);
         return ResponseEntity.noContent().build();
     }
@@ -63,13 +63,10 @@ public class PartyController {
         return ResponseEntity.ok(partyResponseDto);
     }
 
-    @PostMapping("/party/{partyId}/join")
-    public ResponseEntity<?> joinParty(@PathVariable Long partyId, Authentication authentication) {
+    @PostMapping("/{partyId}/join/{userId}")
+    public ResponseEntity<?> joinParty(@PathVariable Long partyId, @PathVariable Long userId) {
         try {
-            Long userId = getUserIdFromAuthentication(authentication);
-
             partyService.joinParty(partyId, userId);
-
             return ResponseEntity.ok().build();
         } catch (PartyNotFoundException | UserNotFoundException | AlreadyJoinedException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

@@ -38,8 +38,19 @@ public class Party {
     private Long numOfPeople;
     private String content;
 
+    private Long userId;
+
     //@NotNull
     //private int coin;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_wishlist")
+    private User user;
+
+    public void addToWishlist(User user) {
+        this.user = user;
+        user.getWishlist().add(this);
+    }
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -127,5 +138,9 @@ public class Party {
 
     public void setLatitude(double latitude) {
         this.latitude = latitude;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 }

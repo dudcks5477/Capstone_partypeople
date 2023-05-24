@@ -42,6 +42,7 @@ public class PartyService {
                 .partyDateTime(partyDateTime)
                 .numOfPeople(requestDto.getNumOfPeople())
                 .content(requestDto.getContent())
+                .userId(userId) // userId 설정
                 .participants(Collections.singleton(user))
                 .imageFile(requestDto.getImageFile())
                 .build();
@@ -54,6 +55,12 @@ public class PartyService {
 
 
         Party savedParty = partyRepository.save(party);
+
+        // 경험치 증가
+        int experienceToAdd = 100; // 경험치 증가량 설정
+        user.addExperience(experienceToAdd);
+
+        userRepository.save(user); // 업데이트된 사용자 저장
         return savedParty.getId();
     }
 
@@ -67,8 +74,8 @@ public class PartyService {
         Party party = partyRepository.findById(partyId)
                 .orElseThrow(() -> new PartyNotFoundException("Party not found"));
 
-        if (!party.getParticipants().contains(userId)) {
-            throw new AccessDeniedException("You do not have permission to update this party");
+        if (!party.getParticipants().stream().anyMatch(user -> user.getId().equals(userId))) {
+            throw new AccessDeniedException("You do not have permission to delete this party");
         }
 
         // 파티 정보 업데이트
@@ -99,7 +106,7 @@ public class PartyService {
         Party party = partyRepository.findById(partyId)
                 .orElseThrow(() -> new PartyNotFoundException("Party not found"));
 
-        if (!party.getParticipants().contains(userId)) {
+        if (!party.getParticipants().stream().anyMatch(user -> user.getId().equals(userId))) {
             throw new AccessDeniedException("You do not have permission to delete this party");
         }
 
@@ -119,6 +126,10 @@ public class PartyService {
         }
 
         party.addParticipant(user);
+
+        // 사용자의 경험치를 증가시킵니다.
+        user.addExperience(50); // 예시: 50의 경험치를 증가시킵니다.
+
         partyRepository.save(party);
     }
 

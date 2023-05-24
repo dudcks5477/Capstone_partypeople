@@ -40,13 +40,25 @@ public class User implements UserDetails {
     @ManyToMany(mappedBy = "participants")
     private Set<Party> parties = new HashSet<>();
 
-    @ManyToMany
-    @JoinTable(
-            name = "user_wishlist",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "party_id")
-    )
-    private List<Party> wishlist;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Party> wishlist = new ArrayList<>();
+
+    private int experience;
+
+    private  int level=1;
+
+    public void addExperience(int experiencePoints) {
+        this.experience += experiencePoints;
+        checkLevelUp();
+    }
+
+    private void checkLevelUp() {
+        int requiredExperience = (this.level + 1) * 100; // 예시 레벨업 조건
+        if (this.experience >= requiredExperience) {
+            this.level++;
+            this.experience -= requiredExperience;
+        }
+    }
 
     private boolean enabled;
     private boolean accountNonExpired;

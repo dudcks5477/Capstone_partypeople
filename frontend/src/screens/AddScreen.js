@@ -76,14 +76,45 @@ const AddScreen = ({navigation,route}) => {
         formData.append('numOfPeople', numOfPeople);
         formData.append('content', description);
         
-        const response = await axios.post('http://13.209.74.82:8080:8080/party', formData);
+        // 파티 생성 요청 보내기
+        const response = await fetch('http://ec2-13-209-74-82.ap-northeast-2.compute.amazonaws.com:8080/party', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+          body: formData,
+        });
   
-        if (response.status === 200) {
-          console.log(formData)
-          // 데이터가 성공적으로 전송되었을 때의 처리 로직
-          // navigation.navigate('Map');
+        if (response.ok) { 
+          // 파티가 성공적으로 생성되었을 때의 처리 로직
+          // 파티가 성공적으로 생성되었을 때의 처리 로직
+const partyData = await response.json();
+const partyId = partyData.id; // 이 부분은 실제 반환된 JSON 형태에 따라 달라집니다.
+
+// 채팅방 생성 요청 보내기
+const chatRoomResponse = await fetch('http://ec2-13-209-74-82.ap-northeast-2.compute.amazonaws.com:8080/chatRoom', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({ 
+    partyId: partyId,
+    hostId: 'yourHostId' // 현재 사용자의 아이디
+  }),
+});
+
+if (chatRoomResponse.ok) {
+  // 채팅방이 성공적으로 생성되었을 때의 처리 로직
+  const chatRoomData = await chatRoomResponse.json();
+  const chatRoomId = chatRoomData.id; // 이 부분은 실제 반환된 JSON 형태에 따라 달라집니다.
+  console.log(`채팅방 생성 성공, ID: ${chatRoomId}`);
+} else {
+  // 채팅방 생성 실패 처리 로직
+  Alert.alert('오류', '채팅방 생성에 실패했습니다.');
+}
+
         } else {
-          // 요청이 실패했을 때의 처리 로직
+          // 파티 생성 실패 처리 로직
           Alert.alert('오류', '데이터 전송에 실패했습니다.');
         }
       } catch (error) {

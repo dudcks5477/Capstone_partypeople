@@ -9,6 +9,7 @@ import Card from '../components/Card';
 const HomeScreen = () => {
   const navigation = useNavigation();
   const [partyData, setPartyData] = useState(null);
+  const [showHeader, setShowHeader] = useState(true);
 
   useEffect(() => {
     const getData = async () => {
@@ -24,21 +25,37 @@ const HomeScreen = () => {
 
     getData();
   }, []);
-  const clearAllData = async () => {
-    try {
-      await AsyncStorage.clear();
-      console.log('AsyncStorage cleared successfully');
-    } catch (e) {
-      console.log('Failed to clear AsyncStorage:', e);
+
+  // 스크롤 50 이상하면 searchBar랑 Line 사라지는거
+  const handleScroll = (event) => {
+    const currentOffset = event.nativeEvent.contentOffset.y;
+    if (currentOffset > 50) {
+      setShowHeader(false);
+    } else {
+      setShowHeader(true);
     }
   };
+
+  // const clearAllData = async () => {
+  //   try {
+  //     await AsyncStorage.clear();
+  //     console.log('AsyncStorage cleared successfully');
+  //   } catch (e) {
+  //     console.log('Failed to clear AsyncStorage:', e);
+  //   }
+  // };
+  
   return (
-    <>
-      <SearchBar />
-      <Line style={{ marginTop: 20 }} />
+    <View style={styles.container}>
+      {showHeader && (
+        <>
+          <SearchBar />
+          <Line style={{ marginTop: 20 }} />
+        </>
+      )}
       <SafeAreaView style={styles.containerNotch}>
-        <View style={styles.container}>
-          <ScrollView>
+        <View style={styles.containerParty}>
+          <ScrollView onScroll={handleScroll}>
           {partyData && (
               <TouchableOpacity
                 style={styles.cardButton}
@@ -50,19 +67,19 @@ const HomeScreen = () => {
           </ScrollView>
         </View>
         <View>
-      <Button title="Clear AsyncStorage" onPress={clearAllData} />
-    </View>
-
+        {/* <Button title="Clear AsyncStorage" onPress={clearAllData} /> */}
+        </View>
       </SafeAreaView>
-    </>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  containerNotch: {
-    flex: 1,
-  },
   container: {
+    flex: 1,
+    backgroundColor: '#222',
+  },
+  containerParty: {
     marginVertical: 10,
   },
   cardButton: {

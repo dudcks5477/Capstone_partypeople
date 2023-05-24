@@ -73,14 +73,14 @@ const ChatScreen = ({ navigation }) => {
   }
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{flex: 1, backgroundColor: '#222'}}>
       <Text style={styles.title}>채팅</Text>
 
       <View style={{ marginTop: 20, width: '90%', marginHorizontal: '5%' }}>
         <View style={{ flexDirection: 'row', marginBottom: 13 }}>
           <TouchableOpacity onPress={() => setSelectedTab('message')}>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text style={{ marginRight: 35 }}>Message</Text>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Text style={[styles.text, {marginRight: 35}]}>Message</Text>
               {messageCount > 0 && (
                 <View style={styles.notificationBadge}>
                   <Text style={styles.badgeText}>{messageCount}</Text>
@@ -89,8 +89,8 @@ const ChatScreen = ({ navigation }) => {
             </View>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => setSelectedTab('notification')}>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text>Notification</Text>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Text style={styles.text}>Notification</Text>
               {notificationCount > 0 && (
                 <View style={styles.notificationBadge}>
                   <Text style={styles.badgeText}>{notificationCount}</Text>
@@ -121,7 +121,7 @@ const ChatScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   title: {
-    color: 'gray',
+    color: '#B39DDB',
     fontSize: 40,
     fontWeight: 'bold',
     marginLeft: 15,
@@ -140,6 +140,18 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 12,
   },
+  text: {
+    color: '#B39DDB',
+    fontSize: 14
+  },
+  subText: {
+    color: '#B39DDB',
+    fontSize: 12
+  },
+  smallText: {
+    color: '#B39DDB',
+    fontSize: 10
+  }
 });
 
 export default ChatScreen;

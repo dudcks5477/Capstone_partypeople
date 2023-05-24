@@ -15,11 +15,11 @@ export default function SearchBar() {
         style={{ 
           flex:1, 
           height: 56,
-          borderWidth: 1,
           borderRadius: 13,
           marginTop: 46,
           marginLeft: 14,
           marginRight: 14,
+          backgroundColor: '#D2D2D2',
         }}
         value={query}
         onChangeText={setQuery}

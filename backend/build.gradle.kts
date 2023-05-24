@@ -26,6 +26,9 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     runtimeOnly ("org.mariadb.jdbc:mariadb-java-client")
+    implementation ("commons-io:commons-io:2.11.0")
+    implementation ("org.springframework.boot:spring-boot-starter-security")
+
 }
 
 tasks.withType<Test> {

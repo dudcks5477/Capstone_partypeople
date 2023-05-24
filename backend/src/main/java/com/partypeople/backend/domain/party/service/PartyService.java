@@ -1,75 +1,132 @@
 package com.partypeople.backend.domain.party.service;
 
-import com.partypeople.backend.domain.party.dto.PartyDto;
+import com.partypeople.backend.domain.account.User;
+import com.partypeople.backend.domain.account.UserRepository;
+import com.partypeople.backend.domain.global.Exception.AlreadyJoinedException;
+import com.partypeople.backend.domain.global.Exception.PartyNotFoundException;
+import com.partypeople.backend.domain.global.Exception.UserNotFoundException;
+import com.partypeople.backend.domain.global.Exception.AccessDeniedException;
+import com.partypeople.backend.domain.party.dto.PartyRequestDto;
+import com.partypeople.backend.domain.party.dto.PartyResponseDto;
 import com.partypeople.backend.domain.party.entity.Party;
 import com.partypeople.backend.domain.party.repository.PartyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Transactional
 @Service
 public class PartyService {
     private final PartyRepository partyRepository;
-    @Transactional
-    public Party create(PartyDto partyDto) {
-        Party party = partyDtoToEntity(partyDto);
-        return partyRepository.save(party);
-    }
+    private final UserRepository userRepository;
+    public Long createParty(PartyRequestDto requestDto, Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
 
-    public PartyDto read(HttpServletRequest request, Long id) {
-        Optional<Party> party = partyRepository.findById(id);
-        //if (party.isEmpty()) {
-        //throw new WrongPartyId();
-        //}
-        PartyDto partyDto = entityToPartyDto(party.get());
+        // 파티 생성 로직
+        LocalDateTime partyDateTime = LocalDateTime.of(requestDto.getPartyDate(), requestDto.getPartyTime());
 
-        return partyDto;
-    }
-    @Transactional
-    public Party update(Long id, PartyDto partyDto) {
-        Optional<Party> party = partyRepository.findById(id);
-        ///if (booth.isEmpty()) {
-        //   throw new WrongBoothId();
-        //}
-        long partyId = party.get().getId();
-        partyDto.setId(partyId);
-        Party updateParty = partyDtoToEntity(partyDto);
-        partyRepository.save(updateParty);
-        return updateParty;
-    }
-
-    @Transactional
-    public String delete(Long id) {
-        Optional<Party> party = partyRepository.findById(id);
-        //if (booth.isEmpty()) {
-        // throw new WrongBoothId();
-        //}
-        partyRepository.delete(party.get());
-        return "Ok";
-    }
-
-    public Party partyDtoToEntity(PartyDto partyDto) {
-        return Party.builder()
-                .id(partyDto.getId())
-                .name(partyDto.getName())
-                .place(partyDto.getPlace())
-                .content(partyDto.getContent())
+        Party party = Party.builder()
+                .partyName(requestDto.getPartyName())
+                .longitude(requestDto.getLongitude())
+                .latitude(requestDto.getLatitude())
+                .partyLocation(requestDto.getPartyLocation())
+                .partyDateTime(partyDateTime)
+                .numOfPeople(requestDto.getNumOfPeople())
+                .content(requestDto.getContent())
+                .participants(Collections.singleton(user))
+                .imageFile(requestDto.getImageFile())
                 .build();
+        try {
+            party.uploadImageFile(); // 이미지 업로드 메소드 호출
+        } catch (IOException e) {
+            // 이미지 업로드 실패 시 예외 처리
+            // 적절한 예외 처리 로직 추가
+        }
+
+
+        Party savedParty = partyRepository.save(party);
+        return savedParty.getId();
     }
 
-    public PartyDto entityToPartyDto(Party party) {
-        return PartyDto.builder()
-                .id(party.getId())
-                .name(party.getName())
-                .place(party.getPlace())
-                .content(party.getContent())
-                .build();
+    public PartyResponseDto getParty(Long partyId) {
+        Party party = partyRepository.findById(partyId)
+                .orElseThrow(() -> new PartyNotFoundException("Party not found"));
+
+        return new PartyResponseDto(party);
     }
+    public void updateParty(Long partyId, PartyRequestDto requestDto, Long userId) {
+        Party party = partyRepository.findById(partyId)
+                .orElseThrow(() -> new PartyNotFoundException("Party not found"));
+
+        if (!party.getParticipants().contains(userId)) {
+            throw new AccessDeniedException("You do not have permission to update this party");
+        }
+
+        // 파티 정보 업데이트
+        party.setPartyName(requestDto.getPartyName());
+        party.setLatitude(requestDto.getLatitude());
+        party.setLongitude(requestDto.getLongitude());
+        party.setPartyLocation(requestDto.getPartyLocation());
+        party.setPartyDateTime(LocalDateTime.of(requestDto.getPartyDate(), requestDto.getPartyTime()));
+        party.setNumOfPeople(requestDto.getNumOfPeople());
+        party.setContent(requestDto.getContent());
+
+        // 이미지 업로드
+        MultipartFile imageFile = requestDto.getImageFile();
+        if (imageFile != null && !imageFile.isEmpty()) {
+            try {
+                party.setImageFile(imageFile);
+                party.uploadImageFile();
+            } catch (IOException e) {
+                //throw new FileUploadException("Failed to upload image file.");
+            }
+        }
+
+
+        partyRepository.save(party);
+    }
+
+    public void deleteParty(Long partyId, Long userId) {
+        Party party = partyRepository.findById(partyId)
+                .orElseThrow(() -> new PartyNotFoundException("Party not found"));
+
+        if (!party.getParticipants().contains(userId)) {
+            throw new AccessDeniedException("You do not have permission to delete this party");
+        }
+
+        partyRepository.delete(party);
+    }
+
+    public void joinParty(Long partyId, Long userId) {
+        Party party = partyRepository.findById(partyId)
+                .orElseThrow(() -> new PartyNotFoundException("Party not found with ID: " + partyId));
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
+
+        // 이미 참가한 사용자인지 확인
+        if (party.getParticipants().contains(user)) {
+            throw new AlreadyJoinedException("User is already joined to this party");
+        }
+
+        party.addParticipant(user);
+        partyRepository.save(party);
+    }
+
+    public List<PartyResponseDto> getAllParties() {
+        List<Party> parties = partyRepository.findAll();
+        return parties.stream()
+                .map(PartyResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
 }

@@ -1,27 +1,36 @@
 import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity ,Text} from 'react-native';
-import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
 import { styles } from './Styles/LoginStyles';
+
 const RegisterScreen = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [birthDay, setBirthDay] = useState('');
   const navigation = useNavigation();
+
   const registerUser = async () => {
-    console.log('A')
     try {
-      const response = await axios.post('http://13.209.74.82:8080/users', {
-        name: name,
-        email: email,
-        password: password,
-        birthDay: birthDay,
+      const response = await fetch('http://ec2-13-209-74-82.ap-northeast-2.compute.amazonaws.com:8080/users', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: name,
+          email: email,
+          password: password,
+          birthDay: birthDay,
+        }),
       });
-      
+
+      const responseData = await response.json();
+
       // 회원가입이 성공적으로 처리되었을 때의 로직을 작성합니다.
-      console.log(response.data); // 서버로부터 받은 응답 데이터 출력
-      navigation.navigate('Login')
+      console.log(responseData); // 서버로부터 받은 응답 데이터 출력
+      navigation.navigate('Login');
     } catch (error) {
       // 회원가입 요청이 실패하였을 때의 예외 처리 로직을 작성합니다.
       console.error(error);
@@ -51,11 +60,11 @@ const RegisterScreen = () => {
         value={birthDay}
         onChangeText={text => setBirthDay(text)}
       />
-    <View style={styles.container}>
-      <TouchableOpacity style={styles.button} onPress={registerUser}>
-        <Text style={styles.buttonText}>회원가입</Text>
-      </TouchableOpacity>
-    </View>
+      <View style={styles.container}>
+        <TouchableOpacity style={styles.button} onPress={registerUser}>
+          <Text style={styles.buttonText}>회원가입</Text>
+        </TouchableOpacity>
+      </View>
     </>
   );
 };

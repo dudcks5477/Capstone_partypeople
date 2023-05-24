@@ -1,222 +1,119 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import Line from '../container/Line';
-import { ScrollView } from 'react-native-gesture-handler';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 const ChatScreen = ({ navigation }) => {
   const [chatRooms, setChatRooms] = useState([]);
-  // add this state
+  const [selectedTab, setSelectedTab] = useState('message');
   const [messageCount, setMessageCount] = useState(0);
-  // add this state
   const [notificationCount, setNotificationCount] = useState(0);
 
-  const [selectedTab, setSelectedTab] = useState('message');
-
   useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      fetchData();
-    });
-
-    return unsubscribe;
-  }, [navigation]);
+    fetchData();
+  }, []);
 
   const fetchData = async () => {
     try {
-      const chatRoomData = await AsyncStorage.getItem('chatRooms');
-      if (chatRoomData !== null) {
-        setChatRooms(JSON.parse(chatRoomData));
-      }
-    } catch (e) {
-      console.log("Error fetching data", e);
+      // 채팅방 목록을 백엔드 서버에서 가져온다고 가정합니다.
+      // 백엔드 API 호출 등 필요한 로직을 수행하여 chatRooms 데이터를 설정합니다.
+      const chatRoomsData = await fetchChatRooms(); // 채팅방 목록을 가져오는 API 호출
+
+      // 가져온 채팅방 목록을 상태에 설정합니다.
+      setChatRooms(chatRoomsData);
+    } catch (error) {
+      console.log("Error fetching data", error);
     }
   };
+
+  const fetchChatRooms = async () => {
+    try {
+      const response = await fetch('http://ec2-13-209-74-82.ap-northeast-2.compute.amazonaws.com:8080/api/chatRooms', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          // 필요한 경우 추가적인 헤더 설정
+        },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        return data;
+      } else {
+        console.error('Failed to fetch chat rooms');
+        return [];
+      }
+    } catch (error) {
+      console.error('Error fetching chat rooms:', error);
+      return [];
+    }
+  };
+  
 
   function renderItem({ item }) {
     return (
       <TouchableOpacity
-        onPress={() => navigation.navigate('ChatRoomScreen', { partyName: item.partyName })}
+        onPress={() =>
+          navigation.navigate('ChatRoomScreen', {
+            chatRoomId: item.chatRoomId,
+            partyName: item.partyName,
+            isHost: item.hostId === 'myHostId',
+          })
+        }
       >
-        <Text>{item.partyName}</Text>
+        <View style={{ flexDirection: 'row', marginTop: 10, alignItems: 'center' }}>
+          <MaterialIcons name="account-circle" size={60} color="gray" style={{ marginRight: 2 }} />
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={{ fontSize: 14 }}>{item.partyName}</Text>
+            <Text style={{ fontSize: 12 }}>{item.hostId === 'myHostId' ? '주최자' : '참석자'}</Text>
+            <Text style={{ fontSize: 10 }}>{`${item.attendeesCount}명 참석자`}</Text>
+          </View>
+        </View>
       </TouchableOpacity>
     );
   }
 
   return (
-    <View style={{flex: 1}}>
+    <View style={{ flex: 1 }}>
       <Text style={styles.title}>채팅</Text>
-      
-      {/* 일단 뭔지 몰라서 주석처리 */}
-      {/* <FlatList
-        data={chatRooms}
-        renderItem={renderItem}
-        keyExtractor={item => item.partyName}
-      /> */}
-      <View style={{
-        marginTop: 20, 
-        width: '90%',
-        marginHorizontal: '5%',
-        }}>
-         <View style={{flexDirection: 'row', marginBottom:13}}>
+
+      <View style={{ marginTop: 20, width: '90%', marginHorizontal: '5%' }}>
+        <View style={{ flexDirection: 'row', marginBottom: 13 }}>
           <TouchableOpacity onPress={() => setSelectedTab('message')}>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Text style={{marginRight: 35}}>Message</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Text style={{ marginRight: 35 }}>Message</Text>
               {messageCount > 0 && (
-                <View style={{
-                  backgroundColor: 'black',
-                  borderRadius: 50,
-                  width: 20,
-                  height: 20,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  marginLeft: 5,
-                }}>
-                  <Text style={{
-                    color: 'white',
-                    fontSize: 12,
-                  }}>{messageCount}</Text>
+                <View style={styles.notificationBadge}>
+                  <Text style={styles.badgeText}>{messageCount}</Text>
                 </View>
               )}
             </View>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => setSelectedTab('notification')}>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Text>Notification</Text>
               {notificationCount > 0 && (
-                <View style={{
-                  backgroundColor: 'black',
-                  borderRadius: 50,
-                  width: 20,
-                  height: 20,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  marginLeft: 5,
-                }}>
-                  <Text style={{
-                    color: 'white',
-                    fontSize: 12,
-                  }}>{notificationCount}</Text>
+                <View style={styles.notificationBadge}>
+                  <Text style={styles.badgeText}>{notificationCount}</Text>
                 </View>
               )}
             </View>
           </TouchableOpacity>
         </View>
-        {selectedTab === 'message' && <Line style={{width: 60, marginLeft: '0%',backgroundColor: 'black'}}/>}
-        {selectedTab === 'notification' && <Line style={{width: 75, marginLeft: '26%', backgroundColor: 'black'}}/>}
+        {selectedTab === 'message' && <Line style={{ width: 60, marginLeft: '0%', backgroundColor: 'black' }} />}
+        {selectedTab === 'notification' && (
+          <Line style={{ width: 75, marginLeft: '26%', backgroundColor: 'black' }} />
+        )}
       </View>
 
-      <Line style= {{marginBottom: 10}}/>
+      <Line style={{ marginBottom: 10 }} />
 
-      {/* 채팅 목록 */}
-      <View style={{flex:1}}>
-
-        {/* 채팅 목록이 자동으로 생성 */}
-        {/* <FlatList
+      <View style={{ flex: 1 }}>
+        <FlatList
           style={{ width: '90%', marginHorizontal: '5%' }}
           data={chatRooms}
-          keysExtractor={(item, index) => index.toString()}
-          renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => navigation.navigate('ChatRoomScreen', { partyName: item.partyName })}>
-              <View style={{flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
-                <MaterialIcons name="account-circle" size={60} color="gray" style={{marginRight: 2}}/>
-                <View style={{flexDirection: 'column'}}>
-                  <Text style={{fontSize: 14}}>{item.partyName}</Text>
-                  <Text style={{fontSize: 12}}>주최자외</Text>
-                  <Text style={{fontSize: 10}}>{`${item.attendeesCount}명 참석자`}</Text>
-                </View>
-              </View>
-            </TouchableOpacity>
-          )}
-        /> */}
-
-        {/* 아래 코드 지우지마 테스트용 채팅목록들임 */}
-        <TouchableOpacity onPress={() => navigation.navigate('ChatRoomScreen', { partyName: '파티이름' })}>
-          <ScrollView style={{ width: '90%', marginHorizontal: '5%'}}> 
-            <View style={{flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
-              <MaterialIcons name="account-circle" size={60} color="gray" style={{marginRight: 2}}/>
-              <View style={{flexDirection: 'column'}}>
-                <Text style={{fontSize: 14}}>파티이름</Text>
-                <Text style={{fontSize: 12}}>주최자외</Text>
-                <Text style={{fontSize: 10}}>32명 참석자</Text>
-              </View>
-            </View>
-            <Line/>
-            {/* <View style={{flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
-              <MaterialIcons name="account-circle" size={60} color="gray" style={{marginRight: 2}}/>
-              <View style={{flexDirection: 'column'}}>
-                <Text style={{fontSize: 14}}>파티이름</Text>
-                <Text style={{fontSize: 12}}>주최자외</Text>
-                <Text style={{fontSize: 10}}>32명 참석자</Text>
-              </View>
-            </View>
-            <Line/>
-            <View style={{flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
-              <MaterialIcons name="account-circle" size={60} color="gray" style={{marginRight: 2}}/>
-              <View style={{flexDirection: 'column'}}>
-                <Text style={{fontSize: 14}}>파티이름</Text>
-                <Text style={{fontSize: 12}}>주최자외</Text>
-                <Text style={{fontSize: 10}}>32명 참석자</Text>
-              </View>
-            </View>
-            <Line/>
-            <View style={{flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
-              <MaterialIcons name="account-circle" size={60} color="gray" style={{marginRight: 2}}/>
-              <View style={{flexDirection: 'column'}}>
-                <Text style={{fontSize: 14}}>파티이름</Text>
-                <Text style={{fontSize: 12}}>주최자외</Text>
-                <Text style={{fontSize: 10}}>32명 참석자</Text>
-              </View>
-            </View>
-            <Line/>
-            <View style={{flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
-              <MaterialIcons name="account-circle" size={60} color="gray" style={{marginRight: 2}}/>
-              <View style={{flexDirection: 'column'}}>
-                <Text style={{fontSize: 14}}>파티이름</Text>
-                <Text style={{fontSize: 12}}>주최자외</Text>
-                <Text style={{fontSize: 10}}>32명 참석자</Text>
-              </View>
-            </View>
-            <Line/>
-            <View style={{flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
-              <MaterialIcons name="account-circle" size={60} color="gray" style={{marginRight: 2}}/>
-              <View style={{flexDirection: 'column'}}>
-                <Text style={{fontSize: 14}}>파티이름</Text>
-                <Text style={{fontSize: 12}}>주최자외</Text>
-                <Text style={{fontSize: 10}}>32명 참석자</Text>
-              </View>
-            </View>
-            <Line/>
-            <View style={{flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
-              <MaterialIcons name="account-circle" size={60} color="gray" style={{marginRight: 2}}/>
-              <View style={{flexDirection: 'column'}}>
-                <Text style={{fontSize: 14}}>파티이름</Text>
-                <Text style={{fontSize: 12}}>주최자외</Text>
-                <Text style={{fontSize: 10}}>32명 참석자</Text>
-              </View>
-            </View>
-            <Line/>
-            <View style={{flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
-              <MaterialIcons name="account-circle" size={60} color="gray" style={{marginRight: 2}}/>
-              <View style={{flexDirection: 'column'}}>
-                <Text style={{fontSize: 14}}>파티이름</Text>
-                <Text style={{fontSize: 12}}>주최자외</Text>
-                <Text style={{fontSize: 10}}>32명 참석자</Text>
-              </View>
-            </View>
-            <Line/>
-            <View style={{flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
-              <MaterialIcons name="account-circle" size={60} color="gray" style={{marginRight: 2}}/>
-              <View style={{flexDirection: 'column'}}>
-                <Text style={{fontSize: 14}}>파티이름</Text>
-                <Text style={{fontSize: 12}}>주최자외</Text>
-                <Text style={{fontSize: 10}}>32명 참석자</Text>
-              </View>
-            </View>
-            <Line/> */}
-          </ScrollView>
-        </TouchableOpacity>
-
+          keyExtractor={(item) => item.chatRoomId}
+          renderItem={renderItem}
+        />
       </View>
     </View>
   );
@@ -229,6 +126,19 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginLeft: 15,
     marginTop: 30,
+  },
+  notificationBadge: {
+    backgroundColor: 'black',
+    borderRadius: 50,
+    width: 20,
+    height: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 5,
+  },
+  badgeText: {
+    color: 'white',
+    fontSize: 12,
   },
 });
 

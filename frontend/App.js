@@ -36,7 +36,7 @@ const App = () => (
           component={UnderBarButton}
           options={{ headerShown: false }}
         />
-        <Stack.Screen name="MapScreen" component={MapScreen} /> */}
+        <Stack.Screen name="MapScreen" component={MapScreen} />
         <Stack.Screen
           name="AddScreen"
           component={AddScreen}
@@ -51,7 +51,7 @@ const App = () => (
             headerShown: false,
           }}
         />
-        {/*
+        
         <Stack.Screen
           name="PartyDetail"
           component={PartyDetailScreen}
@@ -72,15 +72,15 @@ const App = () => (
           options={{
             headerShown: false,
           }}
-        />
-        <Stack.Screen
+        /> */}
+        {/* <Stack.Screen
           name="Chat"
           component={ChatScreen}
           options={{
             headerShown: false,
           }}
-        />
-        <Stack.Screen
+        /> */}
+         <Stack.Screen
           name="ChatRoomScreen"
           component={ChatRoomScreen}
           options={{
@@ -88,13 +88,13 @@ const App = () => (
           }}
         />
         
-        <Stack.Screen
+        {/* <Stack.Screen
           name="Register"
           component={RegisterScreen}
           options={{
             headerShown: false,
           }}
-        /> */}
+        />  */}
 
           
 

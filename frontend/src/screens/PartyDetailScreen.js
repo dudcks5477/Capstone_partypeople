@@ -5,7 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import Line from '../container/Line';
 import { TouchableHighlight } from 'react-native-gesture-handler';
-const PartyDetailScreen = () => {
+const PartyDetailScreen = ({ route }) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const [partyData, setPartyData] = useState({
     address: '',
@@ -14,18 +14,29 @@ const PartyDetailScreen = () => {
     partyName: '',
     numOfPeople: '',
     description: '',
+    image: [],  // add image state
   });
 
   const navigation = useNavigation();
+  const { partyId } = route.params;  // receive partyId from previous screen
+
+  useEffect(() => {
+    fetchPartyDetail();
+  }, []);
 
   const fetchPartyDetail = async () => {
     try {
-      const response = await axios.get('http://your-backend-server-url/api/partyDetail', {
+      const response = await fetch('http://your-backend-server-url/api/partyDetail', {
+        method: 'GET',
         headers: {
-          'Authorization': `Bearer ${token}`
-        }
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ partyId })  // send partyId to server
       });
-      setPartyData(response.data);
+      
+      const data = await response.json();
+      setPartyData(data);
     } catch (e) {
       console.error(e);
     }
@@ -33,61 +44,51 @@ const PartyDetailScreen = () => {
 
   const toggleFavorite = async () => {
     try {
-      const response = await axios.post('http://your-backend-server-url/api/toggleFavorite', {
-        partyName: partyData.partyName,
-      }, {
+      const response = await fetch('http://your-backend-server-url/api/toggleFavorite', {
+        method: 'POST',
         headers: {
-          'Authorization': `Bearer ${token}`
-        }
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ partyName: partyData.partyName })
       });
-      setIsFavorite(response.data.isFavorite);
+      
+      const data = await response.json();
+      setIsFavorite(data.isFavorite);
     } catch (e) {
       console.error(e);
     }
   };
 
-
-  
   const joinChatRoom = async () => {
     try {
-      await axios.post('http://your-backend-server-url/api/joinChatRoom', {
-        partyName: partyData.partyName,
-      }, {
+      const response = await fetch('http://your-backend-server-url/api/joinChatRoom', {
+        method: 'POST',
         headers: {
-          'Authorization': `Bearer ${token}`
-        }
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ partyId: partyData.id }) // partyData.id는 참석하려는 파티의 아이디입니다.
       });
-      navigation.navigate('Chat');
+  
+      if (response.ok) {
+        const responseData = await response.json();
+        const chatRoomId = responseData.chatRoomId; // 서버에서 반환하는 채팅방 아이디를 받아옵니다.
+        navigation.navigate('Chat', { chatRoomId: chatRoomId }); // 채팅방 화면으로 이동할 때 chatRoomId를 같이 전달합니다.
+      } else {
+        console.error('Failed to join chat room');
+      }
     } catch (e) {
       console.error(e);
     }
   };
-
-  useEffect(() => {
-    // fetchPartyDetail();
-  }, []);
 
 
   const handleGoBack = () => {
     navigation.goBack(); // 이전으로 돌아가기
   }
 
-  const handleAttendeePress = () => {
-    // 참가자 버튼을 눌렀을 때 동작
-    console.log("참가자 버튼이 눌렸습니다.");
-  }
 
-  const images = [
-    require('../assets/party1.jpeg'),
-    require('../assets/party2.jpeg'),
-    require('../assets/party3.jpeg'),
-    // 이미지 경로 추가
-  ]
-  const handlePress = () => {
-      console.log("dede",isFavorite)
-      navigation.push('WishlistScreen',{isFavorite,address,date ,time,partyName,numOfPeople,description});
-    
-  };
   return (
     <ScrollView>
       <Line style={{marginTop: 20}} />
@@ -103,7 +104,9 @@ const PartyDetailScreen = () => {
       </TouchableOpacity>
 
       <View style={styles.cardContainer}>
-        <Image source={require('../assets/party1.jpeg')} style={styles.cardImage} />
+        {partyData.images.map((image, index) => (
+          <Image key={index} source={{ uri: image }} style={styles.cardImage} />
+        ))}
       </View>
 
       <TouchableOpacity onPress={() => navigation.navigate('ProfileScreen', { userId: partyData.hostId })} style={styles.hostProfile}>

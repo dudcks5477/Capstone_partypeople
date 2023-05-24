@@ -9,12 +9,15 @@ export default function LoginScreen() {
   const [password, setPassword] = useState('');
 
   const navigation = useNavigation();
+  
 
+  const serverURL = 'http://ec2-13-209-74-82.ap-northeast-2.compute.amazonaws.com:8080';
+  
   const handleLogin = async () => {
     // navigation.navigate('BottomTab', { screen: 'Home' });
     try {
       // 이메일과 비밀번호를 백엔드로 전송하여 로그인 처리합니다.
-      const response = await axios.post('http://ec2-13-209-74-82.ap-northeast-2.compute.amazonaws.com:8080/api/User', {
+      const response = await axios.post('http://ec2-13-209-74-82.ap-northeast-2.compute.amazonaws.com:8080/users', {
         email: email,
         password: password,
       });

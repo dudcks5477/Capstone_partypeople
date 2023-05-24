@@ -33,11 +33,11 @@ const HomeScreen = () => {
     }
   };
   return (
-    <>
+    <View style={styles.container}>
       <SearchBar />
       <Line style={{ marginTop: 20 }} />
       <SafeAreaView style={styles.containerNotch}>
-        <View style={styles.container}>
+        <View style={styles.containerParty}>
           <ScrollView>
           {partyData && (
               <TouchableOpacity
@@ -50,19 +50,19 @@ const HomeScreen = () => {
           </ScrollView>
         </View>
         <View>
-      <Button title="Clear AsyncStorage" onPress={clearAllData} />
-    </View>
-
+        {/* <Button title="Clear AsyncStorage" onPress={clearAllData} /> */}
+        </View>
       </SafeAreaView>
-    </>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  containerNotch: {
-    flex: 1,
-  },
   container: {
+    flex: 1,
+    backgroundColor: '#222',
+  },
+  containerParty: {
     marginVertical: 10,
   },
   cardButton: {

@@ -16,20 +16,23 @@ const PrivateProfileScreen = () => {
   const [modalVisible, setModalVisible] = useState(false);
 
   return (
-    <View>
-      <Text style={{ color: 'gray', fontSize: 40, fontWeight: 'bold', marginLeft: 15, marginTop: 30 }}>
+    <View style={{
+      flex: 1,
+      backgroundColor: "#222",
+    }}>
+      <Text style={{ color: '#B39DDB', fontSize: 40, fontWeight: 'bold', marginLeft: 15, marginTop: 30 }}>
         프로필
       </Text>
       <Line style={{ marginTop: 20, width: '90%', marginHorizontal: '5%' }} />
       <View style={{ marginTop: 5, width: '90%', marginHorizontal: '5%', flexDirection: 'row' }}>
         <MaterialIcons name="account-circle" size={60} color="gray" style={{ marginRight: 2 }} />
         <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
-          <Text style={{ fontSize: 14 }}>주최자</Text>
-          <Text style={{ fontSize: 12 }}>Show profile</Text>
+          <Text style={{ fontSize: 14, color: '#B39DDB' }}>주최자</Text>
+          <Text style={{ fontSize: 12, color: '#B39DDB' }}>Show profile</Text>
         </View>
       </View>
       <View style={{ width: '90%', marginHorizontal: '5%' }}>
-        <Text style={{ marginTop: 5, marginBottom:5, fontSize: 20, fontWeight: 'bold', height: 223}}>참석 예정</Text>
+        <Text style={{ marginTop: 5, marginBottom:5, fontSize: 20, fontWeight: 'bold', height: 223, color: '#B39DDB'}}>참석 예정</Text>
         <Modal
           transparent={true}
           visible={modalVisible}
@@ -71,18 +74,32 @@ const PrivateProfileScreen = () => {
       </View>
       <Line />
       <View style={{ width: '90%', marginHorizontal: '5%' }}>
-        <Text style={{ marginTop: 5, fontSize: 20, fontWeight: 'bold' }}>세팅</Text>
-        <TouchableOpacity onPress={() => onItemPress('Personal Information')}>
-          <Text>Personal Information</Text>
+        <Text style={{ marginTop: 5, marginBottom: 15, fontSize: 20, fontWeight: 'bold', color: '#B39DDB' }}>세팅</Text>
+
+        <TouchableOpacity onPress={() => onItemPress('Personal Information')} style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <MaterialIcons name="account-circle" size={20} color="#B39DDB" style={{ marginRight: 7 }} />
+            <Text style={{color: '#B39DDB'}}>Personal Information</Text>
+          </View>
+          <MaterialIcons name="chevron-right" size={20} color="#B39DDB" style={{ marginRight: 7 }} />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => onItemPress('Login & Security')}>
-          <Text>Login & Security</Text>
+
+        <TouchableOpacity onPress={() => onItemPress('Login & Security')} style={{flexDirection: 'row', alignItems: 'center'}}>
+          <MaterialIcons name="admin-panel-settings" size={20} color="#B39DDB" style={{ marginRight: 7 }} />
+          <Text style={{color: '#B39DDB'}}>Login & Security</Text>
+          <MaterialIcons name="chevron-right" size={20} color="#B39DDB" style={{ marginRight: 7 }} />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => onItemPress('Payments and payouts')}>
-          <Text>Payments and payouts</Text>
+
+        <TouchableOpacity onPress={() => onItemPress('Payments and payouts')} style={{flexDirection: 'row', alignItems: 'center'}}>
+          <MaterialIcons name="payments" size={20} color="#B39DDB" style={{ marginRight: 7 }} />
+          <Text style={{color: '#B39DDB'}}>Payments and payouts</Text>
+          <MaterialIcons name="chevron-right" size={20} color="#B39DDB" style={{ marginRight: 7 }} />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => onItemPress('Taxes')}>
-          <Text>Taxes</Text>
+
+        <TouchableOpacity onPress={() => onItemPress('Taxes')} style={{flexDirection: 'row', alignItems: 'center'}}>
+          <MaterialIcons name="note" size={20} color="#B39DDB" style={{ marginRight: 7 }} />
+          <Text style={{color: '#B39DDB'}}>Taxes</Text>
+          <MaterialIcons name="chevron-right" size={20} color="#B39DDB" style={{ marginRight: 7 }} />
         </TouchableOpacity>
       </View>
     </View>

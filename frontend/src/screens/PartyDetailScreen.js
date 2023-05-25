@@ -26,17 +26,14 @@ const PartyDetailScreen = ({ route }) => {
 
   const fetchPartyDetail = async () => {
     try {
-      const response = await fetch('http://your-backend-server-url/api/partyDetail', {
-        method: 'GET',
+      const response = await axios.get('http://your-backend-server-url/api/partyDetail', {
         headers: {
           'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ partyId })  // send partyId to server
+        params: { partyId }, // send partyId to server
       });
       
-      const data = await response.json();
-      setPartyData(data);
+      setPartyData(response.data);
     } catch (e) {
       console.error(e);
     }
@@ -44,37 +41,32 @@ const PartyDetailScreen = ({ route }) => {
 
   const toggleFavorite = async () => {
     try {
-      const response = await fetch('http://your-backend-server-url/api/toggleFavorite', {
-        method: 'POST',
+      const response = await axios.post('http://your-backend-server-url/api/toggleFavorite', {
+        partyName: partyData.partyName
+      }, {
         headers: {
           'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ partyName: partyData.partyName })
       });
       
-      const data = await response.json();
-      setIsFavorite(data.isFavorite);
+      setIsFavorite(response.data.isFavorite);
     } catch (e) {
       console.error(e);
     }
   };
-
   const joinChatRoom = async () => {
     try {
-      const response = await fetch('http://your-backend-server-url/api/joinChatRoom', {
-        method: 'POST',
+      const response = await axios.post('http://your-backend-server-url/api/joinChatRoom', {
+        partyId: partyData.id
+      }, {
         headers: {
           'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ partyId: partyData.id }) // partyData.id는 참석하려는 파티의 아이디입니다.
       });
-  
-      if (response.ok) {
-        const responseData = await response.json();
-        const chatRoomId = responseData.chatRoomId; // 서버에서 반환하는 채팅방 아이디를 받아옵니다.
-        navigation.navigate('Chat', { chatRoomId: chatRoomId }); // 채팅방 화면으로 이동할 때 chatRoomId를 같이 전달합니다.
+
+      if (response.status === 200) {
+        const chatRoomId = response.data.chatRoomId;
+        navigation.navigate('Chat', { chatRoomId: chatRoomId });
       } else {
         console.error('Failed to join chat room');
       }

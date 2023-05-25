@@ -5,7 +5,7 @@ import {View, Button, Platform, Text, TextInput,TouchableOpacity, Alert, ScrollV
 import ImageCropPicker from 'react-native-image-crop-picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import axios from 'axios';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Line from '../container/Line';
 
@@ -19,7 +19,7 @@ const AddScreen = ({navigation,route}) => {
   const [time, setTime] = useState();
   const [show, setShow] = useState(false);
   const [partyName, setPartyName] = useState('');
-  const [numOfPeople, setNumOfPeople] = useState('');
+  const [numOfPeople, setNumOfPeople] = useState();
   const [description, setDescription] = useState('');
   const [coin, setCoin] = useState('');
   const [mode, setMode] = useState('date');
@@ -50,93 +50,104 @@ const AddScreen = ({navigation,route}) => {
       });
   };
   const handleCreate = async () => {
-    if (!address || !partyName || !numOfPeople || !description || !date || imageSources.length === 0) {
+    if (!address || !partyName || !numOfPeople || !description || !date ||imageSources.length === 0) {
       Alert.alert('오류', '입력되지 않은 항목이 있습니다.');
     } else {
       try {
-        const formData = new FormData();
-  
-        // 이미지 업로드
-        imageSources.forEach((image, index) => {
-          const filename = `image_${index + 1}.jpg`;
-          formData.append('imageFile', {
+        console.log(typeof(longitude))
+        console.log(typeof(latitude))
+        console.log(typeof(numOfPeople))
+        console.log(typeof(time))
+        console.log(typeof(date2))
+        
+        const data = {
+          imageFile: imageSources.map((image, index) => ({
             uri: image.path,
             type: image.mime,
-            name: filename,
-          });
-        });
-  
-        // 기존의 데이터 추가
-        formData.append('partyLocation', address);
-        formData.append('longitude', longitude);
-        formData.append('latitude', latitude);
-        formData.append('partyDate', date2);
-        formData.append('PartyTime', time);
-        formData.append('partyName', partyName);
-        formData.append('numOfPeople', numOfPeople);
-        formData.append('content', description);
-        
+            name: `image_${index + 1}.jpg`,
+          })
+          ),
+          partyLocation: address,
+          longitude,
+          latitude,
+          partyDate: date2,
+          partyTime: time,
+          partyName,
+          numOfPeople,
+          content: description,
+
+        };
+        const partyDate = date.toISOString().slice(0, 10);
+        console.log(partyDate)
+        const storedUserId = JSON.parse(await AsyncStorage.getItem('userId'));
+        console.log(storedUserId)
+        console.log(partyName)
+        console.log(longitude)
+        console.log(latitude)
+        console.log(address)
+        console.log(date2)
+        console.log(time)
+        console.log(numOfPeople)
+        console.log(description)
+        console.log(data.imageFile)
         // 파티 생성 요청 보내기
-        const response = await fetch('http://ec2-13-209-74-82.ap-northeast-2.compute.amazonaws.com:8080/party', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-          body: formData,
-        });
+        const response = await axios.post(`http://3.35.21.149:8080/party/${storedUserId}`, {
+        // imageName : data.imageFile,
+        partyName : data.partyName,
+        longitude : data.longitude,
+        latitude : data.latitude,
+        partyLocation : data.partyLocation,
+        partyDate : data.partyDate,
+        partyTime : data.partyTime,
+        numOfPeople : data.numOfPeople,
+        content : data.content,
+      });
   
-        if (response.ok) { 
+        if (response.status === 200) { 
           // 파티가 성공적으로 생성되었을 때의 처리 로직
-          // 파티가 성공적으로 생성되었을 때의 처리 로직
-const partyData = await response.json();
-const partyId = partyData.id; // 이 부분은 실제 반환된 JSON 형태에 따라 달라집니다.
+          const partyData = response.data;
+          const partyId = partyData.id; 
+          await AsyncStorage.setItem('partyId', JSON.stringify(partyId));
+          // 채팅방 생성 요청 보내기
+          // const chatRoomResponse = await axios.post('http://ec2-13-209-74-82.ap-northeast-2.compute.amazonaws.com:8080/chatRoom', {
+          //   partyId: partyId,
+          //   hostId: storedUserId // 현재 사용자의 아이디
+          // }, {
+          //   headers: {
+          //     'Content-Type': 'application/json',
+          //   },
+          // });
 
-// 채팅방 생성 요청 보내기
-const chatRoomResponse = await fetch('http://ec2-13-209-74-82.ap-northeast-2.compute.amazonaws.com:8080/chatRoom', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify({ 
-    partyId: partyId,
-    hostId: 'yourHostId' // 현재 사용자의 아이디
-  }),
-});
+        //   if (chatRoomResponse.status === 200) {
+        //     // 채팅방이 성공적으로 생성되었을 때의 처리 로직
+        //     const chatRoomData = chatRoomResponse.data;
+        //     const chatRoomId = chatRoomData.id;
+        //     console.log(`채팅방 생성 성공, ID: ${chatRoomId}`);
+        //   } else {
+        //     // 채팅방 생성 실패 처리 로직
+        //     Alert.alert('오류', '채팅방 생성에 실패했습니다.');
+        //   }
 
-if (chatRoomResponse.ok) {
-  // 채팅방이 성공적으로 생성되었을 때의 처리 로직
-  const chatRoomData = await chatRoomResponse.json();
-  const chatRoomId = chatRoomData.id; // 이 부분은 실제 반환된 JSON 형태에 따라 달라집니다.
-  console.log(`채팅방 생성 성공, ID: ${chatRoomId}`);
-} else {
-  // 채팅방 생성 실패 처리 로직
-  Alert.alert('오류', '채팅방 생성에 실패했습니다.');
-}
-
-        } else {
-          // 파티 생성 실패 처리 로직
-          Alert.alert('오류', '데이터 전송에 실패했습니다.');
+        // } else {
+        //   // 파티 생성 실패 처리 로직
+        //   Alert.alert('오류', '데이터 전송에 실패했습니다.');
         }
       } catch (error) {
-        // 예외 발생 시의 처리 로직
-        console.log(error);
-        Alert.alert('오류', '데이터 전송 중 예외가 발생했습니다.');
+        // 예외 발생 처리 로직
+        console.error(error);
       }
     }
-  };
+  }
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
-    const currentDate2 = selectedDate || date;
+  
     setDateSelected(true);
     setShow(Platform.OS === 'ios');
     setDate(currentDate);
-    setDate2(currentDate2.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' }))
-    console.log('aaD',currentDate.toLocaleDateString());
-    console.log("AAd",currentDate.toLocaleTimeString())
-    setTime(currentDate.toLocaleTimeString());
-
+    
   };
+
 
   const showMode = currentMode => {
     setShow(true);
@@ -219,8 +230,7 @@ if (chatRoomResponse.ok) {
             }}>
               <Text>
                 {date && mode === 'time' 
-                  ? date.toLocaleTimeString('ko-KR', { hour: '2-digit',
-                  minute: '2-digit' })
+                  ? date.toLocaleTimeString('ko-KR', { hour: '2-digit',minute: '2-digit' })
                   : "시간"
                 }
               </Text>
@@ -259,8 +269,9 @@ if (chatRoomResponse.ok) {
             value={numOfPeople}
             keyboardType={'numeric'}
             onChangeText={text => {
-              if (parseInt(text) <= 100) {
-                setNumOfPeople(text)
+              const parsedNum = parseInt(text);
+              if (!isNaN(parsedNum) && parsedNum <= 100) {
+                setNumOfPeople(parsedNum);
               }
             }}
           />

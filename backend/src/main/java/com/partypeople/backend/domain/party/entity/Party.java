@@ -49,12 +49,15 @@ public class Party {
     )
     private Set<User> participants = new HashSet<>();
 
+    @ManyToMany(mappedBy = "chatRooms")
+    private Set<User> chatParticipants = new HashSet<>();
     public void addParticipant(User user) {
         participants.add(user);
         user.getParties().add(this);
     }
 
     public boolean containsParticipant(User user) {
+
         return participants.contains(user);
     }
 

@@ -7,6 +7,7 @@ import axios from 'axios';
 
 
 const MapScreen = () => {
+  const [parties, setParties] = useState([]);
   const [partyID, setPartyID] = useState(null);
   const [imageFile, setImageFile] = useState('');
   const [address, setAddress] = useState('');
@@ -40,39 +41,43 @@ const MapScreen = () => {
     });
   };
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get('http://3.35.21.149:8080/party'); // 실제 API 주소로 변경해 주세요
-        const data = response.data;
-  
-        setAddress(data.partyLocation);
-        setLatitude(data.latitude);
-        setLongitude(data.longitude);
-        setDescription(data.content);
-        setDate(data.partyDate);
-        setTime(data.PartyTime);
-        setNumOfPeople(data.numOfPeople);
-        setPartyName(data.partyName);
-        if (data.partyID) {
-          setPartyID(data.partyID);
-        }
-        // 이미지 파일의 URL을 상태에 저장합니다.
-        // 이미지가 여러 개인 경우, 첫 번째 이미지만 선택합니다.
-        if (data.imageFile && data.imageFile.length > 0) {
-          setImageFile(data.imageFile[0]);
-        }
-  
-        console.log(data);
-      } catch (e) {
-        console.log(e);
-      }
-    };
-  
-    fetchData();
-  }, []);
-  const handleMarkerPress = () => {
-    setModalVisible(true);
+  const fetchData = async () => {
+    try {
+      const response = await axios.get('http://3.35.21.149:8080/party');
+      const data = response.data;
+
+      // 받아온 파티 데이터를 배열로 상태에 저장합니다.
+      setParties(data);
+
+      console.log(data);
+    } catch (e) {
+      console.log(e);
+    }
   };
+
+  fetchData();
+}, []);
+const handleMarkerPress = (party) => {
+  // 선택된 파티의 데이터를 상태에 저장합니다.
+  setAddress(party.partyLocation);
+  setLatitude(party.latitude);
+  setLongitude(party.longitude);
+  setDescription(party.content);
+  setDate(party.partyDate);
+  setTime(party.PartyTime);
+  setNumOfPeople(party.numOfPeople);
+  setPartyName(party.partyName);
+  if (party.partyID) {
+    setPartyID(party.partyID);
+  }
+  if (party.imageFile && party.imageFile.length > 0) {
+    setImageFile(party.imageFile[0]);
+  }
+
+  // Modal을 표시합니다.
+  setModalVisible(true);
+};
+
   const handlePartyDetailPress = () => {
     navigation.navigate('PartyDetail',partyID);
     setModalVisible(false);
@@ -82,25 +87,24 @@ const MapScreen = () => {
   return (
     <View style={styles.container}>
       <MapView
-        provider={PROVIDER_GOOGLE}
-        style={styles.map}
-        ref={mapRef} // Ref를 추가합니다.
-        initialRegion={region} // 초기 위치를 상태에서 가져옵니다.
-        onRegionChangeComplete={setRegion} // 지도를 이동할 때마다 상태를 업데이트합니다.
-      >
-        {address && (
-          
+  provider={PROVIDER_GOOGLE}
+  style={styles.map}
+  ref={mapRef} // Ref를 추가합니다.
+  initialRegion={region} // 초기 위치를 상태에서 가져옵니다.
+  onRegionChangeComplete={setRegion} // 지도를 이동할 때마다 상태를 업데이트합니다.
+>
+  {parties.map((party, index) => (
     <Marker
+      key={index}
       coordinate={{
-        latitude: latitude,
-        longitude: longitude,
+        latitude: party.latitude,
+        longitude: party.longitude,
       }}
-      onPress={handleMarkerPress} // 마커를 클릭했을 때, handleMarkerPress 함수를 실행합니다.
+      onPress={() => handleMarkerPress(party)} // 클릭한 마커에 해당하는 파티의 데이터를 인자로 넘깁니다.
     />
-  )}
-  
+  ))}
+</MapView>
 
-      </MapView>
       <Modal
         transparent={true}
         visible={modalVisible}

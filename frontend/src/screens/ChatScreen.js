@@ -141,7 +141,6 @@ const ChatScreen = ({ navigation }) => {
                 <Text style={styles.smallText}>32명 참석자</Text>
               </View>
             </View>
-            <Line/>
             {/* <View style={{flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
               <MaterialIcons name="account-circle" size={60} color="gray" style={{marginRight: 2}}/>
               <View style={{flexDirection: 'column'}}>

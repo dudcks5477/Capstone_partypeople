@@ -120,7 +120,7 @@ const AddScreen = ({navigation,route}) => {
   }
 
   return (
-    <View>
+    <View style={{backgroundColor: '#222', flex: 1}}>
 
       <TouchableOpacity onPress={handleGoBack} style={{
         flexDirection:"row", 
@@ -129,25 +129,26 @@ const AddScreen = ({navigation,route}) => {
         width: '90%',
         marginHorizontal: '3%'
         }}>
-        <MaterialIcons name="chevron-left" size={24} color="black" style={{ marginRight: 2}}/>
-        <Text style={{fontSize: 25}}>생성</Text>
+        <MaterialIcons name="chevron-left" size={24} color="black" style={{ marginRight: 2, color: '#B39DDB'}}/>
+        <Text style={{fontSize: 25, color: '#B39DDB', fontWeight: 'bold'}}>생성</Text>
       </TouchableOpacity>
 
-      <Line style={{marginTop: 15, marginBottom: 10}}/>
+      <Line style={{marginTop: 15, marginBottom: 10 }}/>
 
       <View style = {{
         width: '90%',
         marginHorizontal: '5%'
       }}>
         <View style={{flexDirection:'row', alignItems: 'center'}}>
-          <Text style={{marginRight: 30}}>파티이름</Text>
+          <Text style={{marginRight: 30, color: '#B39DDB'}}>파티이름</Text>
           <TextInput
             style={{
               flex: 1,
               height: 39, 
               borderColor: 'gray', 
               borderWidth: 1,
-              borderRadius: 6
+              borderRadius: 6,
+              color: 'white'
             }}
             onChangeText={text => setPartyName(text)}
             value={partyName}
@@ -155,7 +156,7 @@ const AddScreen = ({navigation,route}) => {
         </View>
         
         <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 10}}>
-          <Text style={{marginRight: 30}}>파티시간</Text>
+          <Text style={{marginRight: 30, color: '#B39DDB'}}>파티시간</Text>
           <View style={{flex: 1, marginRight: 10}}>
             <TouchableOpacity onPress={showDatepicker} style={{
               height: 39,
@@ -166,7 +167,7 @@ const AddScreen = ({navigation,route}) => {
               alignItems: 'center',
               paddingLeft: 10,
             }}>
-              <Text>
+              <Text style={{color: '#B39DDB'}}>
                 {dateSelected 
                   ? date.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric'}) 
                   : "날짜"
@@ -185,7 +186,7 @@ const AddScreen = ({navigation,route}) => {
               alignItems: 'center',
               paddingLeft: 10,
             }}>
-              <Text>
+              <Text style={{color: '#B39DDB'}}>
                 {date && mode === 'time' 
                   ? date.toLocaleTimeString('ko-KR', { hour: '2-digit',
                   minute: '2-digit' })
@@ -197,7 +198,7 @@ const AddScreen = ({navigation,route}) => {
         </View>
 
         <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 10}}>
-          <Text style={{marginRight: 30}}>파티장소</Text>
+          <Text style={{marginRight: 30, color: '#B39DDB'}}>파티장소</Text>
           <TouchableOpacity
             onPress={() => navigation.navigate('Map2')}
             style={{
@@ -210,12 +211,12 @@ const AddScreen = ({navigation,route}) => {
                 paddingLeft: 10,
               }}
             >
-              <Text>{address || "위치 선택"}</Text>
+              <Text style={{color: '#B39DDB'}}>{address || "위치 선택"}</Text>
           </TouchableOpacity>
         </View>
         
         <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 10}}>
-          <Text style={{marginRight: 30}}>최대인원</Text>
+          <Text style={{marginRight: 30, color: '#B39DDB'}}>최대인원</Text>
           <TextInput
             style={{
                 flex: 1,
@@ -235,7 +236,7 @@ const AddScreen = ({navigation,route}) => {
         </View>
 
         <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 10}}>
-          <Text style={{marginRight: 30}}>파티코인</Text>
+          <Text style={{marginRight: 30, color: '#B39DDB'}}>파티코인</Text>
           <TextInput
             style={{
                 flex: 1,
@@ -257,7 +258,7 @@ const AddScreen = ({navigation,route}) => {
         width: '90%',
         marginHorizontal: '5%'
       }}>
-        <Text>파티 소개</Text>
+        <Text style={{color: '#B39DDB'}}>파티 소개</Text>
         <TextInput
           style={{
             height: 150, 
@@ -278,7 +279,7 @@ const AddScreen = ({navigation,route}) => {
         marginHorizontal: '5%',
       }}>
          <View>
-         <Text>사진 등록</Text>
+         <Text style={{color: "#B39DDB"}}>사진 등록</Text>
       <View style={{ flexDirection: 'row', marginTop: 10, alignItems: 'center' }}>
         <TouchableOpacity
           style={{
@@ -293,7 +294,9 @@ const AddScreen = ({navigation,route}) => {
           }}
           onPress={handleCameraPress}
         >
-          <MaterialIcons name="photo-camera" size={70} color="gray" />
+          <View style={{backgroundColor: "black", width: "100%", justifyContent: 'center', alignItems: 'center', borderRadius: 10}}>
+            <MaterialIcons name="photo-camera" size={70} color="#B39DDB" />
+          </View>
         </TouchableOpacity>
         <ScrollView
           horizontal={true}
@@ -347,11 +350,12 @@ const AddScreen = ({navigation,route}) => {
         <Text style={{
           borderColor: 1,
           borderRadius: 10,
-          backgroundColor: '#ccc',
+          backgroundColor: '#B39DDB',
           width: 147,
           height: 43,
           lineHeight: 43,
           textAlign: 'center',
+          fontWeight: 'bold'
         }}>생성하기</Text>
       </TouchableOpacity>
 

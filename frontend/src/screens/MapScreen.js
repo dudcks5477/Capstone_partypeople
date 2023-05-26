@@ -132,7 +132,7 @@ const MapScreen = () => {
               minLength={2}
               placeholder="언제든 파티 위치 검색"
               query={{
-                key: '영찬아 여기에 API넣어서 써 직접 내가 .env 로 할려다가 실패해서 컴퓨터 부실뻔했어 근데 안돼 아직도',
+                key: '',
                 language: "ko",
                 components: "country:kr",
               }}

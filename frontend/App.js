@@ -72,8 +72,8 @@ const App = () => (
           options={{
             headerShown: false,
           }}
-        /> */}
-        {/* <Stack.Screen
+        />
+        <Stack.Screen
           name="Chat"
           component={ChatScreen}
           options={{

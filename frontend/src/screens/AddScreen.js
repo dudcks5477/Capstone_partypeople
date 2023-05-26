@@ -53,6 +53,10 @@ const AddScreen = ({navigation,route}) => {
     if (!address || !partyName || !numOfPeople || !description || !date ||imageSources.length === 0) {
       Alert.alert('오류', '입력되지 않은 항목이 있습니다.');
     } else {
+      setDate2(date.toISOString().slice(0, 10))
+      setTime(date.toISOString().slice(11, 19))
+      console.log(date2)
+      console.log(time)
       try {
         console.log(typeof(longitude))
         console.log(typeof(latitude))
@@ -77,10 +81,11 @@ const AddScreen = ({navigation,route}) => {
           content: description,
 
         };
-        const partyDate = date.toISOString().slice(0, 10);
-        console.log(partyDate)
+        
         const storedUserId = JSON.parse(await AsyncStorage.getItem('userId'));
-        console.log(storedUserId)
+
+        
+        console.log("sto",storedUserId)
         console.log(partyName)
         console.log(longitude)
         console.log(latitude)
@@ -92,7 +97,7 @@ const AddScreen = ({navigation,route}) => {
         console.log(data.imageFile)
         // 파티 생성 요청 보내기
         const response = await axios.post(`http://3.35.21.149:8080/party/${storedUserId}`, {
-        // imageName : data.imageFile,
+        imageFile : data.imageFile,
         partyName : data.partyName,
         longitude : data.longitude,
         latitude : data.latitude,
@@ -104,10 +109,13 @@ const AddScreen = ({navigation,route}) => {
       });
   
         if (response.status === 200) { 
+          
           // 파티가 성공적으로 생성되었을 때의 처리 로직
-          const partyData = response.data;
-          const partyId = partyData.id; 
-          await AsyncStorage.setItem('partyId', JSON.stringify(partyId));
+          
+           
+          console.log("성공")
+          navigate.navigation('MapScreen')
+          // await AsyncStorage.setItem('partyId', JSON.stringify(partyId));
           // 채팅방 생성 요청 보내기
           // const chatRoomResponse = await axios.post('http://ec2-13-209-74-82.ap-northeast-2.compute.amazonaws.com:8080/chatRoom', {
           //   partyId: partyId,

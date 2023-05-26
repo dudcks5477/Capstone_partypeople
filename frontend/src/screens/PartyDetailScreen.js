@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import Line from '../container/Line';
 import { TouchableHighlight } from 'react-native-gesture-handler';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const PartyDetailScreen = ({ route }) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const [partyData, setPartyData] = useState({
@@ -14,44 +15,37 @@ const PartyDetailScreen = ({ route }) => {
     partyName: '',
     numOfPeople: '',
     description: '',
-    image: [],  // add image state
+    images: [],  // add image state
   });
-
+ 
   const navigation = useNavigation();
-  const { partyId } = route.params;  // receive partyId from previous screen
-
+  const partyId  = route.params;  // receive partyId from previous screen
+  console.log("ID",partyId)
   useEffect(() => {
     fetchPartyDetail();
   }, []);
 
   const fetchPartyDetail = async () => {
     try {
-      const response = await axios.get('http://your-backend-server-url/api/partyDetail', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-        params: { partyId }, // send partyId to server
-      });
-      
+      const response = await axios.get(`http://3.35.21.149:8080/party/${partyId}`);
+
       setPartyData(response.data);
     } catch (e) {
       console.error(e);
     }
   };
-
   const toggleFavorite = async () => {
     try {
-      const response = await axios.post('http://your-backend-server-url/api/toggleFavorite', {
-        partyName: partyData.partyName
-      }, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-      
+      const storedUserId = JSON.parse(await AsyncStorage.getItem('userId'));
+      const response = await axios.post(`http://3.35.21.149:8080/wishlist/${storedUserId}/add/${partyId}`,{
+
+      })
+      console.log(response.data)
+      console.log("sto",storedUserId)
+      console.log("tID",partyId)
       setIsFavorite(response.data.isFavorite);
     } catch (e) {
-      console.error(e);
+      console.error("toggle",e);
     }
   };
   const joinChatRoom = async () => {
@@ -74,7 +68,10 @@ const PartyDetailScreen = ({ route }) => {
       console.error(e);
     }
   };
-
+  const handleAttendeePress = (attendeeIndex) => {
+    // attendeeIndex를 사용해 원하는 동작 수행
+    console.log(`Attendee ${attendeeIndex} was pressed`);
+  };
 
   const handleGoBack = () => {
     navigation.goBack(); // 이전으로 돌아가기
@@ -96,7 +93,7 @@ const PartyDetailScreen = ({ route }) => {
       </TouchableOpacity>
 
       <View style={styles.cardContainer}>
-        {partyData.images.map((image, index) => (
+        {partyData.images?.map((image, index) => (
           <Image key={index} source={{ uri: image }} style={styles.cardImage} />
         ))}
       </View>

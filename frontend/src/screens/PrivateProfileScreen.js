@@ -32,7 +32,7 @@ const PrivateProfileScreen = () => {
         </View>
       </View>
       <View style={{ width: '90%', marginHorizontal: '5%' }}>
-        <Text style={{ marginTop: 5, marginBottom:5, fontSize: 20, fontWeight: 'bold', height: 223, color: '#B39DDB'}}>참석 예정</Text>
+        <Text style={{ marginTop: 5, marginBottom:5, fontSize: 25, fontWeight: 'bold', height: 223, color: '#B39DDB'}}>참석 예정</Text>
         <Modal
           transparent={true}
           visible={modalVisible}
@@ -74,31 +74,37 @@ const PrivateProfileScreen = () => {
       </View>
       <Line />
       <View style={{ width: '90%', marginHorizontal: '5%' }}>
-        <Text style={{ marginTop: 5, marginBottom: 15, fontSize: 20, fontWeight: 'bold', color: '#B39DDB' }}>세팅</Text>
+        <Text style={{ marginTop: 5, marginBottom: 15, fontSize: 25, fontWeight: 'bold', color: '#B39DDB' }}>세팅</Text>
 
         <TouchableOpacity onPress={() => onItemPress('Personal Information')} style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <MaterialIcons name="account-circle" size={20} color="#B39DDB" style={{ marginRight: 7 }} />
-            <Text style={{color: '#B39DDB'}}>Personal Information</Text>
+            <Text style={{color: '#B39DDB', fontSize: 20}}>Personal Information</Text>
           </View>
           <MaterialIcons name="chevron-right" size={20} color="#B39DDB" style={{ marginRight: 7 }} />
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => onItemPress('Login & Security')} style={{flexDirection: 'row', alignItems: 'center'}}>
-          <MaterialIcons name="admin-panel-settings" size={20} color="#B39DDB" style={{ marginRight: 7 }} />
-          <Text style={{color: '#B39DDB'}}>Login & Security</Text>
+        <TouchableOpacity onPress={() => onItemPress('Login & Security')} style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <MaterialIcons name="admin-panel-settings" size={20} color="#B39DDB" style={{ marginRight: 7 }} />
+            <Text style={{color: '#B39DDB', fontSize: 20}}>Login & Security</Text>
+          </View>
           <MaterialIcons name="chevron-right" size={20} color="#B39DDB" style={{ marginRight: 7 }} />
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => onItemPress('Payments and payouts')} style={{flexDirection: 'row', alignItems: 'center'}}>
-          <MaterialIcons name="payments" size={20} color="#B39DDB" style={{ marginRight: 7 }} />
-          <Text style={{color: '#B39DDB'}}>Payments and payouts</Text>
+        <TouchableOpacity onPress={() => onItemPress('Payments and payouts')} style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <MaterialIcons name="payments" size={20} color="#B39DDB" style={{ marginRight: 7 }} />
+            <Text style={{color: '#B39DDB', fontSize: 20}}>Payments and payouts</Text>
+          </View>
           <MaterialIcons name="chevron-right" size={20} color="#B39DDB" style={{ marginRight: 7 }} />
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => onItemPress('Taxes')} style={{flexDirection: 'row', alignItems: 'center'}}>
-          <MaterialIcons name="note" size={20} color="#B39DDB" style={{ marginRight: 7 }} />
-          <Text style={{color: '#B39DDB'}}>Taxes</Text>
+        <TouchableOpacity onPress={() => onItemPress('Taxes')} style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <MaterialIcons name="note" size={20} color="#B39DDB" style={{ marginRight: 7 }} />
+            <Text style={{color: '#B39DDB', fontSize: 20}}>Taxes</Text>
+          </View>
           <MaterialIcons name="chevron-right" size={20} color="#B39DDB" style={{ marginRight: 7 }} />
         </TouchableOpacity>
       </View>

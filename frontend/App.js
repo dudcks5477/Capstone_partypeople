@@ -19,7 +19,7 @@ const Stack = createNativeStackNavigator();
 const App = () => (
     <NavigationContainer>
       <Stack.Navigator>
-        {/* <Stack.Screen
+        <Stack.Screen
           name="Login"
           component={LoginScreen}
           options={{
@@ -79,7 +79,7 @@ const App = () => (
           options={{
             headerShown: false,
           }}
-        /> */}
+        />
          <Stack.Screen
           name="ChatRoomScreen"
           component={ChatRoomScreen}
@@ -88,13 +88,13 @@ const App = () => (
           }}
         />
         
-        {/* <Stack.Screen
+        <Stack.Screen
           name="Register"
           component={RegisterScreen}
           options={{
             headerShown: false,
           }}
-        />  */}
+        /> 
 
           
 
@@ -102,7 +102,8 @@ const App = () => (
       </Stack.Navigator>
       
     </NavigationContainer>
+  
 
 );
 
-export default App;
+export default App;       

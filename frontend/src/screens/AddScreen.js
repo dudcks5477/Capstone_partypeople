@@ -112,10 +112,9 @@ const AddScreen = ({navigation,route}) => {
           
           // 파티가 성공적으로 생성되었을 때의 처리 로직
           
-           
           console.log("성공")
           navigate.navigation('MapScreen')
-          // await AsyncStorage.setItem('partyId', JSON.stringify(partyId));
+          await AsyncStorage.setItem('partyId', JSON.stringify(response.date.id));
           // 채팅방 생성 요청 보내기
           // const chatRoomResponse = await axios.post('http://ec2-13-209-74-82.ap-northeast-2.compute.amazonaws.com:8080/chatRoom', {
           //   partyId: partyId,

@@ -57,7 +57,7 @@ const handleCardPress = () => {
 
 const styles = StyleSheet.create({
   title: {
-    color: '#B39DDB',
+    color: 'white',
     fontSize: 40,
     fontWeight: 'bold',
     marginLeft: 15,

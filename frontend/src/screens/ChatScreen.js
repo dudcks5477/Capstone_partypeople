@@ -214,22 +214,22 @@ const ChatScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   title: {
-    color: '#B39DDB',
+    color: '#fff',
     fontSize: 40,
     fontWeight: 'bold',
     marginLeft: 15,
     marginTop: 30,
   },
   text: {
-    color: '#B39DDB',
+    color: '#fff',
     fontSize: 14
   },
   subText: {
-    color: '#B39DDB',
+    color: '#fff',
     fontSize: 12
   },
   smallText: {
-    color: '#B39DDB',
+    color: '#fff',
     fontSize: 10
   }
 });

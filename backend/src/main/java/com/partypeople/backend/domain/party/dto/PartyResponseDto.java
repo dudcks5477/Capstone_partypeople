@@ -6,6 +6,7 @@ import com.partypeople.backend.domain.account.User;
 import com.partypeople.backend.domain.party.entity.Party;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -38,8 +39,8 @@ public class PartyResponseDto {
     @JsonProperty("userId")
     private Long userId;
 
-    @JsonProperty("imageName")
-    private String imageName;
+    @JsonProperty("imageNames")
+    private List<String> imageNames;
 
     @JsonProperty("participantIds")
     private Set<Long> participantIds;
@@ -53,8 +54,7 @@ public class PartyResponseDto {
         this.partyDateTime = party.getPartyDateTime();
         this.numOfPeople = party.getNumOfPeople();
         this.content = party.getContent();
-        this.imageName = party.getImageName();
-        this.userId = party.getUserId();
+        this.imageNames = party.getImageNames();
         // 추가된 코드
         this.participantIds = party.getParticipants().stream()
                 .map(User::getId)

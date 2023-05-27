@@ -13,6 +13,7 @@ import com.partypeople.backend.domain.party.repository.PartyRepository;
 import com.partypeople.backend.domain.party.service.PartyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -33,11 +34,20 @@ public class PartyController {
     private final PartyRepository partyRepository;
 
     private static final String UPLOAD_DIR = "src/main/resources";
+
+    @PostMapping("/party")
+    public ResponseEntity<?> handleParty(@RequestPart("party") PartyDto party) {
+        // TODO: 'party' 파트를 처리하는 로직
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping("/{userId}")
-    public ResponseEntity<Long> createParty(@PathVariable Long userId, @RequestBody PartyRequestDto requestDto) {
+    public ResponseEntity<Long> createParty(@PathVariable Long userId,
+                                            @RequestPart("party") PartyRequestDto partyDto,
+                                            @RequestPart("images") List<MultipartFile> images) {
         try {
-            Long partyId = partyService.createParty(requestDto, userId);
-            return ResponseEntity.ok(partyId);
+            Long partyId = partyService.createParty(partyDto, userId, images);
+            return new ResponseEntity<>(partyId, HttpStatus.CREATED);
         } catch (UserNotFoundException e) {
             return ResponseEntity.notFound().build();
         } catch (Exception e) {
@@ -45,10 +55,21 @@ public class PartyController {
         }
     }
 
-    @PutMapping("/{partyId}/{userId}")
-    public ResponseEntity<Void> updateParty(@PathVariable Long partyId, @PathVariable Long userId, @RequestBody PartyRequestDto requestDto) {
-        partyService.updateParty(partyId, requestDto, userId);
-        return ResponseEntity.noContent().build();
+    @PutMapping(value = "/{partyId}/{userId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Void> updateParty(
+            @PathVariable Long partyId,
+            @PathVariable Long userId,
+            @RequestPart("party") PartyRequestDto partyDto,
+            @RequestPart("images") List<MultipartFile> images
+    ) {
+        try {
+            partyService.updateParty(partyId, partyDto, userId, images);
+            return ResponseEntity.noContent().build();
+        } catch (PartyNotFoundException | AccessDeniedException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @DeleteMapping("/{partyId}/{userId}")
@@ -75,6 +96,7 @@ public class PartyController {
         }
     }
 
+    /*
     @PostMapping("/{partyId}/upload-image")
     public ResponseEntity<String> uploadPartyImage(@PathVariable Long partyId, @RequestParam("imageFile") MultipartFile imageFile) {
         Party party = partyRepository.findById(partyId)
@@ -118,7 +140,8 @@ public class PartyController {
         }
 
          */
-    }
+
+
     @GetMapping
     public ResponseEntity<List<PartyResponseDto>> getAllParties() {
         List<PartyResponseDto> partyResponseDtos = partyService.getAllParties();
@@ -129,8 +152,4 @@ public class PartyController {
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
         return userPrincipal.getId();
     }
-
-
-
-
 }

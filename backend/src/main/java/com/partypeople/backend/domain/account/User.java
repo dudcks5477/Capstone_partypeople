@@ -1,5 +1,6 @@
 package com.partypeople.backend.domain.account;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.partypeople.backend.domain.party.entity.Party;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -38,10 +39,24 @@ public class User implements UserDetails {
     private LocalDate birthDay;
 
     @ManyToMany(mappedBy = "participants")
+    @JsonManagedReference
     private Set<Party> parties = new HashSet<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToMany
+    @JoinTable(
+            name = "user_wishlist",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "party_id")
+    )
+    @JsonManagedReference
     private List<Party> wishlist = new ArrayList<>();
+
+    public void addToWishlist(Party party) {
+        if (!this.wishlist.contains(party)) {
+            this.wishlist.add(party);
+            party.getUsers().add(this);
+        }
+    }
 
     private int experience;
 

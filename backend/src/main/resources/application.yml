@@ -20,3 +20,9 @@ spring:
     mvc:
       pathmatch:
         matching-strategy: path_pattern_parser
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB

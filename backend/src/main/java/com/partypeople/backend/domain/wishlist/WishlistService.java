@@ -8,9 +8,10 @@ import com.partypeople.backend.domain.party.entity.Party;
 import com.partypeople.backend.domain.party.repository.PartyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
+
 @RequiredArgsConstructor
 @Service
 public class WishlistService {
@@ -19,6 +20,7 @@ public class WishlistService {
 
 
     // 위시리스트에 파티 추가
+    @Transactional
     public void addPartyToWishlist(Long userId, Long partyId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
@@ -26,7 +28,7 @@ public class WishlistService {
                 .orElseThrow(() -> new PartyNotFoundException("Party not found with ID: " + partyId));
 
         user.getWishlist().add(party);
-        userRepository.save(user);
+        party.getUsers().add(user);
     }
 
     // 위시리스트 조회
@@ -37,6 +39,7 @@ public class WishlistService {
     }
 
     // 위시리스트에서 파티 제거
+    @Transactional
     public void removePartyFromWishlist(Long userId, Long partyId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
@@ -45,6 +48,6 @@ public class WishlistService {
                 .orElseThrow(() -> new PartyNotFoundException("Party not found with ID: " + partyId));
 
         user.getWishlist().remove(party);
-        userRepository.save(user);
+        party.getUsers().remove(user);
     }
 }

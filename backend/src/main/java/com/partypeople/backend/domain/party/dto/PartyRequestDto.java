@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 @Data
 @Builder
@@ -22,6 +23,5 @@ public class PartyRequestDto {
     private LocalTime partyTime;
     private Long numOfPeople;
     private String content;
-    private MultipartFile imageFile;
-    private Long userId;
+    //private List<MultipartFile> imageFiles;
 }

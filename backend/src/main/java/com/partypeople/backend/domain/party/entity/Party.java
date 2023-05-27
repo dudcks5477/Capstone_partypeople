@@ -1,5 +1,7 @@
 package com.partypeople.backend.domain.party.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.partypeople.backend.domain.account.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,10 +17,7 @@ import javax.persistence.*;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Builder
 @AllArgsConstructor
@@ -38,19 +37,19 @@ public class Party {
     private Long numOfPeople;
     private String content;
 
-    private Long userId;
+
 
     //@NotNull
     //private int coin;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_wishlist")
+    @JoinColumn(name = "user_id")
+    @JsonBackReference
     private User user;
 
-    public void addToWishlist(User user) {
-        this.user = user;
-        user.getWishlist().add(this);
-    }
+    @ManyToMany(mappedBy = "wishlist")
+    @JsonBackReference
+    private List<User> users = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -58,6 +57,7 @@ public class Party {
             joinColumns = @JoinColumn(name = "party_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
+    @JsonBackReference
     private Set<User> participants = new HashSet<>();
 
     public void addParticipant(User user) {
@@ -70,31 +70,43 @@ public class Party {
     }
 
 
+    @JsonIgnore
     @Transient
-    private MultipartFile imageFile;
+    private List<MultipartFile> imageFiles;
 
-    private String imageName;
+    @ElementCollection
+    @CollectionTable(name = "party_image", joinColumns = @JoinColumn(name = "party_id"))
+    @Column(name = "image_name")
+    private List<String> imageNames;
 
-    public void uploadImageFile() throws IOException {
-        if (imageFile != null && !imageFile.isEmpty()) {
-            String fileName = StringUtils.cleanPath(imageFile.getOriginalFilename());
-            String fileExtension = FilenameUtils.getExtension(fileName);
-            String generatedFileName = UUID.randomUUID().toString() + "." + fileExtension;
-            String uploadDir = "src/main/resources"; // 이미지 업로드 디렉토리 경로
+    /*
+    public void uploadImageFiles() throws IOException {
+        if (imageFiles != null && !imageFiles.isEmpty()) {
+            imageNames = new ArrayList<>();
+
+            String uploadDir = System.getProperty("user.dir") + "/src/main/image/"; // 이미지 업로드 디렉토리 경로
 
             File uploadDirPath = new File(uploadDir);
             if (!uploadDirPath.exists()) {
                 uploadDirPath.mkdirs();
             }
 
-            File uploadedFile = new File(uploadDir + File.separator + generatedFileName);
-            imageFile.transferTo(uploadedFile);
+            for (int i = 0; i < imageFiles.size(); i++) {
+                MultipartFile imageFile = imageFiles.get(i);
+                if (imageFile != null && !imageFile.isEmpty()) {
+                    String originalFileName = StringUtils.cleanPath(imageFile.getOriginalFilename());
+                    String fileExtension = FilenameUtils.getExtension(originalFileName);
+                    String generatedFileName = "image_" + (i + 1) + "." + fileExtension;
 
-            this.imageName = generatedFileName;
+                    File uploadedFile = new File(uploadDir + File.separator + generatedFileName);
+                    imageFile.transferTo(uploadedFile);
+
+                    imageNames.add(generatedFileName);
+                }
+            }
         }
-
-
     }
+     */
 
     public void setId(Long id) {
         this.id = id;
@@ -124,12 +136,12 @@ public class Party {
         this.participants = participants;
     }
 
-    public void setImageFile(MultipartFile imageFile) {
-        this.imageFile = imageFile;
+    public void setImageFiles(List<MultipartFile> imageFiles) {
+        this.imageFiles = imageFiles;
     }
 
-    public void setImageName(String imageName) {
-        this.imageName = imageName;
+    public void setImageNames(List<String> imageNames) {
+        this.imageNames = imageNames;
     }
 
     public void setLongitude(double longitude) {
@@ -140,7 +152,4 @@ public class Party {
         this.latitude = latitude;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
 }

@@ -1,7 +1,6 @@
 package com.partypeople.backend.domain.wishlist;
 
 import com.partypeople.backend.domain.party.entity.Party;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,7 +30,7 @@ public class WishlistController {
     }
 
     // 위시리스트에서 파티 제거
-    @PostMapping("/{userId}/remove/{partyId}")
+    @DeleteMapping("/{userId}/remove/{partyId}")
     public ResponseEntity<String> removePartyFromWishlist(@PathVariable Long userId, @PathVariable Long partyId) {
         wishlistService.removePartyFromWishlist(userId, partyId);
         return ResponseEntity.ok("Party removed from wishlist successfully");

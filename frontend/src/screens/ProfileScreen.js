@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Button, FlatList } from 'react-native';
+import React, {useState} from 'react';
+import { View, Text, TouchableOpacity, Image, FlatList, TextInput, Dimensions } from 'react-native';
 import { Rating } from 'react-native-ratings'; 
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Line from '../container/Line';
@@ -29,6 +29,8 @@ const ProfileScreen = () => {
       .then(response => setUserDetails(response.data))
       .catch(error => console.log(error));
   }, []);
+
+  const [userComment, setUserComment] = useState('');
 
   const handleGoBack = () => {
     navigation.goBack(); 
@@ -113,6 +115,54 @@ const ProfileScreen = () => {
           keyExtractor={item => item.id}
         />
         {/* Add Comments Here */}
+          <FlatList
+            horizontal
+            pagingEnabled
+            showsHorizontalScrollIndicator={false}
+            data={images}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item }) => (
+              <View style={{ alignItems: 'center', marginRight: 10}}>
+                <Image
+                  style={{ width: 346, height: 154, borderRadius: 10 }}
+                  source={item} /> 
+              </View>
+            )}
+          />
+        <Text>Comment</Text>
+        <TextInput
+          style={{ height: 40, borderColor: 'gray'}}
+          onChangeText={text => setUserComment(text)}
+          value={userComment}
+        />
+      </View>
+      <Line style={{marginTop: 5}}/>
+      <View style={{
+        width: '90%',
+        marginHorizontal: '5%',
+        marginTop: 5
+      }}>
+        <Text>Recent Party / Participate In</Text>
+          <FlatList
+            horizontal
+            pagingEnabled
+            showsHorizontalScrollIndicator={false}
+            data={images}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item }) => (
+              <View style={{ alignItems: 'center', marginRight: 10}}>
+                <Image
+                  style={{ width: 346, height: 154, borderRadius: 10 }}
+                  source={item} /> 
+              </View>
+            )}
+          />
+        <Text>Comment</Text>
+        <TextInput
+          style={{ height: 40, borderColor: 'gray'}}
+          onChangeText={text => setUserComment(text)}
+          value={userComment}
+        />
       </View>
     </View>
   );

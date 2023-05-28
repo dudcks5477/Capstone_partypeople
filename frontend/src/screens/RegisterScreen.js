@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { View, TextInput, TouchableOpacity ,Text} from 'react-native';
+import { View, TextInput, TouchableOpacity, Text } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
 import { styles } from './Styles/LoginStyles';
 
 const RegisterScreen = () => {
@@ -12,26 +13,18 @@ const RegisterScreen = () => {
 
   const registerUser = async () => {
     try {
-      const response = await fetch('http://ec2-13-209-74-82.ap-northeast-2.compute.amazonaws.com:8080/users', {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: name,
-          email: email,
-          password: password,
-          birthDay: birthDay,
-        }),
+      const response = await axios.post('http://3.35.21.149:8080/users', {
+        name: name,
+        email: email,
+        password: password,
+        birthDay: birthDay,
       });
 
-      const responseData = await response.json();
-
       // 회원가입이 성공적으로 처리되었을 때의 로직을 작성합니다.
-      console.log(responseData); // 서버로부터 받은 응답 데이터 출력
+      console.log(response.data); // 서버로부터 받은 응답 데이터 출력
       navigation.navigate('Login');
     } catch (error) {
+      
       // 회원가입 요청이 실패하였을 때의 예외 처리 로직을 작성합니다.
       console.error(error);
     }
@@ -42,23 +35,23 @@ const RegisterScreen = () => {
       <TextInput
         placeholder="이름"
         value={name}
-        onChangeText={text => setName(text)}
+        onChangeText={(text) => setName(text)}
       />
       <TextInput
         placeholder="이메일"
         value={email}
-        onChangeText={text => setEmail(text)}
+        onChangeText={(text) => setEmail(text)}
       />
       <TextInput
         placeholder="비밀번호"
         secureTextEntry
         value={password}
-        onChangeText={text => setPassword(text)}
+        onChangeText={(text) => setPassword(text)}
       />
       <TextInput
         placeholder="생년월일"
         value={birthDay}
-        onChangeText={text => setBirthDay(text)}
+        onChangeText={(text) => setBirthDay(text)}
       />
       <View style={styles.container}>
         <TouchableOpacity style={styles.button} onPress={registerUser}>

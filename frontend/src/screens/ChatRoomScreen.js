@@ -87,6 +87,7 @@ const ChatRoomScreen = ({ route }) => {
     return null;
   };
 
+const CustomToolbar = (props) => {
   return (
     <View style={{ flex: 1 }}>
       {renderChatHeader()}
@@ -113,5 +114,5 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-
+}
 export default ChatRoomScreen;

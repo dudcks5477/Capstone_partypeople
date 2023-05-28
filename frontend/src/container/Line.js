@@ -7,7 +7,7 @@ const Line = ({style}) => {
 
 const styles = StyleSheet.create({
   line: {
-    borderWidth: 1,
+    borderWidth: 0.5,
     borderColor: '#D2D2D2',
     height: 1,
     width: '90%',

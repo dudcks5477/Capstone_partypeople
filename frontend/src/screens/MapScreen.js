@@ -1,65 +1,90 @@
-import React, { useState, useRef,useEffect } from 'react';
-import { StyleSheet, View, Dimensions,TouchableOpacity,Text,Modal,Pressable } from 'react-native';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { StyleSheet, View, Dimensions, TouchableOpacity, Text, Modal } from 'react-native';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
-import { useNavigation } from '@react-navigation/native';
-
-
+import { useNavigation, useIsFocused } from '@react-navigation/native';
+import axios from 'axios';
+import { CancelToken, isCancel } from 'axios';
 
 const MapScreen = () => {
-  
-  const mapRef = useRef(null);
   const navigation = useNavigation();
-  const [modalVisible, setModalVisible] = useState(false);
+  const isFocused = useIsFocused();
+
   const [parties, setParties] = useState([]);
   const [selectedParty, setSelectedParty] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  const mapRef = useRef(null);
+
   const [region, setRegion] = useState({
     latitude: 37.5665,
     longitude: 126.9780,
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,
-  }); // 지도 초기 위치를 상태로 관리합니다.
-  const handlePlaceSelected = (data, details) => {
+  });
+
+  useEffect(() => {
+    const source = CancelToken.source();
+
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('http://3.35.21.149:8080/party', {
+          cancelToken: source.token,
+        });
+        const data = response.data;
+        setParties(data);
+      } catch (e) {
+        if (isCancel(e)) {
+          console.log('Request canceled', e.message);
+        } else {
+          console.log(e);
+        }
+      }
+    };
+
+    fetchData();
+
+    return () => {
+      source.cancel();
+    };
+  }, [isFocused]);
+
+  const handleMarkerPress = useCallback((party) => {
+    setSelectedParty(party);
+    setModalVisible(true);
+  }, []);
+
+  const handlePartyDetailPress = useCallback(() => {
+    console.log("select",selectedParty.id)
+    navigation.navigate('PartyDetail', selectedParty.id);
+    setModalVisible(false);
+  }, [navigation, selectedParty]);
+
+  const handlePlaceSelected = useCallback((data, details) => {
     const { geometry } = details;
     const { location } = geometry;
     const { lat, lng } = location;
 
-    // 검색한 위치로 지도를 이동시킵니다.
     mapRef.current.animateToRegion({
       latitude: lat,
       longitude: lng,
       latitudeDelta: region.latitudeDelta,
       longitudeDelta: region.longitudeDelta,
     });
-  };
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        const response = await fetch('http://ec2-13-209-74-82.ap-northeast-2.compute.amazonaws.com:8080/party');
-        
-        if (response.status === 200) {
-          const data = await response.json();
-          setParties(data);
-        } else {
-          console.log('Data fetching failed');
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    };
-  
-    getData();
-  }, []);
-  const handleMarkerPress = (party) => {
-    setSelectedParty(party);
-    setModalVisible(true);
-  };
-  const handlePartyDetailPress = () => {
-    // Here, pass party ID to the next screen
-    navigation.navigate('PartyDetail', { partyId: selectedParty.partyId });
-    setModalVisible(false);
-  };
-  
+  }, [region]);
+
+  const renderPartyMarkers = useCallback(() => (
+    parties.map((party, index) => (
+      <Marker
+        key={index}
+        coordinate={{
+          latitude: party.latitude,
+          longitude: party.longitude,
+        }}
+        onPress={() => handleMarkerPress(party)}
+      />
+    ))
+  ), [parties, handleMarkerPress]);
+
   return (
     <View style={styles.container}>
       <MapView
@@ -69,60 +94,21 @@ const MapScreen = () => {
         initialRegion={region}
         onRegionChangeComplete={setRegion}
       >
-        {parties.map((party) => (
-          <Marker
-            key={party.partyId}
-            coordinate={{
-              latitude: party.latitude,
-              longitude: party.longitude,
-            }}
-            onPress={() => handleMarkerPress(party)}
-          />
-        ))}
+        {renderPartyMarkers()}
       </MapView>
-      {selectedParty && (
-        <Modal
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => {
-            setModalVisible(false);
-          }}
-        >
-          <TouchableOpacity
-            style={styles.modalOverlay}
-            onPress={() => setModalVisible(false)}
-          >
-            <View style={styles.centeredView}>
-              <View style={[styles.modalView, { marginTop: 'auto' }]}>
-                <Text style={styles.modalText}>
-                  파티이름 : {selectedParty.partyName} {'\n'}
-                  날짜 : {selectedParty.date} {'\n'}
-                  시간 : {selectedParty.time} {'\n'}
-                  인원 : {selectedParty.numOfPeople} {'\n'}
-                  설명 : {selectedParty.description}
-                </Text>
-                <Pressable
-                  style={[styles.button, styles.buttonClose]}
-                  onPress={() => setModalVisible(false)}
-                >
-                  <Text style={styles.textStyle}>닫기</Text>
-                </Pressable>
-                <TouchableOpacity
-                  style={styles.navigateButton}
-                  onPress={handlePartyDetailPress}
-                >
-                  <Text style={styles.navigateText}>Navigate</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </TouchableOpacity>
-        </Modal>
-      )}
+
+      <PartyModal
+        isVisible={modalVisible}
+        party={selectedParty}
+        onDetailPress={handlePartyDetailPress}
+        onClose={() => setModalVisible(false)}
+      />
+
       <GooglePlacesAutocomplete
         minLength={2}
-        placeholder="언제든 파티 위치 검색"
+        placeholder="Search"
         query={{
-          key: '영찬아 여기에 API넣어서 써 직접 내가 .env 로 할려다가 실패해서 컴퓨터 부실뻔했어 근데 안돼 아직도',
+          key: '',
           language: "ko",
           components: "country:kr",
         }}
@@ -135,15 +121,47 @@ const MapScreen = () => {
         enablePoweredByContainer={false}
         styles={styles.search}
       />
+
       <TouchableOpacity
         style={styles.addButton}
         onPress={() => navigation.navigate('AddScreen')}
       >
-        <Text style={styles.addButtonText}>+생성하기</Text>
+        <Text style={styles.addButtonText}>+ Add</Text>
       </TouchableOpacity>
     </View>
   );
 };
+
+// 이 부분은 모달 컴포넌트를 생성하여 분리하였습니다.
+const PartyModal = ({ isVisible, party, onDetailPress, onClose }) => (
+  <Modal
+    transparent={true}
+    visible={isVisible}
+    onRequestClose={onClose}
+  >
+    <TouchableOpacity
+      style={styles.modalOverlay}
+      onPress={onClose}
+    >
+      <View style={styles.centeredView}>
+        <View style={[styles.modalView, { marginTop: 'auto' }]}>
+          <Text style={styles.modalText}>
+            {`Party Name: ${party?.partyName}\n`}
+            {`DateTime: ${party?.partyDateTime}\n`}
+            {`People: ${party?.numOfPeople}\n`}
+            {`Description: ${party?.content}`}
+          </Text>
+          <TouchableOpacity
+            style={styles.navigateButton}
+            onPress={onDetailPress}
+          >
+            <Text style={styles.navigateText}>Navigate</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </TouchableOpacity>
+  </Modal>
+);
 
 const styles = StyleSheet.create({
   search: {
@@ -254,8 +272,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
     marginTop: 10,
-    bottom: 205,
-    
+    bottom: 145,
+
   },
 });
 

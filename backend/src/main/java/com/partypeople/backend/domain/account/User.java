@@ -1,6 +1,8 @@
 package com.partypeople.backend.domain.account;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.partypeople.backend.domain.party.entity.Party;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -15,6 +17,9 @@ import java.time.LocalDate;
 import java.util.*;
 
 
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -39,7 +44,6 @@ public class User implements UserDetails {
     private LocalDate birthDay;
 
     @ManyToMany(mappedBy = "participants")
-    @JsonManagedReference
     private Set<Party> parties = new HashSet<>();
 
     @ManyToMany
@@ -48,7 +52,6 @@ public class User implements UserDetails {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "party_id")
     )
-    @JsonManagedReference
     private List<Party> wishlist = new ArrayList<>();
 
     public void addToWishlist(Party party) {

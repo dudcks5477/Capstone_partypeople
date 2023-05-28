@@ -1,7 +1,9 @@
 package com.partypeople.backend.domain.party.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.partypeople.backend.domain.account.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,6 +21,9 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
 
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -47,18 +52,16 @@ public class Party {
     @JsonBackReference
     private User user;
 
-    @ManyToMany(mappedBy = "wishlist")
-    @JsonBackReference
-    private List<User> users = new ArrayList<>();
-
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany
     @JoinTable(
-            name = "party_participant",
+            name = "party_participants",
             joinColumns = @JoinColumn(name = "party_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-    @JsonBackReference
     private Set<User> participants = new HashSet<>();
+
+    @ManyToMany(mappedBy = "wishlist")
+    private Set<User> users = new HashSet<>();
 
     public void addParticipant(User user) {
         participants.add(user);

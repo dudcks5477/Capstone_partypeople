@@ -57,6 +57,7 @@ const AddScreen = ({navigation,route}) => {
       setTime(date.toISOString().slice(11, 19))
       console.log(date2)
       console.log(time)
+      const formData = new FormData();
       try {
         console.log(typeof(longitude))
         console.log(typeof(latitude))
@@ -64,13 +65,8 @@ const AddScreen = ({navigation,route}) => {
         console.log(typeof(time))
         console.log(typeof(date2))
         
-        const data = {
-          imageFile: imageSources.map((image, index) => ({
-            uri: image.path,
-            type: image.mime,
-            name: `image_${index + 1}.jpg`,
-          })
-          ),
+        const storedUserId = JSON.parse(await AsyncStorage.getItem('userId'));
+        formData.append('party', JSON.stringify({
           partyLocation: address,
           longitude,
           latitude,
@@ -79,10 +75,15 @@ const AddScreen = ({navigation,route}) => {
           partyName,
           numOfPeople,
           content: description,
-
-        };
+        }));
+        imageSources.forEach((image, index) => {
+          formData.append('images', {
+            uri: image.path,
+            type: image.mime,
+            name: `image-${index + 1}.jpg`,
+          }, `image-${index}.jpg`);
+        });
         
-        const storedUserId = JSON.parse(await AsyncStorage.getItem('userId'));
 
         
         console.log("sto",storedUserId)
@@ -94,19 +95,13 @@ const AddScreen = ({navigation,route}) => {
         console.log(time)
         console.log(numOfPeople)
         console.log(description)
-        console.log(data.imageFile)
+        // console.log(data.imageFile)
         // 파티 생성 요청 보내기
-        const response = await axios.post(`http://3.35.21.149:8080/party/${storedUserId}`, {
-        imageFile : data.imageFile,
-        partyName : data.partyName,
-        longitude : data.longitude,
-        latitude : data.latitude,
-        partyLocation : data.partyLocation,
-        partyDate : data.partyDate,
-        partyTime : data.partyTime,
-        numOfPeople : data.numOfPeople,
-        content : data.content,
-      });
+        const response = await axios.post(`http://3.35.21.149:8080/party/${storedUserId}`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
   
         if (response.status === 200) { 
           
@@ -116,32 +111,32 @@ const AddScreen = ({navigation,route}) => {
           navigate.navigation('MapScreen')
           await AsyncStorage.setItem('partyId', JSON.stringify(response.date.id));
           // 채팅방 생성 요청 보내기
-          // const chatRoomResponse = await axios.post('http://ec2-13-209-74-82.ap-northeast-2.compute.amazonaws.com:8080/chatRoom', {
-          //   partyId: partyId,
-          //   hostId: storedUserId // 현재 사용자의 아이디
-          // }, {
-          //   headers: {
-          //     'Content-Type': 'application/json',
-          //   },
-          // });
+          const chatRoomResponse = await axios.post('http://ec2-13-209-74-82.ap-northeast-2.compute.amazonaws.com:8080/chatRoom', {
+            partyId: partyId,
+            hostId: storedUserId // 현재 사용자의 아이디
+          }, {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
 
-        //   if (chatRoomResponse.status === 200) {
-        //     // 채팅방이 성공적으로 생성되었을 때의 처리 로직
-        //     const chatRoomData = chatRoomResponse.data;
-        //     const chatRoomId = chatRoomData.id;
-        //     console.log(`채팅방 생성 성공, ID: ${chatRoomId}`);
-        //   } else {
-        //     // 채팅방 생성 실패 처리 로직
-        //     Alert.alert('오류', '채팅방 생성에 실패했습니다.');
-        //   }
+          if (chatRoomResponse.status === 200) {
+            // 채팅방이 성공적으로 생성되었을 때의 처리 로직
+            const chatRoomData = chatRoomResponse.data;
+            const chatRoomId = chatRoomData.id;
+            console.log(`채팅방 생성 성공, ID: ${chatRoomId}`);
+          } else {
+            // 채팅방 생성 실패 처리 로직
+            Alert.alert('오류', '채팅방 생성에 실패했습니다.');
+          }
 
-        // } else {
-        //   // 파티 생성 실패 처리 로직
-        //   Alert.alert('오류', '데이터 전송에 실패했습니다.');
+        } else {
+          // 파티 생성 실패 처리 로직
+          Alert.alert('오류', '데이터 전송에 실패했습니다.');
         }
       } catch (error) {
         // 예외 발생 처리 로직
-        console.error(error);
+        console.error("aa",error);
       }
     }
   }

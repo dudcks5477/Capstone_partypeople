@@ -21,15 +21,29 @@ const PartyDetailScreen = ({ route }) => {
   const navigation = useNavigation();
   const partyId  = route.params;  // receive partyId from previous screen
   console.log("ID",partyId)
+
   useEffect(() => {
     fetchPartyDetail();
+    checkIsFavorite(); // Check if the party is favorite on component mount
   }, []);
-
+  
   const fetchPartyDetail = async () => {
     try {
       const response = await axios.get(`http://3.35.21.149:8080/party/${partyId}`);
 
       setPartyData(response.data);
+    } catch (e) {
+      console.error("ss",e);
+    }
+  };
+  const checkIsFavorite = async () => {
+    try {
+      const storedUserId = JSON.parse(await AsyncStorage.getItem('userId'));
+      const response = await axios.get(`http://3.35.21.149:8080/wishlist/${storedUserId}`);
+      const wishlist = response.data;
+
+      // Set isFavorite to true if the partyId exists in the wishlist
+      setIsFavorite(wishlist.includes(partyId));
     } catch (e) {
       console.error(e);
     }
@@ -37,35 +51,38 @@ const PartyDetailScreen = ({ route }) => {
   const toggleFavorite = async () => {
     try {
       const storedUserId = JSON.parse(await AsyncStorage.getItem('userId'));
-      const response = await axios.post(`http://3.35.21.149:8080/wishlist/${storedUserId}/add/${partyId}`,{
-
-      })
-      console.log(response.data)
-      console.log("sto",storedUserId)
-      console.log("tID",partyId)
-      setIsFavorite(response.data.isFavorite);
+      let response;
+  
+      if (isFavorite) {
+        response = await axios.post(`http://3.35.21.149:8080/wishlist/${storedUserId}/remove/${partyId}`);
+      } else {
+        response = await axios.post(`http://3.35.21.149:8080/wishlist/${storedUserId}/add/${partyId}`);
+      }
+    
+      setIsFavorite(!isFavorite);
+      console.log(response.data);
+      console.log("sto",storedUserId);
+      console.log("tID",partyId);
     } catch (e) {
       console.error("toggle",e);
     }
   };
   const joinChatRoom = async () => {
     try {
-      const response = await axios.post('http://your-backend-server-url/api/joinChatRoom', {
-        partyId: partyData.id
-      }, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-
+      const storedUserId = JSON.parse(await AsyncStorage.getItem('userId'));
+      console.log(partyId)
+      console.log(storedUserId)
+      const response = await axios.post(`http://3.35.21.149:8080/party/${partyId}/join/${storedUserId}`);
+      
       if (response.status === 200) {
+        console.log(response.data)
         const chatRoomId = response.data.chatRoomId;
         navigation.navigate('Chat', { chatRoomId: chatRoomId });
       } else {
         console.error('Failed to join chat room');
       }
     } catch (e) {
-      console.error(e);
+      console.error("dd",e);
     }
   };
   const handleAttendeePress = (attendeeIndex) => {

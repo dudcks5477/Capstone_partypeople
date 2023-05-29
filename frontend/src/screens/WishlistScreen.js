@@ -1,40 +1,40 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text ,StyleSheet,ScrollView,TouchableOpacity,Image} from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
+import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
-const WishlistScreen = ({ route }) => {
-  const {isFavorite,address,date ,time,partyName,numOfPeople,description} = route.params || {};
+import AsyncStorage from '@react-native-async-storage/async-storage';
+const WishlistScreen = () => {
   const [wishlist, setWishlist] = useState([]);
   const navigation = useNavigation();
-  console.log("",isFavorite)
-  const images = [
-    require('../assets/party1.jpeg'),
-    require('../assets/party2.jpeg'),
-    require('../assets/party3.jpeg'),
-    // 이미지 경로 추가
-  ]
+  const [partyData,setPartyData]=useState([]);
   useEffect(() => {
-    const getData = async () => {
+    const fetchWishlist = async () => {
       try {
-        const data = await AsyncStorage.getItem('wishlist');
-        if (data !== null) {
-          setWishlist(JSON.parse(data));
+        const storedUserId = await AsyncStorage.getItem('userId');
+        const response = await axios.get(`http://3.35.21.149:8080/wishlist/${storedUserId}`);
+        
+        if (response.data !== null) {
+          setWishlist(response.data);
+          try {
+            const response = await axios.get('http://3.35.21.149:8080/party');
+            setPartyData(response.data);
+          } catch (e) {
+            console.error(e);
+          }
         }
       } catch (e) {
-        console.log("Wish", e);
+        console.log("Wishlist fetch error", e);
       }
     };
   
-    const unsubscribe = navigation.addListener('focus', () => {
-      getData();
-    });
+    const unsubscribe = navigation.addListener('focus', fetchWishlist);
   
     return unsubscribe;
   }, [navigation]);
-const handleCardPress = () => {
-    navigation.navigate('PartyDetail');
+
+  const handleCardPress = (party) => {
+    navigation.navigate('PartyDetail', { party });
   };
-  
 
   return (
     <ScrollView style={{backgroundColor: "#222"}}>
@@ -45,10 +45,10 @@ const handleCardPress = () => {
         <TouchableOpacity
           key={index}
           style={styles.cardContainer}
-          onPress={handleCardPress}
+          onPress={() => handleCardPress(party)}
         >
-          <Image source={require('../assets/party1.jpeg')} style={styles.cardImage} />
-          <Text style={styles.cardText}>{party.partyName}</Text>
+          <Image source={{ uri: party.image }} style={styles.cardImage} />
+          <Text style={styles.cardText}>{partyData.partyName}</Text>
         </TouchableOpacity>
       ))}
     </ScrollView>

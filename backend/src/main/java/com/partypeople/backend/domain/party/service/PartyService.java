@@ -8,6 +8,7 @@ import com.partypeople.backend.domain.global.Exception.UserNotFoundException;
 import com.partypeople.backend.domain.global.Exception.AccessDeniedException;
 import com.partypeople.backend.domain.party.dto.PartyRequestDto;
 import com.partypeople.backend.domain.party.dto.PartyResponseDto;
+import com.partypeople.backend.domain.party.entity.ImageDetail;
 import com.partypeople.backend.domain.party.entity.Party;
 import com.partypeople.backend.domain.party.repository.PartyRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,12 +33,12 @@ public class PartyService {
     private final PartyRepository partyRepository;
     private final UserRepository userRepository;
     private final String uploadDir = "src/main/resources";
+    private final String serverUrl = "http://3.35.21.149:8080";
     @Transactional
     public Long createParty(PartyRequestDto requestDto, Long userId, List<MultipartFile> images) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
 
-        // 파티 생성 로직
         LocalDateTime partyDateTime = LocalDateTime.of(requestDto.getPartyDate(), requestDto.getPartyTime());
 
         Party party = Party.builder()
@@ -52,20 +53,18 @@ public class PartyService {
                 .build();
 
         try {
-            List<String> imageNames = uploadImageFiles(images); // 이미지 업로드 메소드 호출
-            party.setImageNames(imageNames);
+            List<ImageDetail> imageDetails = uploadImageFiles(images);
+            party.setImageDetails(imageDetails);
         } catch (IOException e) {
-            // 이미지 업로드 실패 시 예외 처리
-            // 적절한 예외 처리 로직 추가
+            // Add error handling code...
         }
 
         Party savedParty = partyRepository.save(party);
 
-        // 경험치 증가
-        int experienceToAdd = 100; // 경험치 증가량 설정
+        int experienceToAdd = 100;
         user.addExperience(experienceToAdd);
 
-        userRepository.save(user); // 업데이트된 사용자 저장
+        userRepository.save(user);
         return savedParty.getId();
     }
 
@@ -84,7 +83,6 @@ public class PartyService {
             throw new AccessDeniedException("You do not have permission to delete this party");
         }
 
-        // 파티 정보 업데이트
         party.setPartyName(requestDto.getPartyName());
         party.setLatitude(requestDto.getLatitude());
         party.setLongitude(requestDto.getLongitude());
@@ -93,14 +91,12 @@ public class PartyService {
         party.setNumOfPeople(requestDto.getNumOfPeople());
         party.setContent(requestDto.getContent());
 
-        // 이미지 업로드
         if (images != null && !images.isEmpty()) {
             try {
-                List<String> imageNames = uploadImageFiles(images); // 이미지 업로드 메소드 호출
-                party.setImageNames(imageNames);
+                List<ImageDetail> imageDetails = uploadImageFiles(images);
+                party.setImageDetails(imageDetails);
             } catch (IOException e) {
-                // 이미지 업로드 실패 시 예외 처리
-                // 적절한 예외 처리 로직 추가
+                // Add error handling code...
             }
         }
         partyRepository.save(party);
@@ -143,10 +139,10 @@ public class PartyService {
                 .collect(Collectors.toList());
     }
 
-    public List<String> uploadImageFiles(List<MultipartFile> imageFiles) throws IOException {
-        List<String> imageNames = new ArrayList<>();
+    public List<ImageDetail> uploadImageFiles(List<MultipartFile> imageFiles) throws IOException {
+        List<ImageDetail> imageDetails = new ArrayList<>();
         if (imageFiles != null && !imageFiles.isEmpty()) {
-            String uploadDir = System.getProperty("user.dir") + "/src/main/resources/"; // 이미지 업로드 디렉토리 경로
+            String uploadDir = System.getProperty("user.dir") + "/" + this.uploadDir + "/images/";
 
             File uploadDirPath = new File(uploadDir);
             if (!uploadDirPath.exists()) {
@@ -163,10 +159,11 @@ public class PartyService {
                     File uploadedFile = new File(uploadDir + File.separator + generatedFileName);
                     imageFile.transferTo(uploadedFile);
 
-                    imageNames.add(generatedFileName);
+                    String uri = serverUrl + "/" + this.uploadDir + "/images/" + generatedFileName;
+                    imageDetails.add(new ImageDetail(generatedFileName, uri));
                 }
             }
         }
-        return imageNames;
+        return imageDetails;
     }
 }

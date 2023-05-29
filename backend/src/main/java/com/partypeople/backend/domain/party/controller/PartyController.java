@@ -5,7 +5,7 @@ import com.partypeople.backend.domain.global.Exception.AlreadyJoinedException;
 import com.partypeople.backend.domain.global.Exception.PartyNotFoundException;
 import com.partypeople.backend.domain.global.Exception.UserNotFoundException;
 import com.partypeople.backend.domain.global.security.UserPrincipal;
-import com.partypeople.backend.domain.party.dto.PartyDto;
+//import com.partypeople.backend.domain.party.dto.PartyDto;
 import com.partypeople.backend.domain.party.dto.PartyRequestDto;
 import com.partypeople.backend.domain.party.dto.PartyResponseDto;
 import com.partypeople.backend.domain.party.entity.Party;
@@ -35,11 +35,6 @@ public class PartyController {
 
     private static final String UPLOAD_DIR = "src/main/resources";
 
-    @PostMapping("/party")
-    public ResponseEntity<?> handleParty(@RequestPart("party") PartyDto party) {
-        // TODO: 'party' 파트를 처리하는 로직
-        return ResponseEntity.ok().build();
-    }
 
     @PostMapping("/{userId}")
     public ResponseEntity<Long> createParty(@PathVariable Long userId,

@@ -1,9 +1,6 @@
 package com.partypeople.backend.domain.party.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import com.partypeople.backend.domain.account.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -61,6 +58,7 @@ public class Party {
     private Set<User> participants = new HashSet<>();
 
     @ManyToMany(mappedBy = "wishlist")
+    @JsonIgnoreProperties("hibernateLazyInitializer")
     private Set<User> users = new HashSet<>();
 
     public void addParticipant(User user) {
@@ -78,38 +76,10 @@ public class Party {
     private List<MultipartFile> imageFiles;
 
     @ElementCollection
-    @CollectionTable(name = "party_image", joinColumns = @JoinColumn(name = "party_id"))
-    @Column(name = "image_name")
-    private List<String> imageNames;
+    @CollectionTable(name = "party_image", joinColumns = @JoinColumn(name = "party_id", referencedColumnName = "id"))
+    @AttributeOverride(name = "name", column = @Column(name = "image_name"))
+    private List<ImageDetail> imageDetails;
 
-    /*
-    public void uploadImageFiles() throws IOException {
-        if (imageFiles != null && !imageFiles.isEmpty()) {
-            imageNames = new ArrayList<>();
-
-            String uploadDir = System.getProperty("user.dir") + "/src/main/image/"; // 이미지 업로드 디렉토리 경로
-
-            File uploadDirPath = new File(uploadDir);
-            if (!uploadDirPath.exists()) {
-                uploadDirPath.mkdirs();
-            }
-
-            for (int i = 0; i < imageFiles.size(); i++) {
-                MultipartFile imageFile = imageFiles.get(i);
-                if (imageFile != null && !imageFile.isEmpty()) {
-                    String originalFileName = StringUtils.cleanPath(imageFile.getOriginalFilename());
-                    String fileExtension = FilenameUtils.getExtension(originalFileName);
-                    String generatedFileName = "image_" + (i + 1) + "." + fileExtension;
-
-                    File uploadedFile = new File(uploadDir + File.separator + generatedFileName);
-                    imageFile.transferTo(uploadedFile);
-
-                    imageNames.add(generatedFileName);
-                }
-            }
-        }
-    }
-     */
 
     public void setId(Long id) {
         this.id = id;
@@ -143,8 +113,8 @@ public class Party {
         this.imageFiles = imageFiles;
     }
 
-    public void setImageNames(List<String> imageNames) {
-        this.imageNames = imageNames;
+    public void setImageDetails(List<ImageDetail> imageDetails) {
+        this.imageDetails = imageDetails;
     }
 
     public void setLongitude(double longitude) {

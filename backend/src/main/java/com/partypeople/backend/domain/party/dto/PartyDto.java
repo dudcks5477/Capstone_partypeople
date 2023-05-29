@@ -1,4 +1,4 @@
-package com.partypeople.backend.domain.party.dto;
+/*package com.partypeople.backend.domain.party.dto;
 
 import com.partypeople.backend.domain.account.User;
 import com.sun.istack.NotNull;
@@ -38,3 +38,5 @@ public class PartyDto {
 
 
 }
+
+ */

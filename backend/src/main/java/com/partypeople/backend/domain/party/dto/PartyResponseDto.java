@@ -3,6 +3,7 @@ package com.partypeople.backend.domain.party.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.partypeople.backend.domain.account.User;
+import com.partypeople.backend.domain.party.entity.ImageDetail;
 import com.partypeople.backend.domain.party.entity.Party;
 
 import java.time.LocalDateTime;
@@ -39,8 +40,8 @@ public class PartyResponseDto {
     @JsonProperty("userId")
     private Long userId;
 
-    @JsonProperty("imageNames")
-    private List<String> imageNames;
+    @JsonProperty("imageDetails")
+    private List<ImageDetail> imageDetails;
 
     @JsonProperty("participantIds")
     private Set<Long> participantIds;
@@ -54,7 +55,7 @@ public class PartyResponseDto {
         this.partyDateTime = party.getPartyDateTime();
         this.numOfPeople = party.getNumOfPeople();
         this.content = party.getContent();
-        this.imageNames = party.getImageNames();
+        this.imageDetails = party.getImageDetails();
         // 추가된 코드
         this.participantIds = party.getParticipants().stream()
                 .map(User::getId)

@@ -1,62 +1,80 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Alert } from 'react-native';
 import { GiftedChat } from 'react-native-gifted-chat';
+import axios from 'axios';
 
 const ChatRoomScreen = ({ route }) => {
-  const { partyName, isHost } = route.params || {};
+  const { partyName, isHost, chatRoomId } = route.params || {};
   const [messages, setMessages] = useState([]);
   const [pinnedMessage, setPinnedMessage] = useState(null);
+  const [userId, setUserId] = useState(''); // 사용자의 userId를 저장합니다.
 
   useEffect(() => {
     fetchMessages();
   }, []);
 
   const fetchMessages = () => {
-    // 채팅방 진입 시 초기 메시지를 불러오는 로직을 작성합니다.
-    // 필요한 API 호출 또는 초기 데이터 설정을 수행합니다.
-    // 가짜 데이터를 예시로 작성합니다.
-    const initialMessages = [
-      {
-        _id: 1,
-        text: '안녕하세요!',
-        createdAt: new Date(),
-        user: {
-          _id: 2,
-          name: '참가자1',
-        },
-      },
-      {
-        _id: 2,
-        text: '안녕하세요!',
-        createdAt: new Date(),
-        user: {
-          _id: 3,
-          name: '참가자2',
-        },
-      },
-      {
-        _id: 3,
-        text: '안녕하세요!',
-        createdAt: new Date(),
-        user: {
-          _id: 4,
-          name: '참가자3',
-        },
-      },
-      // 추가적인 초기 메시지 데이터...
-    ];
-    setMessages(initialMessages);
+    // 서버로부터 채팅 메시지를 가져오는 API 호출을 수행합니다.
+    // chatRoomId를 사용하여 해당 채팅방의 메시지를 가져옵니다.
+    // 가져온 메시지를 setMessages를 통해 설정합니다.
+    // 예시:
+    axios
+      .get(`http://your-ec2-instance-url/api/chatRooms/${chatRoomId}/messages`)
+      .then((response) => {
+        const formattedMessages = response.data.map((message) => ({
+          _id: message.id,
+          text: message.content,
+          createdAt: new Date(message.createdAt),
+          user: {
+            _id: message.senderId,
+            name: message.senderName,
+          },
+        }));
+        setMessages(formattedMessages);
+      })
+      .catch((error) => {
+        console.error('Error fetching messages:', error);
+      });
   };
 
   const onSend = (newMessages = []) => {
-    // 채팅 메시지 전송 로직을 작성합니다.
-    // 필요한 API 호출 또는 상태 업데이트를 수행합니다.
-    setMessages((prevMessages) => GiftedChat.append(prevMessages, newMessages));
+    // 사용자가 새로운 메시지를 보낼 때 호출되는 함수입니다.
+    // newMessages는 GiftedChat이 전달하는 메시지 객체입니다.
+    // 서버로 메시지를 전송하고, 서버로부터 전달받은 메시지를 GiftedChat에서 사용하는 형식으로 변환하여 messages 상태를 업데이트합니다.
+    const formattedMessages = newMessages.map((message) => ({
+      id: message._id,
+      content: message.text,
+      createdAt: message.createdAt.toISOString(),
+      senderId: userId,
+      senderName: isHost ? '호스트' : '참가자',
+      chatRoomId: chatRoomId,
+    }));
+
+    // API 호출을 통해 서버로 메시지를 전송합니다.
+    axios
+      .post('http://your-ec2-instance-url/api/chatRooms/messages', formattedMessages)
+      .then((response) => {
+        // 서버로부터 전달받은 메시지를 GiftedChat에서 사용하는 형식으로 변환하여 messages 상태를 업데이트합니다.
+        const formattedResponse = response.data.map((message) => ({
+          _id: message.id,
+          text: message.content,
+          createdAt: new Date(message.createdAt),
+          user: {
+            _id: message.senderId,
+            name: message.senderName,
+          },
+        }));
+        setMessages((prevMessages) => GiftedChat.append(prevMessages, formattedResponse));
+      })
+      .catch((error) => {
+        console.error('Error sending message:', error);
+      });
   };
 
   const handleLongPress = (context, message) => {
-    // 고정 메시지 기능을 구현합니다.
-    if (message.user._id === 1) {
+    // 메시지를 길게 눌렀을 때 호출되는 함수입니다.
+    // 고정 메시지 기능을 구현할 수 있습니다.
+    if (message.user._id === userId) {
       // 자신이 보낸 메시지만 고정할 수 있도록 설정합니다.
       Alert.alert(
         '고정 메시지',
@@ -87,7 +105,6 @@ const ChatRoomScreen = ({ route }) => {
     return null;
   };
 
-const CustomToolbar = (props) => {
   return (
     <View style={{ flex: 1 }}>
       {renderChatHeader()}
@@ -95,7 +112,7 @@ const CustomToolbar = (props) => {
         messages={messages}
         onSend={onSend}
         user={{
-          _id: 1,
+          _id: userId,
           name: isHost ? '호스트' : '참가자',
         }}
         onLongPress={handleLongPress}
@@ -114,5 +131,5 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-}
+
 export default ChatRoomScreen;

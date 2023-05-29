@@ -8,7 +8,7 @@ const ChatScreen = ({ navigation }) => {
   const [selectedTab, setSelectedTab] = useState('message');
   const [messageCount, setMessageCount] = useState(0);
   const [notificationCount, setNotificationCount] = useState(0);
-
+  const [userId,setuserId] = useState();
   useEffect(() => {
     fetchData();
   }, []);
@@ -28,6 +28,8 @@ const ChatScreen = ({ navigation }) => {
 
   const fetchChatRooms = async () => {
     try {
+      const storedUserId = JSON.parse(await AsyncStorage.getItem('userId'));
+      setuserId(storedUserId)
       const response = await fetch('http://ec2-13-209-74-82.ap-northeast-2.compute.amazonaws.com:8080/api/chatRooms', {
         method: 'GET',
         headers: {
@@ -56,7 +58,7 @@ const ChatScreen = ({ navigation }) => {
           navigation.navigate('ChatRoomScreen', {
             chatRoomId: item.chatRoomId,
             partyName: item.partyName,
-            isHost: item.hostId === 'myHostId',
+            isHost: item.hostId === userId,
           })
         }
       >

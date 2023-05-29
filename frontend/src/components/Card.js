@@ -12,13 +12,13 @@ const Card = ({partyData}) => {
   //   numOfPeople: '',
   //   description: '',
   // });
-
+  console.log(partyData)
   return (
     <>
       <View style={styles.cardContainer}>
         {/* 여기다가 TouchableOpacity만들어서 보내보자 내생각엔 */}
         <View style={styles.card}>
-          {/* <Image source={image} style={styles.image} /> */}
+          {/* <Image source={partyData.imageNames} style={styles.image} /> */}
           <Text style={styles.title}>{partyData.partyName}</Text>
           <Text style={styles.description}>{partyData.description}</Text>
           <Text style={styles.title}>{partyData.numOfPeople}</Text>

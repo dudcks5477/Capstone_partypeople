@@ -19,10 +19,11 @@ const AddScreen = ({navigation,route}) => {
   const [time, setTime] = useState();
   const [show, setShow] = useState(false);
   const [partyName, setPartyName] = useState('');
-  const [numOfPeople, setNumOfPeople] = useState();
+  const [numOfPeople, setNumOfPeople] = useState('0');
   const [description, setDescription] = useState('');
-  const [coin, setCoin] = useState('');
+  const [coin, setCoin] = useState('0');
   const [mode, setMode] = useState('date');
+  const [storedUserId, setStoredUserId] = useState(null);
   const [dateSelected, setDateSelected] = useState(false);
   const handleImagesSelected = (images) => {
     setImageSources(images);
@@ -58,19 +59,16 @@ const AddScreen = ({navigation,route}) => {
       console.log(date2)
       console.log(time)
       try {
-        console.log(typeof(longitude))
-        console.log(typeof(latitude))
-        console.log(typeof(numOfPeople))
-        console.log(typeof(time))
-        console.log(typeof(date2))
-        
-        const data = {
-          imageFile: imageSources.map((image, index) => ({
+        const formData = new FormData();
+        imageSources.forEach((image, index) => {
+          formData.append('images', {
             uri: image.path,
-            type: image.mime,
+            type: image.mine,
             name: `image_${index + 1}.jpg`,
-          })
-          ),
+          });
+        });
+
+        formData.append('party', JSON.stringify({
           partyLocation: address,
           longitude,
           latitude,
@@ -79,33 +77,13 @@ const AddScreen = ({navigation,route}) => {
           partyName,
           numOfPeople,
           content: description,
-
-        };
-        
-        const storedUserId = JSON.parse(await AsyncStorage.getItem('userId'));
-
-        
-        console.log("sto",storedUserId)
-        console.log(partyName)
-        console.log(longitude)
-        console.log(latitude)
-        console.log(address)
-        console.log(date2)
-        console.log(time)
-        console.log(numOfPeople)
-        console.log(description)
-        console.log(data.imageFile)
+        }));
+        formData.append('userId', storedUserId);
         // 파티 생성 요청 보내기
-        const response = await axios.post(`http://3.35.21.149:8080/party/${storedUserId}`, {
-        imageFile : data.imageFile,
-        partyName : data.partyName,
-        longitude : data.longitude,
-        latitude : data.latitude,
-        partyLocation : data.partyLocation,
-        partyDate : data.partyDate,
-        partyTime : data.partyTime,
-        numOfPeople : data.numOfPeople,
-        content : data.content,
+        const response = await axios.post(`http://3.35.21.149:8080/party/${storedUserId}`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          }
       });
   
         if (response.status === 200) { 
@@ -148,8 +126,6 @@ const AddScreen = ({navigation,route}) => {
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
-  
-    setDateSelected(true);
     setShow(Platform.OS === 'ios');
     setDate(currentDate);
     
@@ -275,7 +251,7 @@ const AddScreen = ({navigation,route}) => {
                 borderRadius: 6,
                 color: 'white'
               }}
-            value={numOfPeople}
+            value={numOfPeople.toString()}
             keyboardType={'numeric'}
             onChangeText={text => {
               const parsedNum = parseInt(text);

@@ -19,10 +19,11 @@ const AddScreen = ({navigation,route}) => {
   const [time, setTime] = useState();
   const [show, setShow] = useState(false);
   const [partyName, setPartyName] = useState('');
-  const [numOfPeople, setNumOfPeople] = useState();
+  const [numOfPeople, setNumOfPeople] = useState('0');
   const [description, setDescription] = useState('');
-  const [coin, setCoin] = useState('');
+  const [coin, setCoin] = useState('0');
   const [mode, setMode] = useState('date');
+  const [storedUserId, setStoredUserId] = useState(null);
   const [dateSelected, setDateSelected] = useState(false);
   const handleImagesSelected = (images) => {
     setImageSources(images);
@@ -143,8 +144,6 @@ const AddScreen = ({navigation,route}) => {
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
-  
-    setDateSelected(true);
     setShow(Platform.OS === 'ios');
     setDate(currentDate);
     
@@ -270,7 +269,7 @@ const AddScreen = ({navigation,route}) => {
                 borderRadius: 6,
                 color: 'white'
               }}
-            value={numOfPeople}
+            value={numOfPeople.toString()}
             keyboardType={'numeric'}
             onChangeText={text => {
               const parsedNum = parseInt(text);

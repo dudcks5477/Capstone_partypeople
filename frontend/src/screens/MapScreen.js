@@ -208,6 +208,7 @@ const styles = StyleSheet.create({
   addButton: {
     opacity : 0.8,
     position: 'absolute',
+    marginBottom: 40,
     bottom: 500,
     right: 20,
     width: 100,

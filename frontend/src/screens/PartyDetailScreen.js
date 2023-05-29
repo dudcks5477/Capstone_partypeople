@@ -96,42 +96,44 @@ const PartyDetailScreen = ({ route }) => {
 
 
   return (
-    <ScrollView>
-      <Line style={{marginTop: 20}} />
-
+    <ScrollView style={{backgroundColor: '#222'}}>
       <TouchableOpacity onPress={handleGoBack} style={{
         flexDirection: 'row',
         alignItems: 'center',
         width: '90%',
         marginHorizontal: '5%',
-        marginTop: 2,}}>
-        <MaterialIcons name="chevron-left" size={24} color="black" style={{ marginRight: 2}} />
-        <Text>{partyData.partyName}</Text>
+        marginTop: 20}}>
+        <MaterialIcons name="chevron-left" size={24} color="white" style={{ marginRight: 2}} />
+        <Text style={styles.colW}>{partyData.partyName}</Text>
       </TouchableOpacity>
 
       <View style={styles.cardContainer}>
-        {partyData.images?.map((image, index) => (
-          <Image key={index} source={{ uri: image }} style={styles.cardImage} />
-        ))}
+        {partyData.images && partyData.images.length > 0 ? (
+          partyData.images.map((image, index) => (
+            <Image key={index} source={{ uri: image }} style={styles.cardImage} />
+          ))
+        ) : (
+          <Image source={require('../assets/party1.jpeg')} style={styles.cardImage} />
+        )}
       </View>
 
       <TouchableOpacity onPress={() => navigation.navigate('ProfileScreen', { userId: partyData.hostId })} style={styles.hostProfile}>
-  <View style={styles.profileTextContainer}>
-    <MaterialIcons name="account-circle" size={50} color="gray" />
-    <View>
-      <Text>{partyData.hostName}</Text>
-      <Text>Show profile</Text>
-    </View>
-  </View>
-  <MaterialIcons name="chevron-right" size={24} color="black" style={{marginRight:8}}/>
-</TouchableOpacity>
+        <View style={styles.profileTextContainer}>
+          <MaterialIcons name="account-circle" size={50} color="white" />
+          <View>
+            <Text style={styles.colW}>{partyData.hostName}</Text>
+            <Text style={styles.colW}>Show profile</Text>
+          </View>
+        </View>
+        <MaterialIcons name="chevron-right" size={24} color="white" style={{marginRight:8}}/>
+      </TouchableOpacity>
 
 
       <Line/>
 
       <View style={{width:"90%", marginHorizontal:"5%", height:177}}>
-        <Text>파티소개</Text>
-        <Text>{partyData.description} {partyData.numOfPeople} {partyData.date} {partyData.time} {partyData.address}</Text>
+        <Text style={styles.colW}>파티소개</Text>
+        <Text style={styles.colW}>{partyData.description} {partyData.numOfPeople} {partyData.date} {partyData.time} {partyData.address}</Text>
       </View>
 
       <Line/>  
@@ -143,38 +145,33 @@ const PartyDetailScreen = ({ route }) => {
             <TouchableHighlight
               key={index}
               underlayColor="#DDD"
-              onPress={handleAttendeePress}
+              onPress={() => handleAttendeePress(index)}
               style={styles.attendeeButton}
             >
               <View style={styles.attendee}>
-                <MaterialIcons name="account-circle" size={50} color="gray"/>
-                <Text>참가자</Text>
+                <MaterialIcons name="account-circle" size={50} color="white"/>
+                <Text style={styles.colW}>참가자</Text>
               </View>
             </TouchableHighlight>
           ))}
         </ScrollView>
       </View>
-      <View style={styles.cartContainer}>
-      <MaterialIcons name="shopping-cart" size={28} color="gray" />
-      </View>
       <View style={styles.buttonContainer}>
-        
-      
           {/* <Text style={styles.cartText}>100</Text> */}
+        <View style={styles.cartContainer}>
+          <MaterialIcons name="shopping-cart" size={28} color="black" />
         </View>
-        <Button title="참석하기" color="gray" onPress={joinChatRoom}/>
-    
-      <View>
-      <TouchableOpacity onPress={toggleFavorite}>
-      <View>
-        {isFavorite ? (
-          <MaterialIcons name="favorite" size={28} color="red" />
-        ) : (
-          <MaterialIcons name="favorite-border" size={28} color="gray" />
-        )}
-      </View>
-    </TouchableOpacity>
-      </View>
+        <Button title="참석하기" color="black" onPress={joinChatRoom} style={{borderRadius: 30}}/>
+        <TouchableOpacity onPress={toggleFavorite}>
+          <View>
+            {isFavorite ? (
+              <MaterialIcons name="favorite" size={28} color="red" />
+            ) : (
+              <MaterialIcons name="favorite-border" size={28} color="black" />
+            )}
+          </View>
+        </TouchableOpacity>
+        </View>
     </ScrollView>
   );
 };
@@ -182,6 +179,9 @@ const PartyDetailScreen = ({ route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  colW: {
+    color: 'white'
   },
   header: {
     marginTop: 20,
@@ -246,7 +246,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   buttonContainer: {
-    margin: 5,
+    margin: 15,
     width: '90%',
     marginHorizontal: '5%',
     flexDirection: 'row',

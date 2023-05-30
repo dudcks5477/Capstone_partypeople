@@ -157,9 +157,9 @@ const PartyDetailScreen = ({ route }) => {
         </ScrollView>
       </View>
       <View style={styles.buttonContainer}>
-          {/* <Text style={styles.cartText}>100</Text> */}
-        <View style={styles.cartContainer}>
-          <MaterialIcons name="shopping-cart" size={28} color="black" />
+        <View style={[styles.cartContainer, { opacity: 0.7 }]}>
+          <MaterialIcons name="monetization-on" size={28} color="white"/>
+          <Text style={styles.cartText}>100</Text>
         </View>
         <Button title="참석하기" color="black" onPress={joinChatRoom} style={{borderRadius: 30}}/>
         <TouchableOpacity onPress={toggleFavorite}>
@@ -171,7 +171,7 @@ const PartyDetailScreen = ({ route }) => {
             )}
           </View>
         </TouchableOpacity>
-        </View>
+      </View>
     </ScrollView>
   );
 };
@@ -246,7 +246,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   buttonContainer: {
-    margin: 15,
+    margin: 45,
     width: '90%',
     marginHorizontal: '5%',
     flexDirection: 'row',
@@ -256,9 +256,12 @@ const styles = StyleSheet.create({
   cartContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    width: 30
   },
   cartText: {
     marginLeft: 5,
+    color: 'white',
+    fontWeight: 'bold'
   },
 });
 

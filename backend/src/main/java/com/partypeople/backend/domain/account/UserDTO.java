@@ -9,7 +9,6 @@ import lombok.*;
 public class UserDTO {
     private Long id;
     private String name;
-    // 필요한 경우 User 엔티티의 다른 필드 추가
 
     public static UserDTO fromUser(User user) {
         UserDTO userDTO = new UserDTO();

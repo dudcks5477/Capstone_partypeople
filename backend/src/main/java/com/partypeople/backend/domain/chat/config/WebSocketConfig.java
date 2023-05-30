@@ -15,14 +15,12 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        // 메시지 브로커 구성
         registry.enableSimpleBroker("/topic");
         registry.setApplicationDestinationPrefixes("/app");
     }
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        // Stomp 엔드포인트 등록
         registry.addEndpoint("/websocket")
                 .setAllowedOrigins("*")
                 .withSockJS();

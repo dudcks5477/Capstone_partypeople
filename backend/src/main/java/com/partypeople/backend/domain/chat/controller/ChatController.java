@@ -36,7 +36,7 @@ public class ChatController {
 
     @MessageMapping("/chat.sendMessage")
     public void sendMessage(@Payload ChatMessage chatMessage) {
-        chatMessage.setSentAt(LocalDateTime.now()); // 메시지 전송 시간 설정
+        chatMessage.setSentAt(LocalDateTime.now());
         chatMessageRepository.save(chatMessage);
         messagingTemplate.convertAndSend("/chat/party/" + chatMessage.getParty().getId(), chatMessage);
     }
@@ -46,10 +46,10 @@ public class ChatController {
     public void addUser(@Payload ChatMessage chatMessage) {
         ChatRoom chatRoom = chatRoomRepository.findById(chatMessage.getParty().getId()).orElse(null);
         if (chatRoom != null) {
-            User user = chatMessage.getUser();  // ChatMessage 객체에서 사용자 정보 가져오기
+            User user = chatMessage.getUser();
             if (user != null) {
-                chatRoom.getParticipants().add(user);  // 수정된 부분: User 변수 대신 user 객체 사용
-                user.getChatRooms().add(chatRoom);  // 수정된 부분: 사용자의 ChatRoom 목록에도 chatRoom 추가
+                chatRoom.getParticipants().add(user);
+                user.getChatRooms().add(chatRoom);
                 chatRoomRepository.save(chatRoom);
                 userRepository.save(user);  // 사용자 정보 저장
             }

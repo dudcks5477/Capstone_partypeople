@@ -74,7 +74,7 @@ public class User implements UserDetails {
     }
 
     private void checkLevelUp() {
-        int requiredExperience = (this.level + 1) * 100; // 예시 레벨업 조건
+        int requiredExperience = (this.level + 1) * 100;
         if (this.experience >= requiredExperience) {
             this.level++;
             this.experience -= requiredExperience;
@@ -88,7 +88,6 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // 사용자의 권한 정보를 반환하는 메소드 구현
         return Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"));
     }
 

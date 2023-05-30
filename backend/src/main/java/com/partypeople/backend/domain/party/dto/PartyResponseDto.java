@@ -37,9 +37,6 @@ public class PartyResponseDto {
     @JsonProperty("content")
     private String content;
 
-    @JsonProperty("userId")
-    private Long userId;
-
     @JsonProperty("imageDetails")
     private List<ImageDetail> imageDetails;
 

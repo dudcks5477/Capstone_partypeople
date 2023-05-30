@@ -1,5 +1,8 @@
 package com.partypeople.backend.domain.party.service;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.partypeople.backend.domain.account.User;
 import com.partypeople.backend.domain.account.UserRepository;
 import com.partypeople.backend.domain.global.Exception.AlreadyJoinedException;
@@ -29,6 +32,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -39,9 +43,10 @@ public class PartyService {
     private final UserRepository userRepository;
 
 
-    private final String uploadDir = "backend/src/main/resources/static/image";
+    private final AmazonS3 amazonS3;
 
-    private final String serverUrl = "http://3.35.21.149:8080";
+    @Value("${cloud.aws.s3.bucket}")
+    private String bucketName;
 
 
     @Transactional
@@ -158,23 +163,28 @@ public class PartyService {
             for (int i = 0; i < imageFiles.size(); i++) {
                 MultipartFile imageFile = imageFiles.get(i);
                 if (imageFile != null && !imageFile.isEmpty()) {
-                    String originalFileName = StringUtils.cleanPath(imageFile.getOriginalFilename());
-                    String fileExtension = FilenameUtils.getExtension(originalFileName);
-                    String generatedFileName = "image_" + (i + 1) + "." + fileExtension;
+                    String originalFileName = imageFile.getOriginalFilename();
+                    String fileExtension = getFileExtension(originalFileName);
+                    String generatedFileName = UUID.randomUUID().toString() + "." + fileExtension;
 
-                    Path uploadPath = Path.of(uploadDir);
-                    if (!Files.exists(uploadPath)) {
-                        Files.createDirectories(uploadPath);
-                    }
+                    ObjectMetadata metadata = new ObjectMetadata();
+                    metadata.setContentLength(imageFile.getSize());
 
-                    Path filePath = uploadPath.resolve(generatedFileName);
-                    Files.copy(imageFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+                    PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, generatedFileName, imageFile.getInputStream(), metadata);
+                    amazonS3.putObject(putObjectRequest);
 
-                    String uri = serverUrl + "/images/" + generatedFileName;
+                    String uri = amazonS3.getUrl(bucketName, generatedFileName).toString();
                     imageDetails.add(new ImageDetail(generatedFileName, uri));
                 }
             }
         }
         return imageDetails;
+    }
+
+    private String getFileExtension(String filename) {
+        if (filename != null && filename.contains(".")) {
+            return filename.substring(filename.lastIndexOf(".") + 1);
+        }
+        return "";
     }
 }

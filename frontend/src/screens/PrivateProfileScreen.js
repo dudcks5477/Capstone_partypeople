@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Image, Modal, StyleSheet, Dimensions, Pressable } from 'react-native';
 import Line from '../container/Line';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-
+import { styles } from './Styles/PrivateStyles';
 const PrivateProfileScreen = () => {
   const onItemPress = (itemName) => {
     console.log(`${itemName} clicked`);
@@ -16,23 +16,18 @@ const PrivateProfileScreen = () => {
   const [modalVisible, setModalVisible] = useState(false);
 
   return (
-    <View style={{
-      flex: 1,
-      backgroundColor: "#222",
-    }}>
-      <Text style={{ color: '#ccc', fontSize: 40, fontWeight: 'bold', marginLeft: 15, marginTop: 30 }}>
-        프로필
-      </Text>
-      <Line style={{ marginTop: 20, width: '90%', marginHorizontal: '5%' }} />
-      <View style={{ marginTop: 5, width: '90%', marginHorizontal: '5%', flexDirection: 'row' }}>
-        <MaterialIcons name="account-circle" size={60} color="gray" style={{ marginRight: 2 }} />
-        <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
-          <Text style={{ fontSize: 14, color: '#ccc' }}>주최자</Text>
-          <Text style={{ fontSize: 12, color: '#ccc' }}>Show profile</Text>
+    <View style={styles.container}>
+      <Text style={styles.heading}>프로필</Text>
+      <Line style={styles.line} />
+      <View style={styles.profileInfo}>
+        <MaterialIcons name="account-circle" size={60} color="gray" style={styles.profileIcon} />
+        <View style={styles.profileTextContainer}>
+          <Text style={styles.profileText}>주최자</Text>
+          <Text style={styles.profileText}>Show profile</Text>
         </View>
       </View>
-      <View style={{ width: '90%', marginHorizontal: '5%' }}>
-        <Text style={{ marginTop: 5, marginBottom:5, fontSize: 25, fontWeight: 'bold', height: 223, color: '#ccc'}}>참석 예정</Text>
+      <View style={styles.partyInfoContainer}>
+        <Text style={styles.partyInfoText}>참석 예정</Text>
         <Modal
           transparent={true}
           visible={modalVisible}
@@ -73,96 +68,44 @@ const PrivateProfileScreen = () => {
         </Modal>
       </View>
       <Line />
-      <View style={{ width: '90%', marginHorizontal: '5%' }}>
-        <Text style={{ marginTop: 5, marginBottom: 15, fontSize: 25, fontWeight: 'bold', color: '#ccc' }}>세팅</Text>
+      <View style={styles.settingsContainer}>
+        <Text style={styles.settingsText}>세팅</Text>
 
-        <TouchableOpacity onPress={() => onItemPress('Personal Information')} style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <MaterialIcons name="account-circle" size={20} color="#ccc" style={{ marginRight: 7 }} />
-            <Text style={{color: '#ccc', fontSize: 20}}>Personal Information</Text>
+        <TouchableOpacity onPress={() => onItemPress('Personal Information')} style={styles.settingsItem}>
+          <View style={styles.itemTextContainer}>
+            <MaterialIcons name="account-circle" size={20} color="#ccc" style={styles.itemIcon} />
+            <Text style={styles.itemText}>Personal Information</Text>
           </View>
-          <MaterialIcons name="chevron-right" size={20} color="#ccc" style={{ marginRight: 7 }} />
+          <MaterialIcons name="chevron-right" size={20} color="#ccc" style={styles.itemIcon} />
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => onItemPress('Login & Security')} style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <MaterialIcons name="admin-panel-settings" size={20} color="#ccc" style={{ marginRight: 7 }} />
-            <Text style={{color: '#ccc', fontSize: 20}}>Login & Security</Text>
+        <TouchableOpacity onPress={() => onItemPress('Login & Security')} style={styles.settingsItem}>
+          <View style={styles.itemTextContainer}>
+            <MaterialIcons name="admin-panel-settings" size={20} color="#ccc" style={styles.itemIcon} />
+            <Text style={styles.itemText}>Login & Security</Text>
           </View>
-          <MaterialIcons name="chevron-right" size={20} color="#ccc" style={{ marginRight: 7 }} />
+          <MaterialIcons name="chevron-right" size={20} color="#ccc" style={styles.itemIcon} />
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => onItemPress('Payments and payouts')} style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <MaterialIcons name="payments" size={20} color="#ccc" style={{ marginRight: 7 }} />
-            <Text style={{color: '#ccc', fontSize: 20}}>Payments and payouts</Text>
+        <TouchableOpacity onPress={() => onItemPress('Payments and payouts')} style={styles.settingsItem}>
+          <View style={styles.itemTextContainer}>
+            <MaterialIcons name="payments" size={20} color="#ccc" style={styles.itemIcon} />
+            <Text style={styles.itemText}>Payments and payouts</Text>
           </View>
-          <MaterialIcons name="chevron-right" size={20} color="#ccc" style={{ marginRight: 7 }} />
+          <MaterialIcons name="chevron-right" size={20} color="#ccc" style={styles.itemIcon} />
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => onItemPress('Taxes')} style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <MaterialIcons name="note" size={20} color="#ccc" style={{ marginRight: 7 }} />
-            <Text style={{color: '#ccc', fontSize: 20}}>Taxes</Text>
+        <TouchableOpacity onPress={() => onItemPress('Taxes')} style={styles.settingsItem}>
+          <View style={styles.itemTextContainer}>
+            <MaterialIcons name="note" size={20} color="#ccc" style={styles.itemIcon} />
+            <Text style={styles.itemText}>Taxes</Text>
           </View>
-          <MaterialIcons name="chevron-right" size={20} color="#ccc" style={{ marginRight: 7 }} />
+          <MaterialIcons name="chevron-right" size={20} color="#ccc" style={styles.itemIcon} />
         </TouchableOpacity>
       </View>
     </View>
   );
 };
 
-const styles = StyleSheet.create({
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0)',
-  },
-  modalView: {
-    backgroundColor: 'white',
-    borderRadius: 10,
-    padding: 20,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-    width: Dimensions.get('window').width - 60,
-    height: Dimensions.get('window').height / 4,
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: 'center',
-  },
-  button: {
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
-    marginTop: 10,
-  },
-  buttonClose: {
-    backgroundColor: '#2196F3',
-  },
-  textStyle: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  navigateButton: {
-    backgroundColor: '#FFC107',
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
-    marginTop: 10,
-  },
-  navigateText: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-});
 
 export default PrivateProfileScreen;

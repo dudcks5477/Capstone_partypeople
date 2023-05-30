@@ -22,6 +22,7 @@ const HomeScreen = () => {
       try {
         const response = await axios.get('http://3.35.21.149:8080/party');
         setPartyData(response.data);
+        console.log("home",response.data)
       } catch (e) {
         console.error(e);
       }

@@ -6,6 +6,7 @@ import axios from 'axios';
 import Line from '../container/Line';
 import { TouchableHighlight } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {styles} from './Styles/PartyDetailStyles'
 const PartyDetailScreen = ({ route }) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const [partyData, setPartyData] = useState({
@@ -95,174 +96,78 @@ const PartyDetailScreen = ({ route }) => {
 
 
   return (
-    <ScrollView style={{backgroundColor: '#222'}}>
-      <TouchableOpacity onPress={handleGoBack} style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        width: '90%',
-        marginHorizontal: '5%',
-        marginTop: 20}}>
-        <MaterialIcons name="chevron-left" size={24} color="white" style={{ marginRight: 2}} />
-        <Text style={styles.colW}>{partyData.partyName}</Text>
-      </TouchableOpacity>
+    <ScrollView style={styles.container}>
+    <TouchableOpacity onPress={handleGoBack} style={styles.backButton}>
+    <MaterialIcons name="chevron-left" size={24} color="white" style={{ marginRight: 2 }} />
+    <Text style={styles.colW}>{partyData.partyName}</Text>
+    </TouchableOpacity>
 
       <View style={styles.cardContainer}>
-        {partyData.images && partyData.images.length > 0 ? (
-          partyData.images.map((image, index) => (
-            <Image key={index} source={{ uri: image }} style={styles.cardImage} />
-          ))
-        ) : (
-          <Image source={require('../assets/party1.jpeg')} style={styles.cardImage} />
-        )}
-      </View>
+  {partyData.images && partyData.images.length > 0 ? (
+    partyData.images.map((image, index) => (
+      <Image key={index} source={{ uri: image }} style={styles.cardImage} />
+    ))
+  ) : (
+    <Image source={require('../assets/party1.jpeg')} style={styles.cardImage} />
+  )}
+</View>
 
-      <TouchableOpacity onPress={() => navigation.navigate('ProfileScreen', { userId: partyData.hostId })} style={styles.hostProfile}>
-        <View style={styles.profileTextContainer}>
+<TouchableOpacity onPress={() => navigation.navigate('ProfileScreen', { userId: partyData.hostId })} style={styles.hostProfile}>
+  <View style={styles.profileTextContainer}>
+    <MaterialIcons name="account-circle" size={50} color="white" />
+    <View>
+      <Text style={styles.colW}>{partyData.hostName}</Text>
+      <Text style={styles.colW}>Show profile</Text>
+    </View>
+  </View>
+  <MaterialIcons name="chevron-right" size={24} color="white" style={{ marginRight: 8 }} />
+</TouchableOpacity>
+
+<Line />
+
+<View style={styles.partyInfoContainer}>
+  <Text style={styles.colW}>파티소개</Text>
+  <Text style={styles.colW}>{partyData.description} {partyData.numOfPeople} {partyData.date} {partyData.time} {partyData.address}명 만 모집하는 저희 Party UP 직원을 구인합니다.</Text>
+</View>
+
+<Line />
+
+<View style={styles.attendeesContainer}>
+  <ScrollView horizontal>
+    {[...Array(10)].map((_, index) => (
+      <TouchableHighlight
+        key={index}
+        underlayColor="#DDD"
+        onPress={() => handleAttendeePress(index)}
+        style={styles.attendeeButton}
+      >
+        <View style={styles.attendee}>
           <MaterialIcons name="account-circle" size={50} color="white" />
-          <View>
-            <Text style={styles.colW}>{partyData.hostName}</Text>
-            <Text style={styles.colW}>Show profile</Text>
-          </View>
+          <Text style={styles.colW}>참가자</Text>
         </View>
-        <MaterialIcons name="chevron-right" size={24} color="white" style={{marginRight:8}}/>
-      </TouchableOpacity>
-
-
-      <Line/>
-
-      <View style={{width:"90%", marginHorizontal:"5%", height:177}}>
-        <Text style={styles.colW}>파티소개</Text>
-        <Text style={styles.colW}>{partyData.description} {partyData.numOfPeople} {partyData.date} {partyData.time} {partyData.address}명 만 모집하는 저희 Party UP 직원을 구인합니다.</Text>
-      </View>
-
-      <Line/>  
-
-      {/* onPress 동작이 안함 */}
-      <View style={styles.attendeesContainer}>
-        <ScrollView horizontal>
-          {[...Array(10)].map((_, index) => (
-            <TouchableHighlight
-              key={index}
-              underlayColor="#DDD"
-              onPress={() => handleAttendeePress(index)}
-              style={styles.attendeeButton}
-            >
-              <View style={styles.attendee}>
-                <MaterialIcons name="account-circle" size={50} color="white"/>
-                <Text style={styles.colW}>참가자</Text>
-              </View>
-            </TouchableHighlight>
-          ))}
-        </ScrollView>
-      </View>
-      <View style={styles.buttonContainer}>
-        <View style={[styles.cartContainer, { opacity: 0.7 }]}>
-          <MaterialIcons name="monetization-on" size={28} color="white"/>
-          <Text style={styles.cartText}>100</Text>
-        </View>
-        <Button title="참석하기" color="black" onPress={joinChatRoom} style={{borderRadius: 30}}/>
-        <TouchableOpacity onPress={toggleFavorite}>
-          <View>
-            {isFavorite ? (
-              <MaterialIcons name="favorite" size={28} color="red" />
-            ) : (
-              <MaterialIcons name="favorite-border" size={28} color="black" />
-            )}
-          </View>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
-  );
+      </TouchableHighlight>
+    ))}
+  </ScrollView>
+</View>
+<View style={styles.buttonContainer}>
+  <View style={[styles.cartContainer, { opacity: 0.7 }]}>
+    <MaterialIcons name="monetization-on" size={28} color="white" />
+    <Text style={styles.cartText}>100</Text>
+  </View>
+  <Button title="참석하기" color="black" onPress={joinChatRoom} style={{ borderRadius: 30 }} />
+  <TouchableOpacity onPress={toggleFavorite}>
+    <View>
+      {isFavorite ? (
+        <MaterialIcons name="favorite" size={28} color="red" />
+      ) : (
+        <MaterialIcons name="favorite-border" size={28} color="black" />
+      )}
+    </View>
+  </TouchableOpacity>
+</View>
+      </ScrollView>
+);
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  colW: {
-    color: 'white'
-  },
-  header: {
-    marginTop: 20,
-  },
-  backButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: '90%',
-    marginHorizontal: '5%',
-    marginTop: 2,
-  },
-  partyTitle: {
-    marginLeft: 2,
-  },
-  cardContainer: {
-    alignItems: 'center',
-    marginTop: 10,
-  },
-  cardImage: {
-    width: '90%',
-    height: 222,
-    borderRadius: 8,
-    shadowColor: '#000000',
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 6,
-  },
-  hostProfile: {
-    width: '90%',
-    marginHorizontal: '5%',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    margin: 10,
-  },
-  profileTextContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  section: {
-    marginTop: 20,
-  },
-  sectionTitle: {
-    marginLeft: '5%',
-    marginBottom: 5,
-  },
-  line: {
-    height: 1,
-    backgroundColor: '#E0E0E0',
-    marginHorizontal: '5%',
-  },
-  attendeesContainer: {
-    flexDirection: 'row',
-    width: '90%',
-    marginHorizontal: '5%',
-    marginTop: 5,
-  },
-  attendeeButton: {
-    marginRight: 10,
-  },
-  attendee: {
-    alignItems: 'center',
-  },
-  buttonContainer: {
-    margin: 45,
-    width: '90%',
-    marginHorizontal: '5%',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  cartContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: 30
-  },
-  cartText: {
-    marginLeft: 5,
-    color: 'white',
-    fontWeight: 'bold'
-  },
-});
-
-
-export default PartyDetailScreen;
+  
+  export default PartyDetailScreen;

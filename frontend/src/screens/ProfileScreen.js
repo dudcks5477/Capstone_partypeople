@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import { View, Text, TouchableOpacity, Image, FlatList, TextInput, Dimensions } from 'react-native';
+import React, {useState,useEffect} from 'react';
+import { View, Text, TouchableOpacity, Image, FlatList, TextInput, Dimensions,Button } from 'react-native';
 import { Rating } from 'react-native-ratings'; 
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Line from '../container/Line';

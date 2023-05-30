@@ -13,6 +13,8 @@ import com.partypeople.backend.domain.party.entity.Party;
 import com.partypeople.backend.domain.party.repository.PartyRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FilenameUtils;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -20,6 +22,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,8 +37,13 @@ import java.util.stream.Collectors;
 public class PartyService {
     private final PartyRepository partyRepository;
     private final UserRepository userRepository;
-    private final String uploadDir = "src/main/resources";
+
+
+    private final String uploadDir = "backend/src/main/resources/static/image";
+
     private final String serverUrl = "http://3.35.21.149:8080";
+
+
     @Transactional
     public Long createParty(PartyRequestDto requestDto, Long userId, List<MultipartFile> images) {
         User user = userRepository.findById(userId)
@@ -65,6 +75,7 @@ public class PartyService {
         user.addExperience(experienceToAdd);
 
         userRepository.save(user);
+        //savedParty.addChatRoom();
         return savedParty.getId();
     }
 
@@ -74,6 +85,7 @@ public class PartyService {
 
         return new PartyResponseDto(party);
     }
+
     @Transactional
     public void updateParty(Long partyId, PartyRequestDto requestDto, Long userId, List<MultipartFile> images) {
         Party party = partyRepository.findById(partyId)
@@ -101,6 +113,7 @@ public class PartyService {
         }
         partyRepository.save(party);
     }
+
     public void deleteParty(Long partyId, Long userId) {
         Party party = partyRepository.findById(partyId)
                 .orElseThrow(() -> new PartyNotFoundException("Party not found"));
@@ -142,13 +155,6 @@ public class PartyService {
     public List<ImageDetail> uploadImageFiles(List<MultipartFile> imageFiles) throws IOException {
         List<ImageDetail> imageDetails = new ArrayList<>();
         if (imageFiles != null && !imageFiles.isEmpty()) {
-            String uploadDir = System.getProperty("user.dir") + "/" + this.uploadDir + "/images/";
-
-            File uploadDirPath = new File(uploadDir);
-            if (!uploadDirPath.exists()) {
-                uploadDirPath.mkdirs();
-            }
-
             for (int i = 0; i < imageFiles.size(); i++) {
                 MultipartFile imageFile = imageFiles.get(i);
                 if (imageFile != null && !imageFile.isEmpty()) {
@@ -156,10 +162,15 @@ public class PartyService {
                     String fileExtension = FilenameUtils.getExtension(originalFileName);
                     String generatedFileName = "image_" + (i + 1) + "." + fileExtension;
 
-                    File uploadedFile = new File(uploadDir + File.separator + generatedFileName);
-                    imageFile.transferTo(uploadedFile);
+                    Path uploadPath = Path.of(uploadDir);
+                    if (!Files.exists(uploadPath)) {
+                        Files.createDirectories(uploadPath);
+                    }
 
-                    String uri = serverUrl + "/" + this.uploadDir + "/images/" + generatedFileName;
+                    Path filePath = uploadPath.resolve(generatedFileName);
+                    Files.copy(imageFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+                    String uri = serverUrl + "/images/" + generatedFileName;
                     imageDetails.add(new ImageDetail(generatedFileName, uri));
                 }
             }

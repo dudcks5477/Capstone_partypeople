@@ -46,6 +46,9 @@ public class PartyResponseDto {
     @JsonProperty("participantIds")
     private Set<Long> participantIds;
 
+    @JsonProperty("imageUrls")
+    private List<String> imageUrls;
+
     public PartyResponseDto(Party party) {
         this.id = party.getId();
         this.partyName = party.getPartyName();
@@ -60,5 +63,11 @@ public class PartyResponseDto {
         this.participantIds = party.getParticipants().stream()
                 .map(User::getId)
                 .collect(Collectors.toSet());
+        if (party.getImageDetails() != null) {
+            this.imageDetails = party.getImageDetails();
+            this.imageUrls = party.getImageDetails().stream()
+                    .map(ImageDetail::getUri)
+                    .collect(Collectors.toList());
+        }
     }
 }

@@ -15,11 +15,7 @@ const ChatScreen = ({ navigation }) => {
 
   const fetchData = async () => {
     try {
-      // 채팅방 목록을 백엔드 서버에서 가져온다고 가정합니다.
-      // 백엔드 API 호출 등 필요한 로직을 수행하여 chatRooms 데이터를 설정합니다.
       const chatRoomsData = await fetchChatRooms(); // 채팅방 목록을 가져오는 API 호출
-
-      // 가져온 채팅방 목록을 상태에 설정합니다.
       setChatRooms(chatRoomsData);
     } catch (error) {
       console.log("Error fetching data", error);

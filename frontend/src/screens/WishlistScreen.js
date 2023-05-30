@@ -47,7 +47,7 @@ const WishlistScreen = () => {
           style={styles.cardContainer}
           onPress={() => handleCardPress(party)}
         >
-          <Image source={{ uri: party.image }} style={styles.cardImage} />
+          {party.image && <Image source={{ uri: party.image }} style={styles.cardImage} />}
           <Text style={styles.cardText}>{partyData.partyName}</Text>
         </TouchableOpacity>
       ))}

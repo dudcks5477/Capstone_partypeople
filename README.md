@@ -1,2 +1,1 @@
-# Party UP
-![Banner Logo](../bannerLogo.PNG)
+![Banner Logo](bannerLogo.PNG)

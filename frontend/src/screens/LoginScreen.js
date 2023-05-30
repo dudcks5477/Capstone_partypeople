@@ -61,8 +61,6 @@ export default function LoginScreen() {
       // AsyncStorage에 토큰 저장
       await AsyncStorage.setItem('userId', JSON.stringify(userId));
 
-
-      // userId를 위해 사용할 수 있습니다.
       console.log("a",userId);
 
       // HomeScreen으로 이동

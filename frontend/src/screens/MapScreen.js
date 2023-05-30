@@ -132,7 +132,6 @@ const MapScreen = () => {
   );
 };
 
-// 이 부분은 모달 컴포넌트를 생성하여 분리하였습니다.
 const PartyModal = ({ isVisible, party, onDetailPress, onClose }) => (
   <Modal
     transparent={true}
@@ -166,17 +165,17 @@ const PartyModal = ({ isVisible, party, onDetailPress, onClose }) => (
 const styles = StyleSheet.create({
   search: {
     // container 감싸고 있는 컴포넌트
-      container: {
-        alignItems: 'center',
-        opacity: 0.8, // 투명도 설정
-        marginTop: 20,},
+    container: {
+      alignItems: 'center',
+      opacity: 0.8,
+      marginTop: 20,
+    },
     // input을 감싸는 컴포넌트
-      textInputContainer: {
-        
-        borderRadius : 20,
-        flexDirection: "row",
-        width: "90%", // 여기서 width를 수정합니다.
-  }},
+    textInputContainer: {
+      borderRadius : 20,
+      flexDirection: "row",
+      width: "90%",
+    }},
   container: {
     ...StyleSheet.absoluteFillObject,
     justifyContent: 'flex-end',
@@ -226,14 +225,14 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
     alignItems: 'center',
-    bottom : 60
+    bottom : 60,
   },
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0)',
   },
   modalView: {
-    backgroundColor: 'white',
+    backgroundColor: '#222',
     borderRadius: 10,
     padding: 20,
     alignItems: 'center',
@@ -251,6 +250,7 @@ const styles = StyleSheet.create({
   modalText: {
     marginBottom: 15,
     textAlign: 'center',
+    color: 'white'
   },
   button: {
     borderRadius: 20,

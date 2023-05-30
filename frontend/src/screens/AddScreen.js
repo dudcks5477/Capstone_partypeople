@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, Button, Platform, Text, TextInput,TouchableOpacity, Alert, ScrollView, Image,Modal} from 'react-native';
+import {View, Text, TextInput,TouchableOpacity, Alert, ScrollView, Image,Modal} from 'react-native';
 
 // import CameraScreen from './CameraScreen';
 import ImageCropPicker from 'react-native-image-crop-picker';
@@ -143,10 +143,12 @@ const AddScreen = ({navigation,route}) => {
   }
 
   const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
-    setShow(Platform.OS === 'ios');
-    setDate(currentDate);
-    
+    if (selectedDate) {
+      const currentDate = selectedDate || date;
+      setShow(false);
+      setDate(currentDate);  
+      setDateSelected(true);
+    }
   };
 
 

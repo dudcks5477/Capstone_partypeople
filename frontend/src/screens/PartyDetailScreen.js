@@ -15,16 +15,16 @@ const PartyDetailScreen = ({ route }) => {
     partyName: '',
     numOfPeople: '',
     description: '',
-    images: [],  // add image state
+    images: [],
   });
  
   const navigation = useNavigation();
-  const partyId  = route.params;  // receive partyId from previous screen
+  const partyId  = route.params;
   console.log("ID",partyId)
 
   useEffect(() => {
     fetchPartyDetail();
-    checkIsFavorite(); // Check if the party is favorite on component mount
+    checkIsFavorite();
   }, []);
   
   const fetchPartyDetail = async () => {
@@ -42,7 +42,6 @@ const PartyDetailScreen = ({ route }) => {
       const response = await axios.get(`http://3.35.21.149:8080/wishlist/${storedUserId}`);
       const wishlist = response.data;
 
-      // Set isFavorite to true if the partyId exists in the wishlist
       setIsFavorite(wishlist.includes(partyId));
     } catch (e) {
       console.error(e);
@@ -133,7 +132,7 @@ const PartyDetailScreen = ({ route }) => {
 
       <View style={{width:"90%", marginHorizontal:"5%", height:177}}>
         <Text style={styles.colW}>파티소개</Text>
-        <Text style={styles.colW}>{partyData.description} {partyData.numOfPeople} {partyData.date} {partyData.time} {partyData.address}</Text>
+        <Text style={styles.colW}>{partyData.description} {partyData.numOfPeople} {partyData.date} {partyData.time} {partyData.address}명 만 모집하는 저희 Party UP 직원을 구인합니다.</Text>
       </View>
 
       <Line/>  

@@ -6,15 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import com.sun.istack.NotNull;
-import org.apache.commons.io.FilenameUtils;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
-
-
 import javax.persistence.*;
-import java.io.File;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -39,11 +32,6 @@ public class Party {
     private Long numOfPeople;
     private String content;
 
-
-
-    //@NotNull
-    //private int coin;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     @JsonBackReference
@@ -66,11 +54,6 @@ public class Party {
         user.getParties().add(this);
     }
 
-    public boolean containsParticipant(User user) {
-        return participants.contains(user);
-    }
-
-
     @JsonIgnore
     @Transient
     private List<MultipartFile> imageFiles;
@@ -79,11 +62,6 @@ public class Party {
     @CollectionTable(name = "party_image", joinColumns = @JoinColumn(name = "party_id", referencedColumnName = "id"))
     @AttributeOverride(name = "name", column = @Column(name = "image_name"))
     private List<ImageDetail> imageDetails;
-
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public void setPartyName(String partyName) {
         this.partyName = partyName;
@@ -103,14 +81,6 @@ public class Party {
 
     public void setContent(String content) {
         this.content = content;
-    }
-
-    public void setParticipants(Set<User> participants) {
-        this.participants = participants;
-    }
-
-    public void setImageFiles(List<MultipartFile> imageFiles) {
-        this.imageFiles = imageFiles;
     }
 
     public void setImageDetails(List<ImageDetail> imageDetails) {

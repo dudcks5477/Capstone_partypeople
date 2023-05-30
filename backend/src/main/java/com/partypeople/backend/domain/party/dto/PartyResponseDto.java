@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.partypeople.backend.domain.account.User;
 import com.partypeople.backend.domain.party.entity.ImageDetail;
 import com.partypeople.backend.domain.party.entity.Party;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -56,7 +55,6 @@ public class PartyResponseDto {
         this.numOfPeople = party.getNumOfPeople();
         this.content = party.getContent();
         this.imageDetails = party.getImageDetails();
-        // 추가된 코드
         this.participantIds = party.getParticipants().stream()
                 .map(User::getId)
                 .collect(Collectors.toSet());

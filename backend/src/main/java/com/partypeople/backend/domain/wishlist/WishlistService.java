@@ -19,7 +19,7 @@ public class WishlistService {
     private final PartyRepository partyRepository;
 
 
-    // 위시리스트에 파티 추가
+
     @Transactional
     public void addPartyToWishlist(Long userId, Long partyId) {
         User user = userRepository.findById(userId)
@@ -31,14 +31,14 @@ public class WishlistService {
         party.getUsers().add(user);
     }
 
-    // 위시리스트 조회
+
     public List<Party> getWishlist(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
         return user.getWishlist();
     }
 
-    // 위시리스트에서 파티 제거
+
     @Transactional
     public void removePartyFromWishlist(Long userId, Long partyId) {
         User user = userRepository.findById(userId)

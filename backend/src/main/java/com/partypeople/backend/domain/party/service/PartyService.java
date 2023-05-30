@@ -15,19 +15,11 @@ import com.partypeople.backend.domain.party.entity.ImageDetail;
 import com.partypeople.backend.domain.party.entity.Party;
 import com.partypeople.backend.domain.party.repository.PartyRepository;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -71,7 +63,7 @@ public class PartyService {
             List<ImageDetail> imageDetails = uploadImageFiles(images);
             party.setImageDetails(imageDetails);
         } catch (IOException e) {
-            // Add error handling code...
+
         }
 
         Party savedParty = partyRepository.save(party);
@@ -113,7 +105,7 @@ public class PartyService {
                 List<ImageDetail> imageDetails = uploadImageFiles(images);
                 party.setImageDetails(imageDetails);
             } catch (IOException e) {
-                // Add error handling code...
+
             }
         }
         partyRepository.save(party);
@@ -137,15 +129,14 @@ public class PartyService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
 
-        // 이미 참가한 사용자인지 확인
         if (party.getParticipants().contains(user)) {
             throw new AlreadyJoinedException("User is already joined to this party");
         }
 
         party.addParticipant(user);
 
-        // 사용자의 경험치를 증가시킵니다.
-        user.addExperience(50); // 예시: 50의 경험치를 증가시킵니다.
+
+        user.addExperience(50);
 
         partyRepository.save(party);
     }

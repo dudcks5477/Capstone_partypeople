@@ -1,14 +1,12 @@
 package com.partypeople.backend.domain.account;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.partypeople.backend.domain.party.entity.Party;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -54,13 +52,6 @@ public class User implements UserDetails {
     )
     private List<Party> wishlist = new ArrayList<>();
 
-    public void addToWishlist(Party party) {
-        if (!this.wishlist.contains(party)) {
-            this.wishlist.add(party);
-            party.getUsers().add(this);
-        }
-    }
-
     private int experience;
 
     private  int level=1;
@@ -71,7 +62,7 @@ public class User implements UserDetails {
     }
 
     private void checkLevelUp() {
-        int requiredExperience = (this.level + 1) * 100; // 예시 레벨업 조건
+        int requiredExperience = (this.level + 1) * 100;
         if (this.experience >= requiredExperience) {
             this.level++;
             this.experience -= requiredExperience;
@@ -85,7 +76,6 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // 사용자의 권한 정보를 반환하는 메소드 구현
         return Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"));
     }
 

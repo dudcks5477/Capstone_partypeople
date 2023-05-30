@@ -20,12 +20,9 @@ const RegisterScreen = () => {
         birthDay: birthDay,
       });
 
-      // 회원가입이 성공적으로 처리되었을 때의 로직을 작성합니다.
       console.log(response.data); // 서버로부터 받은 응답 데이터 출력
       navigation.navigate('Login');
     } catch (error) {
-      
-      // 회원가입 요청이 실패하였을 때의 예외 처리 로직을 작성합니다.
       console.error(error);
     }
   };

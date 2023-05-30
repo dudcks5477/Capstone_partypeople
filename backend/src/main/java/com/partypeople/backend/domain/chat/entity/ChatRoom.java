@@ -1,4 +1,4 @@
-package com.partypeople.backend.domain.chat;
+package com.partypeople.backend.domain.chat.entity;
 
 import com.partypeople.backend.domain.account.User;
 import com.partypeople.backend.domain.party.entity.Party;
@@ -25,11 +25,22 @@ public class ChatRoom {
     @JoinColumn(name = "host_id")
     private User host;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "chat_room_participant",
-            joinColumns = @JoinColumn(name = "chat_room_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
+    @ManyToMany(mappedBy = "chatRooms")
     private Set<User> participants = new HashSet<>();
+
+    @ManyToMany
+    @JoinTable(
+            name = "chat_room_party",
+            joinColumns = @JoinColumn(name = "chat_room_id"),
+            inverseJoinColumns = @JoinColumn(name = "party_id")
+    )
+    private Set<Party> parties = new HashSet<>();
+
+    public Set<User> getParticipants() {
+        Set<User> participants = new HashSet<>();
+        for (Party party : parties) {
+            participants.addAll(party.getParticipants());
+        }
+        return participants;
+    }
 }

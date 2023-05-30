@@ -1,6 +1,10 @@
 package com.partypeople.backend.domain.party.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.partypeople.backend.domain.account.User;
+import com.partypeople.backend.domain.chat.entity.ChatRoom;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,11 +19,11 @@ import javax.persistence.*;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -41,16 +45,28 @@ public class Party {
     //@NotNull
     //private int coin;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    @JsonBackReference
+    private User user;
+
+    @ManyToMany
     @JoinTable(
-            name = "party_participant",
+            name = "party_participants",
             joinColumns = @JoinColumn(name = "party_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private Set<User> participants = new HashSet<>();
 
+    @ManyToMany(mappedBy = "wishlist")
+    private Set<User> users = new HashSet<>();
+
     @ManyToMany(mappedBy = "chatRooms")
     private Set<User> chatParticipants = new HashSet<>();
+
+    @ManyToMany(mappedBy = "parties")
+    private List<ChatRoom> chatRooms = new ArrayList<>();
+
     public void addParticipant(User user) {
         participants.add(user);
         user.getParties().add(this);

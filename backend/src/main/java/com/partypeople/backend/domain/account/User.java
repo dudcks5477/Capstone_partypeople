@@ -1,6 +1,6 @@
 package com.partypeople.backend.domain.account;
 
-import com.partypeople.backend.domain.chat.ChatRoom;
+import com.partypeople.backend.domain.chat.entity.ChatRoom;
 import lombok.*;
 import com.partypeople.backend.domain.party.entity.Party;
 import org.springframework.security.core.GrantedAuthority;
@@ -37,6 +37,33 @@ public class User implements UserDetails {
 
     @Column(nullable = false)
     private LocalDate birthDay;
+
+    @ManyToMany(mappedBy = "participants")
+    private Set<Party> parties = new HashSet<>();
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_chat_room",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "chat_room_id")
+    )
+    private Set<ChatRoom> chatRooms = new HashSet<>();
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_wishlist",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "party_id")
+    )
+    private List<Party> wishlist = new ArrayList<>();
+
+    public void addToWishlist(Party party) {
+        if (!this.wishlist.contains(party)) {
+            this.wishlist.add(party);
+            party.getUsers().add(this);
+        }
+    }
+
     private int experience;
 
     private  int level=1;
@@ -53,19 +80,6 @@ public class User implements UserDetails {
             this.experience -= requiredExperience;
         }
     }
-    @ManyToMany(mappedBy = "participants")
-    private Set<Party> parties = new HashSet<>();
-
-    @ManyToMany(mappedBy = "participants")
-    private Set<ChatRoom> chatRooms = new HashSet<>();
-
-    @ManyToMany
-    @JoinTable(
-            name = "user_wishlist",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "party_id")
-    )
-    private List<Party> wishlist;
 
     private boolean enabled;
     private boolean accountNonExpired;
@@ -80,31 +94,37 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
+
         return email;
     }
 
     @Override
     public String getPassword() {
+
         return password;
     }
 
     @Override
     public boolean isEnabled() {
+
         return enabled;
     }
 
     @Override
     public boolean isAccountNonExpired() {
+
         return accountNonExpired;
     }
 
     @Override
     public boolean isAccountNonLocked() {
+
         return accountNonLocked;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
+
         return credentialsNonExpired;
     }
 

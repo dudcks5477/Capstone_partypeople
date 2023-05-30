@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
-import {View, Text, TextInput,TouchableOpacity, Alert, ScrollView, Image,Modal} from 'react-native';
-
+import {View, Text, TextInput,TouchableOpacity, Alert, ScrollView, Image,Modal,StyleSheet} from 'react-native';
 // import CameraScreen from './CameraScreen';
 import ImageCropPicker from 'react-native-image-crop-picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -8,7 +7,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Line from '../container/Line';
-
+import { styles } from './Styles/AddStyles'
 const AddScreen = ({navigation,route}) => {
   const { address,longitude,latitude } = route.params || {};
   const [imageSources, setImageSources] = useState([]);
@@ -56,7 +55,7 @@ const AddScreen = ({navigation,route}) => {
     } else {
       setDate2(date.toISOString().slice(0, 10))
       setTime(date.toISOString().slice(11, 19))
-      console.log(date2)
+      console.log("A",date2)
       console.log(time)
       const formData = new FormData();
       try {
@@ -65,7 +64,7 @@ const AddScreen = ({navigation,route}) => {
         console.log(typeof(numOfPeople))
         console.log(typeof(time))
         console.log(typeof(date2))
-        
+        console.log(imageSources)
         const storedUserId = JSON.parse(await AsyncStorage.getItem('userId'));
         formData.append('party', JSON.stringify({
           partyLocation: address,
@@ -96,7 +95,7 @@ const AddScreen = ({navigation,route}) => {
         console.log(time)
         console.log(numOfPeople)
         console.log(description)
-        // console.log(data.imageFile)
+        console.log(formData)
         // 파티 생성 요청 보내기
         const response = await axios.post(`http://3.35.21.149:8080/party/${storedUserId}`, formData, {
       headers: {
@@ -112,7 +111,7 @@ const AddScreen = ({navigation,route}) => {
           navigate.navigation('MapScreen')
           await AsyncStorage.setItem('partyId', JSON.stringify(response.date.id));
           // 채팅방 생성 요청 보내기
-          const chatRoomResponse = await axios.post('http://ec2-13-209-74-82.ap-northeast-2.compute.amazonaws.com:8080/chatRoom', {
+          const chatRoomResponse = await axios.post('http://3.35.21.149:8080/chatRoom', {
             partyId: partyId,
             hostId: storedUserId // 현재 사용자의 아이디
           }, {
@@ -166,111 +165,49 @@ const AddScreen = ({navigation,route}) => {
   }
 
   return (
-    <View style={{backgroundColor: '#222', flex: 1}}>
-
-      <TouchableOpacity onPress={handleGoBack} style={{
-        flexDirection:"row", 
-        alignItems:'center', 
-        marginTop: 20,
-        width: '90%',
-        marginHorizontal: '3%'
-        }}>
-        <MaterialIcons name="chevron-left" size={24} color="black" style={{ marginRight: 2, color: 'white'}}/>
-        <Text style={{fontSize: 25, color: 'white', fontWeight: 'bold'}}>생성</Text>
+    <View style={styles.container}>
+      <TouchableOpacity onPress={handleGoBack} style={styles.backButton}>
+        <MaterialIcons name="chevron-left" size={24} color="white" style={styles.backButtonIcon} />
+        <Text style={styles.title}>생성</Text>
       </TouchableOpacity>
 
-      <Line style={{marginTop: 15, marginBottom: 10 }}/>
+      <View style={styles.line} />
 
-      <View style = {{
-        width: '90%',
-        marginHorizontal: '5%'
-      }}>
-        <View style={{flexDirection:'row', alignItems: 'center'}}>
-          <Text style={{marginRight: 30, color: 'white'}}>파티이름</Text>
-          <TextInput
-            style={{
-              flex: 1,
-              height: 39, 
-              borderColor: 'gray', 
-              borderWidth: 1,
-              borderRadius: 6,
-              color: 'white'
-            }}
-            onChangeText={text => setPartyName(text)}
-            value={partyName}
-          />
+      <View style={styles.inputContainer}>
+        <View style={styles.inputRow}>
+          <Text style={styles.inputLabel}>파티이름</Text>
+          <TextInput style={styles.textInput} onChangeText={text => setPartyName(text)} value={partyName} />
         </View>
-        
-        <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 10}}>
-          <Text style={{marginRight: 30, color: 'white'}}>파티시간</Text>
-          <View style={{flex: 1, marginRight: 10}}>
-            <TouchableOpacity onPress={showDatepicker} style={{
-              height: 39,
-              borderColor: 'gray',
-              borderWidth: 1,
-              borderRadius: 6,
-              justifyContent: 'center',
-              alignItems: 'center',
-              paddingLeft: 10,
-            }}>
-              <Text style={{color: 'white'}}>
-                {dateSelected 
-                  ? date.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric'}) 
-                  : "날짜"
-                }
+
+        <View style={styles.inputRow}>
+          <Text style={styles.inputLabel}>파티시간</Text>
+          <View style={styles.dateInput}>
+            <TouchableOpacity onPress={showDatepicker}>
+              <Text style={{ color: 'white' }}>
+                {dateSelected ? date.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' }) : "날짜"}
               </Text>
             </TouchableOpacity>
           </View>
-          <View style={{flex: 1}}>
-            <TouchableOpacity onPress={showTimepicker} style={{
-              flex: 1,
-              height: 39,
-              borderColor: 'gray',
-              borderWidth: 1,
-              borderRadius: 6,
-              justifyContent: 'center',
-              alignItems: 'center',
-              paddingLeft: 10,
-            }}>
-              <Text style={{color: 'white'}}>
-                {date && mode === 'time' 
-                  ? date.toLocaleTimeString('ko-KR', { hour: '2-digit',minute: '2-digit' })
-                  : "시간"
-                }
+          <View style={styles.timeInput}>
+            <TouchableOpacity onPress={showTimepicker}>
+              <Text style={{ color: 'white' }}>
+                {date && mode === 'time' ? date.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }) : "시간"}
               </Text>
             </TouchableOpacity>
           </View>
         </View>
 
-        <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 10}}>
-          <Text style={{marginRight: 30, color: 'white'}}>파티장소</Text>
-          <TouchableOpacity
-            onPress={() => navigation.navigate('Map2')}
-            style={{
-                flex: 1,
-                height: 39, 
-                borderColor: 'gray', 
-                borderWidth: 1,
-                justifyContent: 'center',
-                borderRadius: 6,
-                paddingLeft: 10,
-              }}
-            >
-              <Text style={{color: 'white'}}>{address || "위치 선택"}</Text>
+        <View style={styles.inputRow}>
+          <Text style={styles.inputLabel}>파티장소</Text>
+          <TouchableOpacity onPress={() => navigation.navigate('Map2')} style={styles.locationInput}>
+            <Text style={{ color: 'white' }}>{address || "위치 선택"}</Text>
           </TouchableOpacity>
         </View>
-        
-        <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 10}}>
-          <Text style={{marginRight: 30, color: 'white'}}>최대인원</Text>
+
+        <View style={styles.inputRow}>
+          <Text style={styles.inputLabel}>최대인원</Text>
           <TextInput
-            style={{
-                flex: 1,
-                height: 39, 
-                borderColor: 'gray', 
-                borderWidth: 1,
-                borderRadius: 6,
-                color: 'white'
-              }}
+            style={styles.textInput}
             value={numOfPeople.toString()}
             keyboardType={'numeric'}
             onChangeText={text => {
@@ -282,135 +219,66 @@ const AddScreen = ({navigation,route}) => {
           />
         </View>
 
-        <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 10}}>
-          <Text style={{marginRight: 30, color: 'white'}}>파티코인</Text>
+        <View style={styles.inputRow}>
+          <Text style={styles.inputLabel}>파티코인</Text>
           <TextInput
-            style={{
-                flex: 1,
-                height: 39, 
-                borderColor: 'gray', 
-                borderWidth: 1,
-                borderRadius: 6,
-                color: 'white'
-              }}
+            style={styles.textInput}
             value={coin}
             keyboardType={'numeric'}
-            onChangeText={text => { setCoin(text)}}
+            onChangeText={text => { setCoin(text) }}
           />
         </View>
       </View>
 
-      <Line style={{marginTop: 15, marginBottom: 10}}/>
+      <View style={styles.line} />
 
-      <View style={{
-        width: '90%',
-        marginHorizontal: '5%'
-      }}>
-        <Text style={{color: 'white'}}>파티 소개</Text>
+      <View style={styles.inputContainer}>
+        <Text style={{ color: 'white' }}>파티 소개</Text>
         <TextInput
-          style={{
-            height: 150, 
-            borderColor: 'gray', 
-            borderWidth: 1,
-            marginTop: 10,
-            borderRadius: 6,
-            color: 'white',
-            textAlignVertical: 'top'
-          }}
+          style={styles.partyDescription}
           multiline={true}
           onChangeText={text => setDescription(text)}
           value={description}
         />
       </View>
 
-      <Line style={{marginTop: 15, marginBottom: 10}}/>
+      <View style={styles.line} />
 
-      <View style={{
-        width: '90%',
-        marginHorizontal: '5%',
-      }}>
-         <View>
-         <Text style={{color: "white"}}>사진 등록</Text>
-      <View style={{ flexDirection: 'row', marginTop: 10, alignItems: 'center' }}>
-        <TouchableOpacity
-          style={{
-            borderColor: 1,
-            borderRadius: 10,
-            alignItems: 'center',
-            justifyContent: 'center',
-            height: 69,
-            width: 80,
-            backgroundColor: '#ccc',
-            marginRight: 10,
-          }}
-          onPress={handleCameraPress}
-        >
-          <View style={{backgroundColor: "black", width: "100%", justifyContent: 'center', alignItems: 'center', borderRadius: 10}}>
-            <MaterialIcons name="photo-camera" size={70} color="white" />
-          </View>
-        </TouchableOpacity>
-        <ScrollView
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{ flexDirection: 'row' }}
-        >
-          {imageSources.map((image, index) => (
-            <TouchableOpacity
-              key={index}
-              style={{
-                borderColor: 1,
-                borderRadius: 10,
-                alignItems: 'center',
-                justifyContent: 'center',
-                height: 69,
-                width: 80,
-                backgroundColor: '#ccc',
-                marginRight: 3,
-              }}
-              onPress={() => handleImageClick(index)}
-            >
-              <Image source={{ uri: image.path }} style={{ width: 80, height: 69, borderRadius: 10 }} />
+      <View style={styles.inputContainer}>
+        <View>
+          <Text style={{ color: "white" }}>사진 등록</Text>
+          <View style={styles.photoUpload}>
+            <TouchableOpacity style={styles.photoCameraButton} onPress={handleCameraPress}>
+              <View style={{ backgroundColor: "black", width: "100%", justifyContent: 'center', alignItems: 'center', borderRadius: 10 }}>
+                <MaterialIcons name="photo-camera" size={70} color="white" />
+              </View>
             </TouchableOpacity>
-          ))}
+            <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} contentContainerStyle={{ flexDirection: 'row' }}>
+              {imageSources.map((image, index) => (
+                <TouchableOpacity key={index} style={styles.photoThumbnail} onPress={() => handleImageClick(index)}>
+                  <Image source={{ uri: image.path }} style={{ width: 80, height: 69, borderRadius: 10 }} />
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
+        </View>
+        <ScrollView>
+          {/* Content */}
         </ScrollView>
+        <Modal visible={modalVisible} onRequestClose={handleModalClose}>
+          <View style={styles.photoModalContainer}>
+            {selectedImageIndex !== -1 && (
+              <TouchableOpacity onPress={handleModalClose}>
+                <Image source={{ uri: imageSources[selectedImageIndex].path }} style={styles.photoModal} />
+              </TouchableOpacity>
+            )}
+          </View>
+        </Modal>
       </View>
-      <ScrollView>
-      
-    </ScrollView>
-    <Modal visible={modalVisible} onRequestClose={handleModalClose}>
-      <View style={{ flex: 1, backgroundColor: 'black', justifyContent: 'center', alignItems: 'center' }}>
-        {selectedImageIndex !== -1 && (
-          <TouchableOpacity onPress={handleModalClose}>
-            <Image
-              source={{ uri: imageSources[selectedImageIndex].path }}
-              style={{ width: 300, height: 300, resizeMode: 'contain' }}
-            />
-          </TouchableOpacity>
-        )}
-      </View>
-    </Modal>
-  </View>
-    </View>
 
-      <TouchableOpacity 
-        onPress={handleCreate} 
-        style={{
-          marginTop: 10, 
-          justifyContent: 'center', 
-          alignItems:'center'}}>
-        <Text style={{
-          borderColor: 1,
-          borderRadius: 10,
-          backgroundColor: 'white',
-          width: 147,
-          height: 43,
-          lineHeight: 43,
-          textAlign: 'center',
-          fontSize: 15,
-          fontWeight: 'bold'
-        }}>생성하기</Text>
+      <TouchableOpacity onPress={handleCreate} style={{ marginTop: 10, justifyContent: 'center', alignItems: 'center' }}>
+        <Text style={styles.button}>생성하기</Text>
       </TouchableOpacity>
-
 
       {show && (
         <DateTimePicker
@@ -422,8 +290,6 @@ const AddScreen = ({navigation,route}) => {
           onChange={onChange}
         />
       )}
-      
-    
     </View>
   );
 };

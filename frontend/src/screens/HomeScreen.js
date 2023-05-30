@@ -10,13 +10,6 @@ const HomeScreen = () => {
   const navigation = useNavigation();
   const [partyData, setPartyData] = useState(null);
 
-  const scrollOffset = new Animated.Value(0);
-  const clampedScroll = Animated.diffClamp(
-    scrollOffset,
-    0,
-    50
-  );
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -30,48 +23,25 @@ const HomeScreen = () => {
     fetchData();
   }, []);
 
-  const searchBarOpacity = clampedScroll.interpolate({
-    inputRange: [0, 50],
-    outputRange: [1, 0],
-    extrapolate: 'clamp',
-  });
-
-  const searchBarTranslate = clampedScroll.interpolate({
-    inputRange: [0, 50],
-    outputRange: [0, -50],
-    extrapolate: 'clamp',
-  });
-
   return (
     <View style={styles.container}>
-      <Animated.View
-        style={{
-          opacity: searchBarOpacity,
-          transform: [{ translateY: searchBarTranslate }],
-        }}>
-        <SearchBar />
-        <Line style={{ marginTop: 20 }} />
-      </Animated.View>
-
       <SafeAreaView style={styles.containerNotch}>
-        <View style={styles.containerParty}>
-          <Animated.ScrollView
-            onScroll={Animated.event(
-              [{ nativeEvent: { contentOffset: { y: scrollOffset }}}],
-              { useNativeDriver: true},
-            )}
-            scrollEventThrottle={16}>
-            {partyData && partyData.map((party, index) => (
-              <TouchableOpacity
-                key={index}
-                style={styles.cardButton}
-                onPress={() => navigation.navigate('PartyDetail', party.id)}
-                activeOpacity={1}>
-                <Card partyData={party}/>
-              </TouchableOpacity>
-            ))}
-          </Animated.ScrollView>
+        <View style={styles.containerSearch}>
+          <SearchBar />
+          <Line style={{ marginTop: 20 }} />
         </View>
+
+        <ScrollView style={styles.containerParty}>
+          {partyData && partyData.map((party, index) => (
+            <TouchableOpacity
+              key={index}
+              style={styles.cardButton}
+              onPress={() => navigation.navigate('PartyDetail', party.id)}
+              activeOpacity={1}>
+              <Card partyData={party}/>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
       </SafeAreaView>
     </View>
   );
@@ -82,8 +52,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#222',
   },
+  containerNotch: {
+    flex: 1,
+  },
   containerParty: {
-    marginVertical: 10,
+    marginTop: 10
   },
   cardButton: {
     marginBottom: 10,

@@ -8,7 +8,7 @@ Geocoder.init('AIzaSyB_eawVNI3T9lGyQsePWA2GwE2uXyWxZI0');
 
 
 const MapScreen2 = () => {
-  const mapRef = useRef(null); // Ref를 추가합니다.
+  const mapRef = useRef(null);
   const navigation = useNavigation();
   const [address, setAddress] = useState('');
   const [latitude, setLatitude] = useState();
@@ -18,14 +18,14 @@ const MapScreen2 = () => {
     longitude: 126.9780,
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,
-  }); // 지도 초기 위치를 상태로 관리합니다.
+  }); // 지도 초기 위치 상태 관리
 
   const handlePlaceSelected = (data, details) => {
     const { geometry } = details;
     const { location } = geometry;
     const { lat, lng } = location;
     
-    // 검색한 위치로 지도를 이동시킵니다.
+    // 검색한 위치로 지도 이동
     mapRef.current.animateToRegion({
       latitude: lat,
       longitude: lng,
@@ -95,18 +95,17 @@ const MapScreen2 = () => {
 
 const styles = StyleSheet.create({
   search: {
-    // container 감싸고 있는 컴포넌트
-      container: {
-        alignItems: 'center',
-        opacity: 0.8, // 투명도 설정
-        marginTop: 20,},
-    // input을 감싸는 컴포넌트
-      textInputContainer: {
-        
-        borderRadius : 20,
-        flexDirection: "row",
-        width: "90%", // 여기서 width를 수정합니다.
-  }},
+    container: {
+      alignItems: 'center',
+      opacity: 0.8,
+      marginTop: 20,
+    },
+    textInputContainer: { 
+      borderRadius : 20,
+      flexDirection: "row",
+      width: "90%", 
+    }
+  },
   container: {
     ...StyleSheet.absoluteFillObject,
     justifyContent: 'flex-end',

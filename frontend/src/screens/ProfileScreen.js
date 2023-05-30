@@ -16,7 +16,6 @@ const ProfileScreen = () => {
   const navigation = useNavigation();
 
   useEffect(() => {
-    // Assuming these are the correct URLs
     axios.get('/api/hostedParties')
       .then(response => setHostedParties(response.data))
       .catch(error => console.log(error));
@@ -37,14 +36,12 @@ const ProfileScreen = () => {
   }
 
   const handleSubscribe = () => {
-    // Assuming this is the correct API call to subscribe
     axios.post('/api/subscribe')
       .then(() => setIsSubscribed(true))
       .catch(error => console.log(error));
   }
 
   const handlePartySelect = (partyId) => {
-    // Assuming 'PartyDetail' is the name of your party detail screen
     navigation.navigate('PartyDetail', { partyId });
   }
 

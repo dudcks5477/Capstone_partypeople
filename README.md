@@ -1,1 +1,2 @@
-![Banner Logo](bannerLogo.PNG)
+# 소개
+<img src="bannerLogo.png" width="45%"/>

@@ -67,6 +67,16 @@ public class Party {
     @ManyToMany(mappedBy = "parties")
     private List<ChatRoom> chatRooms = new ArrayList<>();
 
+    public void addChatRoom() {
+        ChatRoom chatRoom = ChatRoom.builder()
+                .party(this)
+                .host(user)
+                .build();
+
+        chatRooms.add(chatRoom);
+        chatParticipants.add(user);
+    }
+
     public void addParticipant(User user) {
         participants.add(user);
         user.getParties().add(this);
@@ -147,4 +157,6 @@ public class Party {
     public void setLatitude(double latitude) {
         this.latitude = latitude;
     }
+
+
 }

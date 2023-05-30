@@ -54,6 +54,7 @@ public class PartyService {
 
 
         Party savedParty = partyRepository.save(party);
+        savedParty.addChatRoom();
         return savedParty.getId();
     }
 

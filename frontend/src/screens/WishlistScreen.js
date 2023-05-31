@@ -3,6 +3,8 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'rea
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Card from '../components/Card';
+
 const WishlistScreen = () => {
   const [wishlist, setWishlist] = useState([]);
   const navigation = useNavigation();
@@ -10,45 +12,36 @@ const WishlistScreen = () => {
   useEffect(() => {
     const fetchWishlist = async () => {
       try {
+        
         const storedUserId = await AsyncStorage.getItem('userId');
+        console.log(storedUserId)
         const response = await axios.get(`http://3.35.21.149:8080/wishlist/${storedUserId}`);
         
-        if (response.data !== null) {
-          setWishlist(response.data);
-          try {
-            const response = await axios.get('http://3.35.21.149:8080/party');
-            setPartyData(response.data);
-          } catch (e) {
-            console.error(e);
-          }
-        }
+        setPartyData(response.data)
       } catch (e) {
         console.log("Wishlist fetch error", e);
       }
     };
-  
+    
     const unsubscribe = navigation.addListener('focus', fetchWishlist);
   
     return unsubscribe;
   }, [navigation]);
 
-  const handleCardPress = (party) => {
-    navigation.navigate('PartyDetail', { party });
-  };
+  
 
   return (
     <ScrollView style={{backgroundColor: "#222"}}>
       <View>
         <Text style={styles.title}>Wishlists</Text>
       </View>
-      {wishlist.map((party, index) => (
+      { partyData && partyData.map((party, index) => (
         <TouchableOpacity
           key={index}
           style={styles.cardContainer}
-          onPress={() => handleCardPress(party)}
+          onPress={() => navigation.navigate('PartyDetail', party.id)}
         >
-          {party.image && <Image source={{ uri: party.image }} style={styles.cardImage} />}
-          <Text style={styles.cardText}>{partyData.partyName}</Text>
+          <Card partyData={party} style={{height : '10%'}}/>
         </TouchableOpacity>
       ))}
     </ScrollView>

@@ -86,8 +86,9 @@ export const styles = StyleSheet.create({
     },
     modalText: {
       marginBottom: 15,
-      textAlign: 'center',
-      color: 'white'
+      textAlign: 'left',
+      color: 'white',
+      fontSize : 13
     },
     button: {
       borderRadius: 20,
@@ -104,13 +105,15 @@ export const styles = StyleSheet.create({
       textAlign: 'center',
     },
     navigateButton: {
+      // backgroundColor: '#2196F3',
+      opacity : 0.5,
       backgroundColor: 'transparent',
       width: Dimensions.get('window').width - 60,
       height: Dimensions.get('window').height / 4,
       borderRadius: 10,
       padding: 10,
       marginTop: 10,
-      bottom: 145,
+      bottom: 170,
   
     },
   });

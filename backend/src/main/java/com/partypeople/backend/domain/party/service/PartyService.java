@@ -178,4 +178,33 @@ public class PartyService {
         }
         return "";
     }
+
+    @Transactional
+    public Long exParty(PartyRequestDto requestDto, Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
+
+        LocalDateTime partyDateTime = LocalDateTime.of(requestDto.getPartyDate(), requestDto.getPartyTime());
+
+        Party party = Party.builder()
+                .partyName(requestDto.getPartyName())
+                .longitude(requestDto.getLongitude())
+                .latitude(requestDto.getLatitude())
+                .partyLocation(requestDto.getPartyLocation())
+                .partyDateTime(partyDateTime)
+                .numOfPeople(requestDto.getNumOfPeople())
+                .content(requestDto.getContent())
+                .participants(Collections.singleton(user))
+                .build();
+
+
+        Party savedParty = partyRepository.save(party);
+
+        int experienceToAdd = 100;
+        user.addExperience(experienceToAdd);
+
+        userRepository.save(user);
+        //savedParty.addChatRoom();
+        return savedParty.getId();
+    }
 }

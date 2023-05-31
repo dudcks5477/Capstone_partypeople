@@ -1,5 +1,6 @@
 package com.partypeople.backend.domain.party.controller;
 
+import com.partypeople.backend.domain.account.User;
 import com.partypeople.backend.domain.global.Exception.AccessDeniedException;
 import com.partypeople.backend.domain.global.Exception.AlreadyJoinedException;
 import com.partypeople.backend.domain.global.Exception.PartyNotFoundException;
@@ -20,6 +21,19 @@ import java.util.List;
 @RestController
 public class PartyController {
     private final PartyService partyService;
+
+    @PostMapping("ex/{userId}")
+    public ResponseEntity<Long> exParty(@PathVariable Long userId,@RequestPart("party") PartyRequestDto partyDto) {
+        try {
+            Long partyId = partyService.exParty(partyDto, userId);
+            return new ResponseEntity<>(partyId, HttpStatus.CREATED);
+        } catch (UserNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
 
     @PostMapping("/{userId}")
     public ResponseEntity<Long> createParty(@PathVariable Long userId,
@@ -81,4 +95,6 @@ public class PartyController {
         List<PartyResponseDto> partyResponseDtos = partyService.getAllParties();
         return ResponseEntity.ok(partyResponseDtos);
     }
+
+
 }

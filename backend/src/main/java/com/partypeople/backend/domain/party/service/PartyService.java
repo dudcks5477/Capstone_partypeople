@@ -42,7 +42,7 @@ public class PartyService {
 
 
     @Transactional
-    public Long createParty(PartyRequestDto requestDto, Long userId, List<MultipartFile> images) {
+    public Long createParty(PartyRequestDto requestDto, Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
 
@@ -58,13 +58,6 @@ public class PartyService {
                 .content(requestDto.getContent())
                 .participants(Collections.singleton(user))
                 .build();
-
-        try {
-            List<ImageDetail> imageDetails = uploadImageFiles(images);
-            party.setImageDetails(imageDetails);
-        } catch (IOException e) {
-
-        }
 
         Party savedParty = partyRepository.save(party);
 
@@ -179,32 +172,22 @@ public class PartyService {
         return "";
     }
 
+
     @Transactional
-    public Long exParty(PartyRequestDto requestDto, Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
+    public List<ImageDetail> uploadPartyImages(Long partyId, List<MultipartFile> images) {
+        Party party = partyRepository.findById(partyId)
+                .orElseThrow(() -> new PartyNotFoundException("Party not found with ID: " + partyId));
 
-        LocalDateTime partyDateTime = LocalDateTime.of(requestDto.getPartyDate(), requestDto.getPartyTime());
+        try {
+            List<ImageDetail> imageDetails = uploadImageFiles(images);
+            party.setImageDetails(imageDetails); // Party에 이미지 정보 설정
+            partyRepository.save(party);
+            return imageDetails;
+        } catch (IOException e) {
+            // 예외 처리
+        }
 
-        Party party = Party.builder()
-                .partyName(requestDto.getPartyName())
-                .longitude(requestDto.getLongitude())
-                .latitude(requestDto.getLatitude())
-                .partyLocation(requestDto.getPartyLocation())
-                .partyDateTime(partyDateTime)
-                .numOfPeople(requestDto.getNumOfPeople())
-                .content(requestDto.getContent())
-                .participants(Collections.singleton(user))
-                .build();
-
-
-        Party savedParty = partyRepository.save(party);
-
-        int experienceToAdd = 100;
-        user.addExperience(experienceToAdd);
-
-        userRepository.save(user);
-        //savedParty.addChatRoom();
-        return savedParty.getId();
+        return Collections.emptyList();
     }
+
 }

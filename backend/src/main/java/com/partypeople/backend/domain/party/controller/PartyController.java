@@ -7,6 +7,7 @@ import com.partypeople.backend.domain.global.Exception.PartyNotFoundException;
 import com.partypeople.backend.domain.global.Exception.UserNotFoundException;
 import com.partypeople.backend.domain.party.dto.PartyRequestDto;
 import com.partypeople.backend.domain.party.dto.PartyResponseDto;
+import com.partypeople.backend.domain.party.entity.ImageDetail;
 import com.partypeople.backend.domain.party.service.PartyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -21,11 +24,11 @@ import java.util.List;
 @RestController
 public class PartyController {
     private final PartyService partyService;
-//
-    @PostMapping("ex/{userId}")
-    public ResponseEntity<Long> exParty(@PathVariable Long userId,@RequestPart("party") PartyRequestDto partyDto) {
+
+    @PostMapping("/{userId}")
+    public ResponseEntity<Long> createParty(@PathVariable Long userId, @RequestBody PartyRequestDto partyDto) {
         try {
-            Long partyId = partyService.exParty(partyDto, userId);
+            Long partyId = partyService.createParty(partyDto, userId);
             return new ResponseEntity<>(partyId, HttpStatus.CREATED);
         } catch (UserNotFoundException e) {
             return ResponseEntity.notFound().build();
@@ -34,15 +37,13 @@ public class PartyController {
         }
     }
 
-
-    @PostMapping("/{userId}")
-    public ResponseEntity<Long> createParty(@PathVariable Long userId,
-                                            @RequestPart("party") PartyRequestDto partyDto,
-                                            @RequestPart("images") List<MultipartFile> images) {
+    @PostMapping("/{partyId}/images")
+    public ResponseEntity<List<ImageDetail>> uploadPartyImages(@PathVariable Long partyId,
+                                                               @RequestParam("images") List<MultipartFile> images) {
         try {
-            Long partyId = partyService.createParty(partyDto, userId, images);
-            return new ResponseEntity<>(partyId, HttpStatus.CREATED);
-        } catch (UserNotFoundException e) {
+            List<ImageDetail> imageDetails = partyService.uploadPartyImages(partyId, images);
+            return ResponseEntity.ok(imageDetails);
+        } catch (PartyNotFoundException e) {
             return ResponseEntity.notFound().build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

@@ -45,8 +45,7 @@ public class Party {
     )
     private Set<User> participants = new HashSet<>();
 
-    @ManyToMany(mappedBy = "wishlist")
-    @JsonIgnoreProperties("hibernateLazyInitializer")
+    @ManyToMany(mappedBy = "wishlist", fetch = FetchType.LAZY)
     private Set<User> users = new HashSet<>();
 
     public void addParticipant(User user) {

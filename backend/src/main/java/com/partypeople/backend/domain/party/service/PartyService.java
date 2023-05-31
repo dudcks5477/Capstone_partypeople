@@ -5,6 +5,7 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.partypeople.backend.domain.account.User;
 import com.partypeople.backend.domain.account.UserRepository;
+import com.partypeople.backend.domain.chat.entity.ChatRoom;
 import com.partypeople.backend.domain.global.Exception.AlreadyJoinedException;
 import com.partypeople.backend.domain.global.Exception.PartyNotFoundException;
 import com.partypeople.backend.domain.global.Exception.UserNotFoundException;
@@ -21,10 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -65,8 +63,25 @@ public class PartyService {
         user.addExperience(experienceToAdd);
 
         userRepository.save(user);
-        //savedParty.addChatRoom();
+        createChatRoomAndAddParticipant(savedParty, user);
         return savedParty.getId();
+    }
+
+    private void createChatRoomAndAddParticipant(Party party, User user) {
+        ChatRoom chatRoom = ChatRoom.builder()
+                .party(party)
+                .host(user)
+                .build();
+
+        Set<User> participants = new HashSet<>();
+        participants.add(user);
+        chatRoom.setParticipants(participants);
+
+        Set<Party> parties = new HashSet<>();
+        parties.add(party);
+        chatRoom.setParties(parties);
+
+        user.getChatRooms().add(chatRoom);
     }
 
     public PartyResponseDto getParty(Long partyId) {

@@ -4,6 +4,7 @@ import com.partypeople.backend.domain.account.User;
 import com.partypeople.backend.domain.account.UserRepository;
 import com.partypeople.backend.domain.global.Exception.PartyNotFoundException;
 import com.partypeople.backend.domain.global.Exception.UserNotFoundException;
+import com.partypeople.backend.domain.party.dto.PartyResponseDto;
 import com.partypeople.backend.domain.party.entity.Party;
 import com.partypeople.backend.domain.party.repository.PartyRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -32,10 +34,15 @@ public class WishlistService {
     }
 
 
-    public List<Party> getWishlist(Long userId) {
+    public List<PartyResponseDto> getWishlist(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
-        return user.getWishlist();
+
+        List<Party> wishlistParties = user.getWishlist();
+
+        return wishlistParties.stream()
+                .map(PartyResponseDto::new)
+                .collect(Collectors.toList());
     }
 
 

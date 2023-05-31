@@ -1,10 +1,12 @@
 package com.partypeople.backend.domain.wishlist;
 
+import com.partypeople.backend.domain.party.dto.PartyResponseDto;
 import com.partypeople.backend.domain.party.entity.Party;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/wishlist")
@@ -23,8 +25,8 @@ public class WishlistController {
 
 
     @GetMapping("/{userId}")
-    public ResponseEntity<List<Party>> getWishlist(@PathVariable Long userId) {
-        List<Party> wishlist = wishlistService.getWishlist(userId);
+    public ResponseEntity<List<PartyResponseDto>> getWishlist(@PathVariable Long userId) {
+        List<PartyResponseDto> wishlist = wishlistService.getWishlist(userId);
         return ResponseEntity.ok(wishlist);
     }
 

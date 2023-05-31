@@ -30,7 +30,7 @@ dependencies {
     implementation ("org.springframework.boot:spring-boot-starter-security")
     implementation ("commons-fileupload:commons-fileupload:1.4")
     implementation ("org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE")
-
+    implementation ("org.springframework.boot:spring-boot-starter-websocket")
 }
 
 tasks.withType<Test> {

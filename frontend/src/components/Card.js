@@ -1,11 +1,11 @@
 import React from 'react';
 import {View, Image, Text, StyleSheet} from 'react-native';
-
+import { styles } from '../screens/Styles/CardStyles'
 const Card = ({partyData}) => {
   const {imageDetails = [], partyName, content, partyDateTime, partyLocation, time, address} = partyData;
   
   const imageUrl = imageDetails.length > 0 ? imageDetails[0].uri : null;
-  console.log(imageUrl)
+  console.log("dd",imageUrl)
   return (
     <View style={styles.cardContainer}>
       <View style={styles.card}>
@@ -26,35 +26,6 @@ const Card = ({partyData}) => {
   );
 };
 
-const styles = StyleSheet.create({
-  cardContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  card: {
-    backgroundColor: '#fff',
-    borderRadius: 16,
-    overflow: 'hidden',
-    elevation: 5,
-    margin: 10,
-    width: '90%',
-    aspectRatio: 1.5,
-  },
-  image: {
-    width: '100%',
-    height: '60%',
-  },
-  title: {
-    fontWeight: 'bold',
-    fontSize: 16,
-    marginHorizontal: 10,
-    marginTop: 10,
-  },
-  description: {
-    fontSize: 14,
-    marginHorizontal: 10,
-    marginVertical: 5,
-  },
-});
+
 
 export default Card;

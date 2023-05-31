@@ -21,18 +21,8 @@ import java.util.List;
 @RestController
 public class PartyController {
     private final PartyService partyService;
+//
 
-    @PostMapping("ex/{userId}")
-    public ResponseEntity<Long> exParty(@PathVariable Long userId,@RequestPart("party") PartyRequestDto partyDto) {
-        try {
-            Long partyId = partyService.exParty(partyDto, userId);
-            return new ResponseEntity<>(partyId, HttpStatus.CREATED);
-        } catch (UserNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
 
 
     @PostMapping("/{userId}")

@@ -24,6 +24,7 @@ const AddScreen = ({navigation,route}) => {
   const [mode, setMode] = useState('date');
   const [storedUserId, setStoredUserId] = useState(null);
   const [dateSelected, setDateSelected] = useState(false);
+  
   const handleImagesSelected = (images) => {
     setImageSources(images);
   };
@@ -55,80 +56,79 @@ const AddScreen = ({navigation,route}) => {
     } else {
       setDate2(date.toISOString().slice(0, 10))
       setTime(date.toISOString().slice(11, 19))
-      console.log("A",date2)
-      console.log(time)
+      
       const formData = new FormData();
       try {
-        console.log(typeof(longitude))
-        console.log(typeof(latitude))
-        console.log(typeof(numOfPeople))
-        console.log(typeof(time))
-        console.log(typeof(date2))
-        console.log(imageSources)
+        
+
         const storedUserId = JSON.parse(await AsyncStorage.getItem('userId'));
-        formData.append('party', JSON.stringify({
-          partyLocation: address,
-          longitude,
-          latitude,
-          partyDate: date2,
-          partyTime: time,
-          partyName,
-          numOfPeople,
-          content: description,
-        }));
+        
         imageSources.forEach((image, index) => {
           formData.append('images', {
             uri: image.path,
             type: image.mime,
-            name: `image-${index + 1}.jpg`,
-          }, `image-${index}.jpg`);
+            name: `image-${index + 1}.jpg`})
         });
         
 
-        
-        console.log("sto",storedUserId)
-        console.log(partyName)
-        console.log(longitude)
-        console.log(latitude)
-        console.log(address)
-        console.log(date2)
-        console.log(time)
-        console.log(numOfPeople)
-        console.log(description)
-        console.log(formData)
+        console.log(imageSources)
+        console.log("Id", storedUserId);
+        console.log("partyName : ", partyName, typeof(partyName));
+        console.log("longitude : ", longitude, typeof(longitude));
+        console.log("latitude : ", latitude, typeof(latitude));
+console.log("partyLocation : ", address, typeof(address));
+console.log("partyDate : ", date2, typeof(date2));
+console.log("partyTime : ", time, typeof(time));
+console.log("numOfPeople : ", numOfPeople, typeof(numOfPeople));
+console.log("content : ", description, typeof(description));
+console.log(formData);
         // 파티 생성 요청 보내기
-        const response = await axios.post(`http://3.35.21.149:8080/party/${storedUserId}`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
+        const response = await axios.post(`http://3.35.21.149:8080/party/${storedUserId}`,{
+          partyLocation: address,
+          longitude: longitude,
+          latitude: latitude,
+          partyDate: date2,
+          partyTime: time,
+          partyName: partyName,
+          numOfPeople: numOfPeople,
+          content: description,
+        } );
+        
+        const partyId = response.data;
+        
+        console.log("d",response.data)
+        const response1 = await axios.post(`http://3.35.21.149:8080/party/${partyId}/images`, formData, {
+        headers: {
+    'Content-Type': 'multipart/form-data',
       },
-    });
-  
-        if (response.status === 200) { 
+      });
+    console.log(response.status)
+        if (response.status === 201 ) { 
           
           // 파티가 성공적으로 생성되었을 때의 처리 로직
           
           console.log("성공")
-          navigate.navigation('MapScreen')
-          await AsyncStorage.setItem('partyId', JSON.stringify(response.date.id));
-          // 채팅방 생성 요청 보내기
-          const chatRoomResponse = await axios.post('http://3.35.21.149:8080/chatRoom', {
-            partyId: partyId,
-            hostId: storedUserId // 현재 사용자의 아이디
-          }, {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          });
-
-          if (chatRoomResponse.status === 200) {
-            // 채팅방이 성공적으로 생성되었을 때의 처리 로직
-            const chatRoomData = chatRoomResponse.data;
-            const chatRoomId = chatRoomData.id;
-            console.log(`채팅방 생성 성공, ID: ${chatRoomId}`);
-          } else {
-            // 채팅방 생성 실패 처리 로직
-            Alert.alert('오류', '채팅방 생성에 실패했습니다.');
-          }
+          navigation.navigate('MapScreen')
+          // await AsyncStorage.setItem('partyId', JSON.stringify(response.date.id));
+          // // 채팅방 생성 요청 보내기
+          // const chatRoomResponse = await axios.post('http://3.35.21.149:8080/chatRoom', {
+          //   partyId: partyId,
+          //   hostId: storedUserId // 현재 사용자의 아이디
+          // }, {
+          //   headers: {
+          //     'Content-Type': 'application/json',
+          //   },
+          // });
+          
+          // if (chatRoomResponse.status === 200) {
+          //   // 채팅방이 성공적으로 생성되었을 때의 처리 로직
+          //   const chatRoomData = chatRoomResponse.data;
+          //   const chatRoomId = chatRoomData.id;
+          //   console.log(`채팅방 생성 성공, ID: ${chatRoomId}`);
+          // } else {
+          //   // 채팅방 생성 실패 처리 로직
+          //   Alert.alert('오류', '채팅방 생성에 실패했습니다.');
+          // }
 
         } else {
           // 파티 생성 실패 처리 로직

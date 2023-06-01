@@ -1,6 +1,6 @@
 package com.partypeople.backend.domain.party.controller;
 
-import com.partypeople.backend.domain.account.User;
+
 import com.partypeople.backend.domain.global.Exception.AccessDeniedException;
 import com.partypeople.backend.domain.global.Exception.AlreadyJoinedException;
 import com.partypeople.backend.domain.global.Exception.PartyNotFoundException;
@@ -15,8 +15,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
 import java.util.List;
 
 @RequiredArgsConstructor

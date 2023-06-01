@@ -9,6 +9,5 @@ import java.util.List;
 
 @Repository
 public interface PartyRepository extends JpaRepository<Party, Long> {
-    List<Party> findAllByIdIn(Collection<Long> partyIds);
 
 }

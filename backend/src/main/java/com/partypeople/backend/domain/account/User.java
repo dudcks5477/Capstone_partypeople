@@ -2,7 +2,6 @@ package com.partypeople.backend.domain.account;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.partypeople.backend.domain.chat.entity.ChatRoom;
 import com.partypeople.backend.domain.party.entity.Party;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -44,14 +43,6 @@ public class User implements UserDetails {
 
     @ManyToMany(mappedBy = "participants")
     private Set<Party> parties = new HashSet<>();
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "user_chat_room",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "chat_room_id")
-    )
-    private Set<ChatRoom> chatRooms = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(

@@ -1,7 +1,6 @@
 package com.partypeople.backend.domain.account;
 
 import com.partypeople.backend.domain.global.Exception.UserNotFoundException;
-import com.partypeople.backend.domain.party.repository.PartyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;

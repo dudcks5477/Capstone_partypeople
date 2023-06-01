@@ -1,0 +1,22 @@
+spring:
+  profiles:
+    include: "local"
+  datasource:
+    url: jdbc:mariadb://partypeople.cisnkgkhl5uc.ap-northeast-2.rds.amazonaws.com:3306/partypeople
+    driver-class-name: org.mariadb.jdbc.Driver
+    username: partypeople
+    password: partypeople
+  jpa:
+    open-in-view: true
+    generate-ddl : true
+    hibernate:
+      ddl-auto: update # db 컬럼과 일치하는지 확인
+    properties:
+      hibernate:
+        format_sql: true # 로그 출력
+        show_sql: true
+
+  #Spring boot 2.6버전 이후에 spring.mvc.pathmatch.matching-strategy 값이 ant_apth_matcher에서 path_pattern_parser로 변경되면서 나타는 오류 해결
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher

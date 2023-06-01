@@ -29,4 +29,4 @@ Party UP은 한림대학교 SW캡스톤 디자인 수업에서 진행한 프로�
 - Java
 - [Springboot](https://spring.io/projects/spring-boot)
 - [MariaDB](https://mariadb.org/)
-- [AWS](https://aws.amazon.com/ko/free/?trk=fa2d6ba3-df80-4d24-a453-bf30ad163af9&sc_channel=ps&ef_id=Cj0KCQjw4NujBhC5ARIsAF4Iv6fxjgIEQiL0NKN6kqftH1qaLBvA8uE0Wqf3yhbgC6V9We2rqcbLYF4aAga5EALw_wcB:G:s&s_kwcid=AL!4422!3!563761819834!e!!g!!aws!15286221779!129400439466)
+- [AWS-S3,EC2,RDS](https://aws.amazon.com/ko/free/?trk=fa2d6ba3-df80-4d24-a453-bf30ad163af9&sc_channel=ps&ef_id=Cj0KCQjw4NujBhC5ARIsAF4Iv6fxjgIEQiL0NKN6kqftH1qaLBvA8uE0Wqf3yhbgC6V9We2rqcbLYF4aAga5EALw_wcB:G:s&s_kwcid=AL!4422!3!563761819834!e!!g!!aws!15286221779!129400439466)

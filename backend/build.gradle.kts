@@ -28,7 +28,8 @@ dependencies {
     runtimeOnly ("org.mariadb.jdbc:mariadb-java-client")
     implementation ("commons-io:commons-io:2.11.0")
     implementation ("org.springframework.boot:spring-boot-starter-security")
-
+    implementation ("commons-fileupload:commons-fileupload:1.4")
+    implementation ("org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE")
 }
 
 tasks.withType<Test> {

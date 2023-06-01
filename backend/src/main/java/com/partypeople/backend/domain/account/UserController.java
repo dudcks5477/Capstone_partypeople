@@ -1,21 +1,12 @@
 package com.partypeople.backend.domain.account;
 
-import com.partypeople.backend.domain.party.dto.PartyRequestDto;
-import com.partypeople.backend.domain.party.dto.PartyResponseDto;
-import com.partypeople.backend.domain.party.entity.Party;
-import com.partypeople.backend.domain.party.repository.PartyRepository;
+import com.partypeople.backend.domain.global.Exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import java.io.IOException;
-import java.net.URI;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/users")
@@ -24,12 +15,9 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private PartyRepository partyRepository;
-
     @PostMapping
     public ResponseEntity<User> createUser(@RequestBody User user) {
-        // 이메일 중복 체크
+
         if (userRepository.findByEmail(user.getEmail()) != null) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
@@ -59,9 +47,12 @@ public class UserController {
         }
     }
 
-
-
-
+    @GetMapping("/{userId}")
+    public ResponseEntity<User> getUserById(@PathVariable Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
+        return ResponseEntity.ok(user);
+    }
 
 }
 

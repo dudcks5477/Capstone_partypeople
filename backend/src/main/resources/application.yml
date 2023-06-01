@@ -17,6 +17,24 @@ spring:
         show_sql: true
 
   #Spring boot 2.6버전 이후에 spring.mvc.pathmatch.matching-strategy 값이 ant_apth_matcher에서 path_pattern_parser로 변경되면서 나타는 오류 해결
-  mvc:
-    pathmatch:
-      matching-strategy: ant_path_matcher
+    mvc:
+      pathmatch:
+        matching-strategy: path_pattern_parser
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+  cloud:
+    aws:
+      credentials:
+        access-key: AKIAYBJMTFRUAHFTKYNP
+        secret-key: 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
+      s3:
+        bucket: party-people
+      region:
+        static: ap-northeast-2
+      stack:
+        auto: false
